@@ -1,33 +1,41 @@
 // Dependencies
-const express = require('express')
-const mongoose = require('mongoose')
+import express from "express";
+import { Sequelize } from "sequelize";
 
 // Routes
-const blogsRouter = require('./controllers/blogs.js')
-const usersRouter = require('./controllers/users.js')
-const loginRouter = require('./controllers/login.js')
-const healthRouter = require('./controllers/health.js')
+import blogsRouter from "./controllers/blogs.js";
+import healthRouter from "./controllers/health.js";
 
 // Utils
-const config = require('./utils/config.js')
-const middleware = require('./utils/middleware.js')
+import { DATABASE_URL } from "./utils/config.js";
+import { errorHandler } from "./utils/middleware.js";
 
-const app = express()
+const app = express();
 
-mongoose.connect(config.MONGODB_URI)
+const sequelize = new Sequelize(DATABASE_URL, {
+  dialect: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+});
 
-app.use(express.json())
-app.use(middleware.tokenExtractor)
-app.use('/api/users', usersRouter)
-app.use('/api/login', loginRouter)
-app.use('/api/blogs', middleware.userExtractor, blogsRouter)
-app.use('/api/health', healthRouter)
-
-if (process.env.NODE_ENV === 'test') {
-  const testingRouter = require('./controllers/testing.js')
-  app.use('/api/testing', testingRouter)
+async function connectToDb() {
+  try {
+    await sequelize.authenticate();
+  } catch (err) {
+    console.error("Unable to connect to the database", err);
+  }
 }
 
-app.use(middleware.errorHandler)
+connectToDb();
 
-module.exports = app
+app.use(express.json());
+app.use("/api/blogs", blogsRouter);
+app.use("/api/health", healthRouter);
+
+app.use(errorHandler);
+
+export default app;

@@ -1,7 +1,9 @@
-const healthRouter = require('express').Router()
+import express from "express";
 
-healthRouter.get('/', async (_req, res) => {
-  return res.status(200).send('Server is online')
-})
+const healthRouter = express.Router();
 
-module.exports = healthRouter
+healthRouter.get("/", async (_req, res) => {
+  return res.status(200).send("Server is online");
+});
+
+export default healthRouter;

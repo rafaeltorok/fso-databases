@@ -1,22 +1,20 @@
-const _ = require('lodash')
+import _ from "lodash";
 
-const dummy = () => {
+export function dummy() {
   return 1;
 }
 
-const totalLikes = (blogs) => {
+export function totalLikes(blogs) {
   const reducer = (sum, item) => {
-    return sum + item.likes
-  }
+    return sum + item.likes;
+  };
 
-  return blogs.length === 0
-    ? 0
-    : blogs.reduce(reducer, 0)
+  return blogs.length === 0 ? 0 : blogs.reduce(reducer, 0);
 }
 
-const favoriteBlog = (blogs) => {
+export function favoriteBlog(blogs) {
   const getFavorite = () => {
-    let favorite = { likes: 0 }
+    let favorite = { likes: 0 };
 
     for (const blog of blogs) {
       if (blog.likes > favorite.likes) {
@@ -24,32 +22,32 @@ const favoriteBlog = (blogs) => {
       }
     }
 
-    return favorite
-  }
+    return favorite;
+  };
 
   return blogs.length === 0
     ? "No blogs are present on the list"
-    : getFavorite(blogs)
+    : getFavorite(blogs);
 }
 
-const mostBlogs = (blogs) => {
+export function mostBlogs(blogs) {
   const getMostBlogs = () => {
-    const authorCounts = _.countBy(blogs, 'author')
-    const countsArray = Object.entries(authorCounts)
-    const [topAuthor, maxCount] = _.maxBy(countsArray, ([, count]) => count)
+    const authorCounts = _.countBy(blogs, "author");
+    const countsArray = Object.entries(authorCounts);
+    const [topAuthor, maxCount] = _.maxBy(countsArray, ([, count]) => count);
 
     return {
       author: topAuthor,
-      blogs: maxCount
-    }
-  }
+      blogs: maxCount,
+    };
+  };
 
   return blogs.length === 0
     ? "No blogs are present on the list"
-    : getMostBlogs(blogs)
+    : getMostBlogs(blogs);
 }
 
-const mostLikes = (blogs) => {
+export function mostLikes(blogs) {
   const getMostLikes = () => {
     const authorLikes = {};
 
@@ -64,24 +62,16 @@ const mostLikes = (blogs) => {
       }
     }
 
-    const likesArray = Object.entries(authorLikes)
-    const [topLikes, maxCount] = _.maxBy(likesArray, ([, count]) => count)
+    const likesArray = Object.entries(authorLikes);
+    const [topLikes, maxCount] = _.maxBy(likesArray, ([, count]) => count);
 
     return {
       author: topLikes,
-      likes: maxCount
-    }
-  }
+      likes: maxCount,
+    };
+  };
 
   return blogs.length === 0
     ? "No blogs are present on the list"
-    : getMostLikes(blogs)
-}
-
-module.exports = {
-  dummy,
-  totalLikes,
-  favoriteBlog,
-  mostBlogs,
-  mostLikes
+    : getMostLikes(blogs);
 }
