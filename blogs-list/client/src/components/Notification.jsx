@@ -3,5 +3,5 @@ export default function Notification({ messageType, message }) {
     <div className={messageType}>
       <h2>{message}</h2>
     </div>
-  )
+  );
 }
