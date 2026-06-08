@@ -37,6 +37,13 @@ npm run dev
 - API requests on http://localhost:3001/api
 - Web UI access on http://localhost:5173
 
+### CLI
+
+Print all available Blogs on the CLI (does not require to start the server)
+```bash
+npm run cli
+```
+
 
 ## Docker
 
