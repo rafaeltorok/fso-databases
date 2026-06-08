@@ -2,6 +2,9 @@
 import express from "express";
 import Blog from "../models/blog.js";
 
+// Middleware
+import { blogFinder } from "../utils/middleware.js";
+
 const blogsRouter = express.Router();
 
 // GET all
@@ -15,16 +18,9 @@ blogsRouter.get("/", async (req, res, next) => {
 });
 
 // GET a blog by its id
-blogsRouter.get("/:id", async (req, res, next) => {
+blogsRouter.get("/:id", blogFinder, async (req, res, next) => {
   try {
-    // Find the blog
-    const data = await Blog.findByPk(req.params.id);
-
-    if (!data) {
-      return res.status(404).json({ error: "Blog not found" });
-    }
-
-    return res.json(data);
+    return res.json(req.blog);
   } catch (error) {
     next(error);
   }
@@ -69,7 +65,7 @@ blogsRouter.delete("/:id", async (req, res, next) => {
 });
 
 // PUT (update) a blog's number of likes
-blogsRouter.put("/:id", async (req, res, next) => {
+blogsRouter.put("/:id", blogFinder, async (req, res, next) => {
   try {
     const likes = req.body.likes;
 
@@ -83,12 +79,7 @@ blogsRouter.put("/:id", async (req, res, next) => {
     }
 
     // Find the blog to be updated
-    const blogToUpdate = await Blog.findByPk(req.params.id);
-
-    // Blog not found: return an error response
-    if (!blogToUpdate) {
-      return res.status(404).json({ error: "Blog not found" });
-    }
+    const blogToUpdate = req.blog;
 
     // Update the likes counter
     await blogToUpdate.update({ likes: likes });
