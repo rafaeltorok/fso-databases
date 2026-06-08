@@ -6,18 +6,7 @@ import blogsRouter from "./controllers/blogs.js";
 import healthRouter from "./controllers/health.js";
 
 // Utils
-import sequelize from "./utils/connectdb.js";
 import { errorHandler } from "./utils/middleware.js";
-
-// Connect to the PostgreSQL database
-async function connectToDb() {
-  try {
-    await sequelize.authenticate();
-  } catch (err) {
-    console.error("Unable to connect to the database", err);
-  }
-}
-connectToDb();
 
 // Express server setup
 const app = express();
