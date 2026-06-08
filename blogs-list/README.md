@@ -83,12 +83,12 @@ curl -X POST http://localhost:3001/api/blogs -H "Content-Type: application/json"
 
 Create a new user
 ```bash
-curl -X POST http://localhost:3001/api/users -H "Content-Type: application/json" -d '{ "username":"admin", "name":"The admin", "password":"my_passwd" }'
+curl -X POST http://localhost:3001/api/users -H "Content-Type: application/json" -d '{ "username":"admin", "name":"Administrator", "password":"admin" }'
 ```
 
 Logging in
 ```bash
-curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json" -d '{ "username":"admin", "password":"my_passwd" }'
+curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json" -d '{ "username":"admin", "password":"admin" }'
 ```
 
 ### DELETE
@@ -96,6 +96,11 @@ curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json"
 Delete a blog
 ```bash
 curl -X DELETE http://localhost:3001/api/blogs/<id>
+```
+
+Delete an user
+```bash
+curl -X DELETE http://localhost:3001/api/users/<id>
 ```
 
 ### PUT
