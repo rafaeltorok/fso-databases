@@ -1,7 +1,7 @@
-const Blog = require("../models/blog.js");
-const User = require("../models/user.js");
+const Blog = require("../../models/blog.js");
+const User = require("../../models/user.js");
 
-const initialBlogs = [
+export const initialBlogs = [
   {
     title: "Test blog",
     author: "The Tester",
@@ -34,19 +34,12 @@ const nonExistingId = async () => {
   return blog._id.toString();
 };
 
-const blogsInDb = async () => {
-  const blogs = await Blog.find({}).populate("user", "-blogs");
+export const blogsInDb = async () => {
+  const blogs = await Blog.findAll();
   return blogs.map((blog) => blog.toJSON());
 };
 
-const usersInDb = async () => {
-  const users = await User.find({}).populate("blogs", "-user");
-  return users.map((u) => u.toJSON());
-};
-
-module.exports = {
-  initialBlogs,
-  nonExistingId,
-  blogsInDb,
-  usersInDb,
+export const usersInDb = async () => {
+  const users = await User.findAll();
+  return users.map((user) => user.toJSON());
 };

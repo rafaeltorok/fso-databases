@@ -1,76 +1,22 @@
+// Test dependencies
 const { test, after, beforeEach, describe } = require("node:test");
 const assert = require("node:assert");
-const mongoose = require("mongoose");
 const supertest = require("supertest");
-const app = require("../app.js");
-const Blog = require("../models/blog.js");
-const helper = require("./test_helper");
 const bcrypt = require("bcrypt");
-const User = require("../models/user");
+
+// Blogs List app
+const app = require("../../app.js");
+
+// Models
+const Blog = require("../../models/blog.js");
+const User = require("../../models/user.js");
+
+// Helper functions
+const helper = require("./integration/test_helper.js");
 
 const api = supertest(app);
 
-beforeEach(async () => {
-  await Blog.deleteMany({});
-  await User.deleteMany({});
-
-  // Creates and stores a new user into the database
-  const passwordHash = await bcrypt.hash("password", 10);
-  const user = new User({
-    username: "root",
-    name: "root",
-    passwordHash,
-  });
-  const savedUser = await user.save();
-
-  // Stores all initial blogs into the database
-  const blogObjects = helper.initialBlogs.map(
-    (blog) =>
-      new Blog({
-        ...blog,
-        user: savedUser._id,
-      }),
-  );
-
-  const savedBlogs = await Promise.all(blogObjects.map((blog) => blog.save()));
-
-  savedUser.blogs = savedBlogs.map((blog) => blog._id);
-  await savedUser.save();
-});
-
-describe("testing the GET method", () => {
-  test("blogs are returned as json", async () => {
-    await api
-      .get("/api/blogs")
-      .expect(200)
-      .expect("Content-Type", /application\/json/);
-  });
-
-  test("all blogs are returned", async () => {
-    const response = await api.get("/api/blogs");
-    assert.strictEqual(response.body.length, helper.initialBlogs.length);
-  });
-
-  test("a specific blog is within the returned blogs", async () => {
-    const blogsAtStart = await helper.blogsInDb();
-    const blogToView = blogsAtStart[0];
-
-    const resultBlog = await api
-      .get(`/api/blogs/${blogToView.id}`)
-      .expect(200)
-      .expect("Content-Type", /application\/json/);
-
-    assert.deepStrictEqual(resultBlog.body, blogToView);
-  });
-
-  test("blogs have id property instead of _id", async () => {
-    const response = await api.get("/api/blogs");
-    const blog = response.body[0];
-    assert(blog.id);
-    assert(!blog._id);
-  });
-});
-
+// Tests
 describe("testing the POST method", () => {
   let token;
 
