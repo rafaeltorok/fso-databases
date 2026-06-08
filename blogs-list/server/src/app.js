@@ -5,7 +5,7 @@ import express from "express";
 import blogsRouter from "./controllers/blogs.js";
 import healthRouter from "./controllers/health.js";
 
-// Utils
+// Middleware
 import { errorHandler } from "./utils/middleware.js";
 
 // Express server setup
