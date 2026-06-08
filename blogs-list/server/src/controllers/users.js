@@ -1,6 +1,7 @@
 // Dependencies
 import express from "express";
 import User from "../models/user.js";
+import bcrypt from "bcrypt";
 
 // Middleware
 import { userFinder } from "../utils/middleware.js";
@@ -10,7 +11,11 @@ const userRouter = express.Router();
 // GET all
 userRouter.get("/", async (req, res, next) => {
   try {
-    const data = await User.findAll();
+    const data = await User.findAll({
+      attributes: {
+        exclude: ["password"]
+      }
+    });
     res.status(200).json(data);
   } catch (err) {
     next(err);
@@ -29,14 +34,22 @@ userRouter.get("/:id", userFinder, async (req, res, next) => {
 // POST a new user
 userRouter.post("/", async (req, res, next) => {
   try {
-    const { username, name } = req.body;
+    const { username, name, password } = req.body;
+
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
 
     const newUser = await User.create({
       username,
-      name
+      name,
+      password: passwordHash
     });
 
-    res.status(201).json(newUser);
+    // Remove sensitive field from the response
+    const nonSensitiveData = newUser.toJSON();
+    delete nonSensitiveData.password;
+
+    res.status(201).json(nonSensitiveData);
   } catch (err) {
     next(err);
   }

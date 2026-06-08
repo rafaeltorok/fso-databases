@@ -39,7 +39,11 @@ export async function blogFinder(req, res, next) {
 
 // Handles finding an user based on its id
 export async function userFinder(req, res, next) {
-  req.user = await User.findByPk(req.params.id);
+  req.user = await User.findByPk(req.params.id, {
+    attributes: {
+      exclude: ["password"]
+    }
+  });
   if (!req.user) {
     return res.status(404).end();
   }
