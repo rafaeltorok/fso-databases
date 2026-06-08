@@ -1,15 +1,8 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { DATABASE_URL } from "../utils/config.js";
+// Sequelize dependencies
+import { Model, DataTypes } from "sequelize";
+import sequelize from "../utils/connectdb.js";
 
-const sequelize = new Sequelize(DATABASE_URL, {
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
-});
-
+// Blog model
 export default class Blog extends Model {}
 Blog.init(
   {
@@ -42,3 +35,5 @@ Blog.init(
     modelName: "blog",
   },
 );
+
+Blog.sync();
