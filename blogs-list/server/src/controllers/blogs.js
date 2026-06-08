@@ -17,26 +17,14 @@ blogsRouter.get("/", async (req, res, next) => {
 // GET a blog by its id
 blogsRouter.get("/:id", async (req, res, next) => {
   try {
-    // GT the ID from the request
-    const blogId = req.params.id;
-
-    // Check if the ID is present on the request
-    if (blogId === undefined) {
-      return res.status(400).send("Missing Blog ID");
-    }
-
     // Find the blog
-    const data = await Blog.findOne({
-      where: {
-        id: blogId
-      }
-    });
+    const data = await Blog.findByPk(req.params.id);
 
-    if (data) {
-      res.json(data);
-    } else {
-      res.status(404).end();
+    if (!data) {
+      return res.status(404).json({ error: "Blog not found" });
     }
+
+    return res.json(data);
   } catch (error) {
     next(error);
   }
@@ -51,8 +39,7 @@ blogsRouter.post("/", async (req, res, next) => {
       title,
       author,
       url,
-      likes: likes || 0,
-      date: new Date()
+      likes
     });
 
     res.status(201).json(newBlog);
@@ -85,7 +72,6 @@ blogsRouter.delete("/:id", async (req, res, next) => {
 blogsRouter.put("/:id", async (req, res, next) => {
   try {
     const likes = req.body.likes;
-    const blogId = req.params.id;
 
     // Assert the number of likes is valid
     if (
@@ -97,11 +83,7 @@ blogsRouter.put("/:id", async (req, res, next) => {
     }
 
     // Find the blog to be updated
-    const blogToUpdate = await Blog.findOne({
-      where: {
-        id: blogId
-      }
-    });
+    const blogToUpdate = await Blog.findByPk(req.params.id);
 
     // Blog not found: return an error response
     if (!blogToUpdate) {
