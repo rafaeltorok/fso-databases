@@ -3,6 +3,7 @@ import express from "express";
 
 // Routes
 import blogsRouter from "./controllers/blogs.js";
+import userRouter from "./controllers/users.js";
 import healthRouter from "./controllers/health.js";
 
 // Middleware
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(express.json());
 app.use("/api/blogs", blogsRouter);
+app.use("/api/users", userRouter);
 app.use("/api/health", healthRouter);
 
 app.use(errorHandler);

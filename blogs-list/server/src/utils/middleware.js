@@ -1,5 +1,6 @@
-// Model
+// Models
 import Blog from "../models/blog.js";
+import User from "../models/user.js";
 
 // eslint-disable-next-line no-unused-vars
 export function errorHandler(err, req, res, next) {
@@ -27,10 +28,19 @@ export function errorHandler(err, req, res, next) {
   res.status(500).json({ error: "internal server error" });
 }
 
-// Handles finding an object based on its id
+// Handles finding a blog based on its id
 export async function blogFinder(req, res, next) {
   req.blog = await Blog.findByPk(req.params.id);
   if (!req.blog) {
+    return res.status(404).end();
+  }
+  next();
+}
+
+// Handles finding an user based on its id
+export async function userFinder(req, res, next) {
+  req.user = await User.findByPk(req.params.id);
+  if (!req.user) {
     return res.status(404).end();
   }
   next();
