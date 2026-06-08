@@ -11,18 +11,18 @@ const blogsRouter = express.Router();
 blogsRouter.get("/", async (req, res, next) => {
   try {
     const data = await Blog.findAll();
-    res.json(data);
-  } catch (error) {
-    next(error);
+    res.status(200).json(data);
+  } catch (err) {
+    next(err);
   }
 });
 
 // GET a blog by its id
 blogsRouter.get("/:id", blogFinder, async (req, res, next) => {
   try {
-    return res.json(req.blog);
-  } catch (error) {
-    next(error);
+    return res.status(200).json(req.blog);
+  } catch (err) {
+    next(err);
   }
 });
 
@@ -39,8 +39,8 @@ blogsRouter.post("/", async (req, res, next) => {
     });
 
     res.status(201).json(newBlog);
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 });
 
@@ -48,6 +48,7 @@ blogsRouter.post("/", async (req, res, next) => {
 blogsRouter.delete("/:id", async (req, res, next) => {
   try {
     const blogId = req.params.id;
+
     const removedBlogs = await Blog.destroy({
       where: {
         id: blogId
@@ -59,8 +60,8 @@ blogsRouter.delete("/:id", async (req, res, next) => {
     } else {
       res.status(404).end();
     }
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 });
 
@@ -84,9 +85,9 @@ blogsRouter.put("/:id", blogFinder, async (req, res, next) => {
     // Update the likes counter
     await blogToUpdate.update({ likes: likes });
 
-    res.json(blogToUpdate.toJSON());
-  } catch (error) {
-    next(error);
+    res.status(200).json(blogToUpdate.toJSON());
+  } catch (err) {
+    next(err);
   }
 });
 
