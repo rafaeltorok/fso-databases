@@ -70,6 +70,15 @@ blogsRouter.delete("/:id", async (req, res, next) => {
   try {
     const blogId = req.params.id;
 
+    // Check if the ID passed has a valid numeric format
+    if (
+      !Number.isFinite(Number(blogId)) ||
+      Number(blogId) < 0
+    ) {
+      return res.status(400).json({ error: "Invalid ID format" });
+    }
+
+    // Remove the blog
     const removedBlogs = await Blog.destroy({
       where: {
         id: blogId
