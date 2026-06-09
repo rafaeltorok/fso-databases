@@ -5,10 +5,10 @@ const supertest = require("supertest");
 const bcrypt = require("bcrypt");
 
 // Blogs List app
-const app = require("../../src/app.js");
+const app = require("../../../src/app.js");
 
 // Models
-const User = require("../../src/models/user.js");
+const User = require("../../../src/models/user.js");
 
 // Helper functions
 const helper = require("./integration/test_helper.js");
