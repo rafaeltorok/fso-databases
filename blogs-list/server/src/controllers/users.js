@@ -44,9 +44,22 @@ userRouter.post("/", async (req, res, next) => {
       return res.status(400).send({ error: "Missing required fields" });
     }
 
+    // Check if the username is already taken
+    const existingUser = await User.findOne({
+      where: {
+        username: username
+      }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ error: "Username must be unique" });
+    }
+
+    // Hash the password to be stored
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
+    // Create the new user
     const newUser = await User.create({
       username,
       name,
