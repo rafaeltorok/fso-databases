@@ -73,7 +73,7 @@ describe("the Blogs GET route", () => {
     assert.deepStrictEqual(otherFields, blogToView);
   });
 
-  test("a non-existing id should return a proper error message", async () => {
+  test("a non-existing id should return a proper status code", async () => {
     await api
       .get("/api/blogs/0")
       .expect(404);
@@ -137,7 +137,7 @@ describe("the Users GET route", () => {
     assert.deepStrictEqual(otherFields, userFields);
   });
 
-  test("a non-existing id should return a proper error message", async () => {
+  test("a non-existing id should return a proper status code", async () => {
     await api
       .get("/api/users/0")
       .expect(404);
