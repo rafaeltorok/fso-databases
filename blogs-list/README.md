@@ -115,15 +115,25 @@ curl -X PUT http://localhost:3001/api/blogs/<id> -H "Content-Type: application/j
 
 ### Backend integration tests
 
-From the root folder of the bloglist app
+Enter the server folder
 ```bash
-npm run test -- ./src/tests/blog_api.test.js
+cd ./server
+```
+
+Run tests
+```bash
+npm run test
 ```
 
 
 ## ESLint
 
-Run the server linting
+Enter the server folder
+```bash
+cd ./server
+```
+
+Run ESLint
 ```bash
 npm run lint
 ```
