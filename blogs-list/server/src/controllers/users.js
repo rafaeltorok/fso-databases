@@ -36,6 +36,14 @@ userRouter.post("/", async (req, res, next) => {
   try {
     const { username, name, password } = req.body;
 
+    if (
+      username === undefined ||
+      name === undefined ||
+      password === undefined
+    ) {
+      return res.status(400).send({ error: "Missing required fields" });
+    }
+
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 

@@ -13,6 +13,15 @@ loginRouter.post("/", async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
+    // Return an error message when missing credentials
+    if (
+      username === undefined ||
+      password === undefined
+    ) {
+      return res.status(400).json({ error: "Missing credentials" });
+    }
+
+    // Confirm the user exists
     const user = await User.findOne({
       where: {
         username: username
@@ -23,12 +32,14 @@ loginRouter.post("/", async (req, res, next) => {
       ? false
       : await bcrypt.compare(password, user.password);
 
+    // Return an error message if the user does not exist
     if (!(user && passwordCorrect)) {
       return res.status(401).json({
         error: "Invalid username or password"
       });
     }
 
+    // Generates the token
     const userForToken = {
       username: user.username,
       id: user.id,
@@ -36,6 +47,7 @@ loginRouter.post("/", async (req, res, next) => {
 
     const token = jwt.sign(userForToken, SECRET);
 
+    // Return the token alongside the non-sensitive user information
     res.status(200).send({ token, username: user.username, name: user.name });
   } catch (err) {
     next(err);

@@ -31,6 +31,25 @@ blogsRouter.post("/", async (req, res, next) => {
   try {
     const { title, author, url, likes } = req.body;
 
+    if (
+      title === undefined ||
+      author === undefined ||
+      url === undefined
+    ) {
+      return res.status(400).send({ error: "Missing required fields" });
+    }
+
+    // Assert the number of likes is valid if present
+    if (likes !== undefined) {
+      if (
+        typeof likes !== "number" ||
+        !Number.isFinite(likes) ||
+        likes < 0
+      ) {
+        return res.status(400).json({ error: "Invalid number of likes" });
+      }
+    }
+
     const newBlog = await Blog.create({
       title,
       author,
