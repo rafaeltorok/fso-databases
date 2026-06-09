@@ -5,11 +5,11 @@ const supertest = require("supertest");
 const bcrypt = require("bcrypt");
 
 // Blogs List app
-const app = require("../../app.js");
+const app = require("../../src/app.js");
 
 // Models
-const Blog = require("../../models/blog.js");
-const User = require("../../models/user.js");
+const Blog = require("../../src/models/blog.js");
+const User = require("../../src/models/user.js");
 
 // Helper functions
 const helper = require("./integration/test_helper.js");
@@ -408,9 +408,4 @@ describe("testing the Users route", () => {
 
     assert.strictEqual(usersAtEnd.length, usersAtStart.length);
   });
-});
-
-// Close connection after ALL tests have finished
-after(async () => {
-  await mongoose.connection.close();
 });
