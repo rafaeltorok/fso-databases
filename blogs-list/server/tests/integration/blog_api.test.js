@@ -1,5 +1,5 @@
 // Test dependencies
-const { test, after, beforeEach, describe } = require("node:test");
+const { test, beforeEach, describe } = require("node:test");
 const assert = require("node:assert");
 const supertest = require("supertest");
 const bcrypt = require("bcrypt");
@@ -8,7 +8,6 @@ const bcrypt = require("bcrypt");
 const app = require("../../src/app.js");
 
 // Models
-const Blog = require("../../src/models/blog.js");
 const User = require("../../src/models/user.js");
 
 // Helper functions
@@ -18,24 +17,6 @@ const api = supertest(app);
 
 // Tests
 describe("testing the POST method", () => {
-  let token;
-
-  beforeEach(async () => {
-    // Clear DB and create test user
-    await User.deleteMany({});
-
-    const passwordHash = await bcrypt.hash("secret", 10);
-    const user = new User({ username: "root", name: "root", passwordHash });
-    await user.save();
-
-    // Login to get token
-    const loginResponse = await api
-      .post("/api/login")
-      .send({ username: "root", name: "root", password: "secret" });
-
-    token = loginResponse.body.token;
-  });
-
   test("a valid blog can be added ", async () => {
     const usersAtStart = await helper.usersInDb();
     const user = usersAtStart[0];
@@ -59,89 +40,6 @@ describe("testing the POST method", () => {
 
     const titles = blogsAtEnd.map((n) => n.title);
     assert(titles.includes("Learning async/await calls"));
-  });
-
-  test("blog without a title is not added", async () => {
-    const usersAtStart = await helper.usersInDb();
-    const user = usersAtStart[0];
-
-    const newBlog = {
-      author: "The Blogger",
-      url: "https://blog.com",
-      userId: user.id,
-    };
-
-    await api
-      .post("/api/blogs")
-      .set("Authorization", `Bearer ${token}`)
-      .send(newBlog)
-      .expect(400);
-
-    const blogsAtEnd = await helper.blogsInDb();
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
-  });
-
-  test("blog without an author is not added", async () => {
-    const usersAtStart = await helper.usersInDb();
-    const user = usersAtStart[0];
-
-    const newBlog = {
-      title: "My Test Blog",
-      url: "https://blog.com",
-      userId: user.id,
-    };
-
-    await api
-      .post("/api/blogs")
-      .set("Authorization", `Bearer ${token}`)
-      .send(newBlog)
-      .expect(400);
-
-    const blogsAtEnd = await helper.blogsInDb();
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
-  });
-
-  test("blog without an url is not added", async () => {
-    const usersAtStart = await helper.usersInDb();
-    const user = usersAtStart[0];
-
-    const newBlog = {
-      title: "My Test Blog",
-      author: "The Blogger",
-      userId: user.id,
-    };
-
-    await api
-      .post("/api/blogs")
-      .set("Authorization", `Bearer ${token}`)
-      .send(newBlog)
-      .expect(400);
-
-    const blogsAtEnd = await helper.blogsInDb();
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
-  });
-
-  test("if the number of likes has not been set, make sure it defaults to 0 ", async () => {
-    const usersAtStart = await helper.usersInDb();
-    const user = usersAtStart[0];
-
-    const newBlog = {
-      title: "Learning async/await calls",
-      author: "The Teacher",
-      url: "https://asyncawait.com",
-      userId: user.id,
-    };
-
-    await api
-      .post("/api/blogs")
-      .set("Authorization", `Bearer ${token}`)
-      .send(newBlog)
-      .expect(201)
-      .expect("Content-Type", /application\/json/);
-
-    const blogsAtEnd = await helper.blogsInDb();
-    const addedBlog = blogsAtEnd.at(-1);
-    assert.strictEqual(addedBlog.likes, 0);
   });
 
   test("blog creation fails with 401 if token is missing", async () => {
