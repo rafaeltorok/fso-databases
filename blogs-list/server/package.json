@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test node --test",
     "start": "cross-env NODE_ENV=production node ./src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon ./src/index.js",
-    "lint": "eslint .",
     "start:test": "cross-env NODE_ENV=test node --watch ./src/index.js",
+    "test": "cross-env NODE_ENV=test node --test --import ./tests/integration/setup.js --test-concurrency=1",
+    "lint": "eslint .",
     "cli": "node ./cli.js"
   },
   "keywords": [],
