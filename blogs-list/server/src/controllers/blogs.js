@@ -31,6 +31,7 @@ blogsRouter.post("/", async (req, res, next) => {
   try {
     const { title, author, url, likes } = req.body;
 
+    // Check if any required fields are missing
     if (
       title === undefined ||
       author === undefined ||
@@ -50,6 +51,7 @@ blogsRouter.post("/", async (req, res, next) => {
       }
     }
 
+    // Create a new blog
     const newBlog = await Blog.create({
       title,
       author,
