@@ -86,7 +86,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert(postResponse.body.error, /missing required fields/i);
+    assert.strictEqual(postResponse.body.error, "Missing required fields");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -111,7 +111,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert(postResponse.body.error, /missing required fields/i);
+    assert.strictEqual(postResponse.body.error, "Missing required fields");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -136,7 +136,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert(postResponse.body.error, /missing required fields/i);
+    assert.strictEqual(postResponse.body.error, "Missing required fields");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -186,7 +186,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert(postResponse.body.error, /invalid number of likes/i);
+    assert.strictEqual(postResponse.body.error, "Invalid number of likes");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -211,7 +211,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert(postResponse.body.error, /invalid number of likes/i);
+    assert.strictEqual(postResponse.body.error, "Invalid number of likes");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -269,7 +269,7 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the response error message
-    assert(response.body.error, /missing required fields/i);
+    assert.strictEqual(response.body.error, "Missing required fields");
 
     // Assert the number of objects has not changed
     const currentAmount = await getAmount("users");
@@ -291,7 +291,7 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the response error message
-    assert(response.body.error, /missing required fields/i);
+    assert.strictEqual(response.body.error, "Missing required fields");
 
     // Assert the number of objects has not changed
     const currentAmount = await getAmount("users");
@@ -313,9 +313,37 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the response error message
-    assert(response.body.error, /missing required fields/i);
+    assert.strictEqual(response.body.error, "Missing required fields");
 
     // Assert the number of objects has not changed
+    const currentAmount = await getAmount("users");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("an already existing username should return a proper error message", async () => {
+    const newUser = initialUsers[0];
+
+    // Create a new user
+    await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    // Get the initial users length
+    const initialAmount = await getAmount("users");
+
+    // Try to add an already existing username
+    const response = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert an error message is within the response
+    assert.strictEqual(response.body.error, "Username must be unique");
+
+    // Assert a new user has not been added
     const currentAmount = await getAmount("users");
     assert.strictEqual(initialAmount, currentAmount);
   });
