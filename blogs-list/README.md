@@ -63,6 +63,13 @@ docker compose -f ./docker-compose.dev.yml up --build
 - API requests on http://localhost:8000/api
 - Web UI access on http://localhost:8000
 
+Cleanup
+```bash
+docker compose -f ./docker-compose.dev.yml down -v
+```
+
+#### Database access via Client UI
+
 Access the database with the following credentials
 
 - Username: `admin`
@@ -71,10 +78,16 @@ Access the database with the following credentials
 - Port: `5432`
 - Disable the SSL connection if using tools such as **pgAdmin**
 
+#### Database access via psql
 
-Cleanup
+Enter the container
 ```bash
-docker compose -f ./docker-compose.dev.yml down -v
+docker exec -it blogslist-dev-db bash
+```
+
+Access psql
+```bash
+psql -U admin -W -d blogslist
 ```
 
 
