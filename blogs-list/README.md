@@ -26,12 +26,12 @@ cd ./blogs-list/client && npm install
 
 Start the Express server
 ```bash
-npm run start
+cd ./server && npm run start
 ```
 
 Start the Vite server
 ```bash
-npm run dev
+cd ./client && npm run dev
 ```
 
 - API requests on http://localhost:3001/api
@@ -47,13 +47,15 @@ npm run cli
 
 ## Docker
 
-The app has been orchestrated with Docker Composer using Nginx as a reverse proxy for both the frontend and backend.
+Docker Composer orchestration using Nginx as a reverse proxy for the frontend and backend.
 
 ### Development build
 
-- Build compatible with hot reloading of files for both frontend and backend.
+Features:
 
-- Uses a containerized PostgreSQL database, with persistent data storage inside of the `/blogs-list/psql-data` folder.
+- Hot reloading of files for both frontend and backend.
+
+- Containerized PostgreSQL database, with persistent data stored inside `/blogs-list/psql-data`.
 
 Start the orchestration
 ```bash
@@ -90,8 +92,26 @@ Access psql
 psql -U admin -W -d blogslist
 ```
 
+- Password: `admin`
+
+### Integration tests
+
+**Note**: the test data is stored temporarily inside a PostgreSQL container.
+
+Start the orchestration
+```bash
+docker compose -f ./docker-compose.test.yml up --build --abort-on-container-exit
+```
+
+Cleanup
+```bash
+docker compose -f ./docker-compose.test.yml down -v
+```
+
 
 ## CRUD operations
+
+**Note**: when running the Docker orchestration, use port `8000` for all HTTP requests.
 
 ### GET
 
@@ -144,7 +164,7 @@ curl -X PUT http://localhost:3001/api/blogs/<id> -H "Content-Type: application/j
 
 ## Tests
 
-### Backend integration tests
+### Integration tests
 
 Enter the server folder
 ```bash
