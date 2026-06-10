@@ -10,6 +10,8 @@ services:
       - ./psql-data:/var/lib/postgresql/data
     networks:
       - dev-network
+    ports:
+      - 5432:5432
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "admin"]
       interval: 30s
@@ -35,6 +37,7 @@ services:
       POSTGRES_URI: postgres://admin:admin@dev-postgres:5432/blogslist
       PORT: 3001
       SECRET: secret
+      DEPLOYMENT: docker
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
       interval: 30s

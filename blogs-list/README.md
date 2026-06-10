@@ -51,13 +51,31 @@ The app has been orchestrated with Docker Composer using Nginx as a reverse prox
 
 ### Development build
 
-Build compatible with hot reloading of files
+- Build compatible with hot reloading of files for both frontend and backend.
+
+- Uses a containerized PostgreSQL database, with persistent data storage inside of the `/blogs-list/psql-data` folder.
+
+Start the orchestration
 ```bash
 docker compose -f ./docker-compose.dev.yml up --build
 ```
 
 - API requests on http://localhost:8000/api
 - Web UI access on http://localhost:8000
+
+Access the database with the following credentials
+
+- Username: `admin`
+- Password: `admin`
+- Database: `blogslist`
+- Port: `5432`
+- Disable the SSL connection if using tools such as **pgAdmin**
+
+
+Cleanup
+```bash
+docker compose -f ./docker-compose.dev.yml down -v
+```
 
 
 ## CRUD operations
