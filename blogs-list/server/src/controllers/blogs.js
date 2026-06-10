@@ -102,6 +102,7 @@ blogsRouter.put("/:id", blogFinder, async (req, res, next) => {
 
     // Assert the number of likes is valid
     if (
+      likes === undefined ||
       typeof likes !== "number" ||
       !Number.isFinite(likes) ||
       likes < 0
