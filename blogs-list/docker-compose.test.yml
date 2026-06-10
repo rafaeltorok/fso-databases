@@ -15,22 +15,22 @@ services:
       retries: 3
       start_period: 30s
 
-  test-server:
+  test-runner:
     depends_on:
       test-postgres:
         condition: service_healthy
     build:
       context: ./server
       dockerfile: test.Dockerfile
-    image: blogslist-test-server
-    container_name: blogslist-test-server
+    image: blogslist-test-runner
+    container_name: blogslist-test-runner
     networks:
       - test-network
     environment:
       TEST_POSTGRES_URI: postgres://admin:admin@test-postgres:5432/test_blogslist
       PORT: 3001
       SECRET: secret
-      DEPLOYMENT: docker
+      DATABASE_SSL: false
 
 networks:
   test-network:

@@ -1,18 +1,12 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
-import { DATABASE_URL } from "./config.js";
 dotenv.config();
+import { DATABASE_URL } from "./config.js";
 
 let sequelize;
 
-if (process.env.DEPLOYMENT === "docker") {
-  sequelize = new Sequelize(DATABASE_URL, {
-    dialect: "postgres",
-    dialectOptions: {
-      ssl: false
-    },
-  });
-} else {
+if (process.env.DATABASE_SSL === "true") {
+  // SSL is required for remote databases
   sequelize = new Sequelize(DATABASE_URL, {
     dialect: "postgres",
     dialectOptions: {
@@ -22,6 +16,16 @@ if (process.env.DEPLOYMENT === "docker") {
       },
     },
   });
+} else if (process.env.DATABASE_SSL === "false") {
+  // Disable SSL connections for the Docker orchestrations
+  sequelize = new Sequelize(DATABASE_URL, {
+    dialect: "postgres",
+    dialectOptions: {
+      ssl: false
+    },
+  });
+} else {
+  throw new Error("The env variable 'DATABASE_SSL' must be set to either true or false");
 }
 
 export default sequelize;
