@@ -1,5 +1,26 @@
 services:
+  dev-postgres:
+    image: postgres:16-alpine
+    container_name: blogslist-dev-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: blogslist
+    volumes:
+      - ./psql-data:/var/lib/postgresql/data
+    networks:
+      - dev-network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "admin"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+
   dev-server:
+    depends_on:
+      dev-postgres:
+        condition: service_healthy
     build:
       context: ./server
       dockerfile: dev.Dockerfile
@@ -10,6 +31,10 @@ services:
     volumes:
       - ./server:/usr/src/app/server
       - /usr/src/app/node_modules
+    environment:
+      POSTGRES_URI: postgres://admin:admin@dev-postgres:5432/blogslist
+      PORT: 3001
+      SECRET: secret
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
       interval: 30s
