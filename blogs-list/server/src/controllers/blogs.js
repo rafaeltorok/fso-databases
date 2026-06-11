@@ -1,16 +1,26 @@
 // Dependencies
 import express from "express";
-import Blog from "../models/blog.js";
+
+// Models
+import { Blog, User } from "../models/index.js";
 
 // Middleware
-import { blogFinder } from "../utils/middleware.js";
+import { blogFinder, tokenExtractor } from "../utils/middleware.js";
 
 const blogsRouter = express.Router();
 
 // GET all
 blogsRouter.get("/", async (req, res, next) => {
   try {
-    const data = await Blog.findAll();
+    const data = await Blog.findAll({
+      attributes: {
+        exclude: ["userId"],
+      },
+      include: {
+        model: User,
+        attributes: ["name"],
+      },
+    });
     res.status(200).json(data);
   } catch (err) {
     next(err);
@@ -27,8 +37,9 @@ blogsRouter.get("/:id", blogFinder, async (req, res, next) => {
 });
 
 // POST a new blog
-blogsRouter.post("/", async (req, res, next) => {
+blogsRouter.post("/", tokenExtractor, async (req, res, next) => {
   try {
+    const user = await User.findByPk(req.decodedToken.id);
     const { title, author, url, likes } = req.body;
 
     // Check if any required fields are missing
@@ -56,7 +67,8 @@ blogsRouter.post("/", async (req, res, next) => {
       title,
       author,
       url,
-      likes
+      likes,
+      userId: user.id,
     });
 
     res.status(201).json(newBlog);
@@ -66,9 +78,12 @@ blogsRouter.post("/", async (req, res, next) => {
 });
 
 // DELETE a blog
-blogsRouter.delete("/:id", async (req, res, next) => {
+blogsRouter.delete("/:id", tokenExtractor, async (req, res, next) => {
   try {
     const blogId = req.params.id;
+
+    // Check if the user is authorized
+    await User.findByPk(req.decodedToken.id);
 
     // Check if the ID passed has a valid numeric format
     if (
@@ -96,9 +111,12 @@ blogsRouter.delete("/:id", async (req, res, next) => {
 });
 
 // PUT (update) a blog's number of likes
-blogsRouter.put("/:id", blogFinder, async (req, res, next) => {
+blogsRouter.put("/:id", blogFinder, tokenExtractor, async (req, res, next) => {
   try {
     const likes = req.body.likes;
+
+    // Check if the user is authorized
+    await User.findByPk(req.decodedToken.id);
 
     // Assert the number of likes is valid
     if (

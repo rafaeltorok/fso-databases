@@ -1,7 +1,9 @@
 // Dependencies
 import express from "express";
-import User from "../models/user.js";
 import bcrypt from "bcrypt";
+
+// Models
+import { Blog, User } from "../models/index.js";
 
 // Middleware
 import { userFinder } from "../utils/middleware.js";
@@ -14,7 +16,13 @@ userRouter.get("/", async (req, res, next) => {
     const data = await User.findAll({
       attributes: {
         exclude: ["password"]
-      }
+      },
+      include: {
+        model: Blog,
+        attributes: {
+          exclude: ["userId"],
+        },
+      },
     });
     res.status(200).json(data);
   } catch (err) {
