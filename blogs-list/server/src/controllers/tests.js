@@ -10,8 +10,8 @@ const testsRouter = express.Router();
 // Routes
 testsRouter.post("/reset", async (req, res, next) => {
   try {
-    await Blog.truncate({ restartIdentity: true });
-    await User.truncate({ restartIdentity: true });
+    await Blog.truncate({ restartIdentity: true, cascade: true });
+    await User.truncate({ restartIdentity: true, cascade: true });
 
     res.status(204).end();
   } catch (err) {
