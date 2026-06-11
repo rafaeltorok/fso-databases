@@ -4,7 +4,7 @@ const app = express();
 
 // Utils
 import { PORT } from "./util/config.js";
-import { connectToDatabase } from "./util/db.js";
+import { sequelize } from "./util/db.js";
 
 // Controllers
 import notesRouter from "./controllers/notes.js";
@@ -22,7 +22,15 @@ app.use("/api/health", healthRouter);
 
 // Start the Express Server
 const start = async () => {
-  await connectToDatabase();
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    console.log("database connected");
+  } catch (err) {
+    console.log("connecting database failed:", err);
+    return process.exit(1);
+  }
+
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });

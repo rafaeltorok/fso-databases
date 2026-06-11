@@ -23,17 +23,5 @@ if (process.env.DATABASE_SSL === "true") {
     },
   });
 } else {
-  throw new Error({ error: "The DATABASE_SSL env variable must be set to either true or false" });
+  throw new Error("The DATABASE_SSL env variable must be set to either true or false");
 }
-
-export const connectToDatabase = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("database connected");
-  } catch (err) {
-    console.log("connecting database failed:", err);
-    return process.exit(1);
-  }
-
-  return null;
-};
