@@ -34,7 +34,7 @@ describe("the Login route", () => {
     const newUser = initialUsers[0];
 
     // Reset the users list before each test
-    await User.truncate({ restartIdentity: true });
+    await User.truncate({ restartIdentity: true, cascade: true });
 
     // Create a new user for testing
     await api
