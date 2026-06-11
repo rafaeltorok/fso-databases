@@ -10,14 +10,16 @@ import { setupDb, dbCleanup } from "./setup.js";
 import app from "../../src/app.js";
 
 // Models
-import Blog from "../../src/models/blog.js";
-import User from "../../src/models/user.js";
+import { Blog, User } from "../../src/models/index.js";
 
 // Test data
 import initialBlogs from "../data/initialBlogs.js";
 import initialUsers from "../data/initialUsers.js";
 
 const api = supertest(app);
+
+// Global variables
+let loggedUser;
 
 // Reset all data on the database tables
 before(async () => {
@@ -34,10 +36,35 @@ after(async () => {
 describe("the Blogs GET route", () => {
   beforeEach(async () => {
     // Remove all blogs before each test
-    await Blog.truncate({ restartIdentity: true });
+    await Blog.truncate({ restartIdentity: true, cascade: true });
+    await User.truncate({ restartIdentity: true, cascade: true });
+
+    // Add a new user
+    const user = initialUsers[0];
+    await api
+      .post("/api/users")
+      .send(user)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    // Log in the user
+    const loginResponse = await api
+      .post("/api/login")
+      .send({ username: user.username, password: user.password })
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    loggedUser = loginResponse.body;
 
     // Stores all initial blogs into the database
-    await Blog.bulkCreate(initialBlogs);
+    for (const blog of initialBlogs) {
+      await api
+        .post("/api/blogs")
+        .send(blog)
+        .set("Authorization", `Bearer ${loggedUser.token}`)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+    }
   });
 
   test("blogs are returned as json", async () => {
@@ -57,6 +84,19 @@ describe("the Blogs GET route", () => {
     assert.strictEqual(response.body.length, initialBlogs.length);
   });
 
+  test("the blogs contain the name of the user who added it", async () => {
+    // Get all available blogs
+    const response = await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert each blog contains the respective user's name
+    for (const blog of response.body) {
+      assert.strictEqual(blog.user.name, loggedUser.name);
+    }
+  });
+
   test("a blog can be fetch through its id value", async () => {
     // Get the first blog from the initial list
     const blogToView = initialBlogs[0];
@@ -66,11 +106,27 @@ describe("the Blogs GET route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Remove the id from the blog
-    const { id, ...otherFields } = response.body;
+    // Remove the id and user fields from the blog
+    const { id, user, ...otherFields } = response.body;
 
     // Assert the data is correct
     assert.deepStrictEqual(otherFields, blogToView);
+  });
+
+  test("a blog should contain the name of the user who added it", async () => {
+    // Get the first blog from the initial list
+    const blogToView = initialBlogs[0];
+
+    const response = await api
+      .get("/api/blogs/1")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    // Remove the id field from the blog
+    const { id, ...otherFields } = response.body;
+
+    // Assert the data is correct
+    assert.deepStrictEqual(otherFields, { ...blogToView, user: { name: loggedUser.name } });
   });
 
   test("a non-existing id should return a proper status code", async () => {
@@ -81,7 +137,7 @@ describe("the Blogs GET route", () => {
 
   test("an empty blogs list should be properly returned", async () => {
     // Empty the table before the test
-    await Blog.truncate();
+    await Blog.truncate({ restartIdentity: true, cascade: true });
 
     const response = await api
       .get("/api/blogs")
@@ -95,10 +151,16 @@ describe("the Blogs GET route", () => {
 describe("the Users GET route", () => {
   beforeEach(async () => {
     // Remove all users before each test
-    await User.truncate({ restartIdentity: true });
+    await User.truncate({ restartIdentity: true, cascade: true });
 
     // Stores all initial users into the database
-    await User.bulkCreate(initialUsers);
+    for (const user of initialUsers) {
+      await api
+        .post("/api/users")
+        .send(user)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+    }
   });
 
   test("users are returned as json", async () => {
@@ -127,14 +189,53 @@ describe("the Users GET route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Remove the id from the user
-    const { id, ...otherFields } = response.body;
+    // Remove the id and blogs fields from the user
+    const { id, blogs, ...otherFields } = response.body;
 
-    // Remove the password field form the original user
+    // Remove the password field from the original user
     const { password, ...userFields } = userToView;
 
     // Assert the data is correct
-    assert.deepStrictEqual(otherFields, userFields);
+    assert.deepStrictEqual(
+      otherFields,
+      {
+        ...userFields,
+        createdAt: response.body.createdAt,
+        updatedAt: response.body.updatedAt
+      }
+    );
+  });
+
+  test("the list of blogs should be included within the returned user", async () => {
+    const user = initialUsers[0];
+
+    // Log in the retrieved user
+    const loginResponse = await api
+      .post("/api/login")
+      .send({ username: user.username, password: user.password })
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    loggedUser = loginResponse.body;
+
+    // Stores all initial blogs
+    for (const blog of initialBlogs) {
+      await api
+        .post("/api/blogs")
+        .send(blog)
+        .set("Authorization", `Bearer ${loggedUser.token}`)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+    }
+
+    // Fetch the user data
+    const response = await api
+      .get("/api/users/1")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert all blogs are included within the response
+    assert.strictEqual(initialBlogs.length, response.body.blogs.length);
   });
 
   test("a non-existing id should return a proper status code", async () => {
@@ -169,13 +270,15 @@ describe("the Users GET route", () => {
 
   test("an empty users list should be properly returned", async () => {
     // Empty the table before the test
-    await User.truncate();
+    await User.truncate({ restartIdentity: true, cascade: true });
 
+    // Fetch the list of users
     const response = await api
       .get("/api/users")
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
+    // Assert it is empty
     assert.deepStrictEqual(response.body, []);
   });
 });
