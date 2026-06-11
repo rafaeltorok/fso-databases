@@ -12,16 +12,36 @@ import app from "../../src/app.js";
 // Models
 import Blog from "../../src/models/blog.js";
 import initialBlogs from "../data/initialBlogs.js";
+import initialUsers from "../data/initialUsers.js";
 
 const api = supertest(app);
 
 // Global variables
 let postResponse;
+let loggedUser;
 
 // Reset all data on the database tables
 before(async () => {
   await setupDb();
   await api.post("/api/tests/reset");
+
+  // Create a new user for the tests
+  const user = initialUsers[0];
+
+  await api
+    .post("/api/users")
+    .send(user)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  // Log in the user and store the auth token
+  const loginResponse = await api
+    .post("/api/login")
+    .send({ username: user.username, password: user.password })
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+
+  loggedUser = loginResponse.body;
 });
 
 // Close the database connection after all tests have been finished
@@ -33,7 +53,7 @@ after(async () => {
 describe("the Blogs PUT route", () => {
   beforeEach(async () => {
     // Remove all blogs before each test
-    await Blog.truncate({ restartIdentity: true });
+    await Blog.truncate({ restartIdentity: true, cascade: true });
 
     // Create a new blog to be updated
     const blogData = initialBlogs[0];
@@ -41,6 +61,7 @@ describe("the Blogs PUT route", () => {
     postResponse = await api
       .post("/api/blogs")
       .send(blogData)
+      .set("Authorization", `Bearer ${loggedUser.token}`)
       .expect(201)
       .expect("Content-Type", /application\/json/);
   });
@@ -50,6 +71,7 @@ describe("the Blogs PUT route", () => {
     await api
       .put(`/api/blogs/${postResponse.body.id}`)
       .send({ likes: 1000 })
+      .set("Authorization", `Bearer ${loggedUser.token}`)
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
@@ -63,6 +85,7 @@ describe("the Blogs PUT route", () => {
     await api
       .put(`/api/blogs/${postResponse.body.id}`)
       .send({ likes: 0 })
+      .set("Authorization", `Bearer ${loggedUser.token}`)
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
@@ -83,12 +106,18 @@ describe("the Blogs PUT route", () => {
     await api
       .put(`/api/blogs/${postResponse.body.id}`)
       .send(updatedData)
+      .set("Authorization", `Bearer ${loggedUser.token}`)
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
     // Assert only the likes counter has been updated
     const updatedBlog = await api.get(`/api/blogs/${postResponse.body.id}`);
-    assert.deepStrictEqual(updatedBlog.body, { ...postResponse.body, likes: 1 });
+
+    // Remove the userId and user fields
+    const { userId, ...postResponseFields } = postResponse.body;
+    const { user, ...updatedBlogFields } = updatedBlog.body;
+
+    assert.deepStrictEqual(updatedBlogFields, { ...postResponseFields, likes: 1 });
   });
 
   test("a negative amount should return a proper error message", async () => {
@@ -96,6 +125,7 @@ describe("the Blogs PUT route", () => {
     const putResponse = await api
       .put(`/api/blogs/${postResponse.body.id}`)
       .send({ likes: -1 })
+      .set("Authorization", `Bearer ${loggedUser.token}`)
       .expect(400)
       .expect("Content-Type", /application\/json/);
 
@@ -112,6 +142,7 @@ describe("the Blogs PUT route", () => {
     const putResponse = await api
       .put(`/api/blogs/${postResponse.body.id}`)
       .send({ likes: "likes" })
+      .set("Authorization", `Bearer ${loggedUser.token}`)
       .expect(400)
       .expect("Content-Type", /application\/json/);
 
@@ -128,6 +159,7 @@ describe("the Blogs PUT route", () => {
     const putResponse = await api
       .put(`/api/blogs/${postResponse.body.id}`)
       .send({ likes: Infinity })
+      .set("Authorization", `Bearer ${loggedUser.token}`)
       .expect(400)
       .expect("Content-Type", /application\/json/);
 
@@ -144,6 +176,7 @@ describe("the Blogs PUT route", () => {
     const putResponse = await api
       .put(`/api/blogs/${postResponse.body.id}`)
       .send({})
+      .set("Authorization", `Bearer ${loggedUser.token}`)
       .expect(400)
       .expect("Content-Type", /application\/json/);
 
@@ -159,6 +192,23 @@ describe("the Blogs PUT route", () => {
     await api
       .put("/api/blogs/0")
       .send({ likes: 1 })
+      .set("Authorization", `Bearer ${loggedUser.token}`)
       .expect(404);
+  });
+
+  test("a non-authorized user should not be able to update a blog", async () => {
+    // Update the amount of likes
+    const putResponse = await api
+      .put(`/api/blogs/${postResponse.body.id}`)
+      .send({ likes: 1 })
+      .expect(401)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert an error message is within the response
+    assert.strictEqual(putResponse.body.error, "token missing");
+
+    // Assert the original likes counter has not been updated
+    const originalBlog = await api.get(`/api/blogs/${postResponse.body.id}`);
+    assert.strictEqual(postResponse.body.likes, originalBlog.body.likes);
   });
 });
