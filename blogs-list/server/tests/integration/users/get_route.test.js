@@ -74,7 +74,7 @@ describe("the Users GET route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Remove the id and blogs fields from the user
+    // Remove the id and blogs fields from the returned user
     const { id, blogs, ...otherFields } = response.body;
 
     // Remove the password field from the original user
@@ -138,7 +138,7 @@ describe("the Users GET route", () => {
     const users = response.body;
 
     for (const user of users) {
-      assert.ok(!("password" in user));
+      assert.ok(!("passwordHash" in user));
     }
   });
 
@@ -150,7 +150,7 @@ describe("the Users GET route", () => {
 
     const user = response.body;
 
-    assert.ok(!("password" in user));
+    assert.ok(!("passwordHash" in user));
   });
 
   test("an empty users list should be properly returned", async () => {

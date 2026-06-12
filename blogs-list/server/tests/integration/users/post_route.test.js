@@ -136,7 +136,7 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the response error message
-    assert.strictEqual(response.body.error, "Missing required fields");
+    assert.ok(response.body.error.includes("Username is required"));
 
     // Assert the number of objects has not changed
     const currentAmount = await getAmount("users");
@@ -158,7 +158,7 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the response error message
-    assert.strictEqual(response.body.error, "Missing required fields");
+    assert.ok(response.body.error.includes("Name is required"));
 
     // Assert the number of objects has not changed
     const currentAmount = await getAmount("users");
@@ -180,7 +180,7 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the response error message
-    assert.strictEqual(response.body.error, "Missing required fields");
+    assert.strictEqual(response.body.error, "Password is required");
 
     // Assert the number of objects has not changed
     const currentAmount = await getAmount("users");

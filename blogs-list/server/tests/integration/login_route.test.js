@@ -73,7 +73,7 @@ describe("the Login route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the password field is not present within the response
-    assert.ok(!("password" in response.body));
+    assert.ok(!("passwordHash" in response.body));
   });
 
   test("missing the username should return a proper error message", async () => {
