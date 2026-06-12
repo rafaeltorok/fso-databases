@@ -30,7 +30,7 @@ loginRouter.post("/", async (req, res, next) => {
 
     const passwordCorrect = user === null
       ? false
-      : await bcrypt.compare(password, user.password);
+      : await bcrypt.compare(password, user.passwordHash);
 
     // Return an error message if the user does not exist
     if (!(user && passwordCorrect)) {
