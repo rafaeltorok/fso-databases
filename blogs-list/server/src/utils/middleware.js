@@ -9,23 +9,16 @@ import { Blog, User } from "../models/index.js";
 export function errorHandler(err, req, res, next) {
   console.error(err); // Log on the server for debugging
 
-  if (err.name === "CastError") {
-    return res.status(400).json({ error: "malformatted id" });
+  if (err.name === "SequelizeUniqueConstraintError") {
+    return res.status(400).json({ error: "Username must be unique" });
   }
 
-  if (err.name === "ValidationError") {
-    return res.status(400).json({ error: err.message });
-  }
-
-  if (
-    err.name === "MongoServerError" &&
-    err.message.includes("E11000 duplicate key error")
-  ) {
-    return res.status(400).json({ error: "expected `username` to be unique" });
-  }
-
-  if (err.code === 11000) {
-    return res.status(409).json({ error: "duplicate key" });
+  if (err.name === "SequelizeValidationError") {
+    if (err.errors.length > 1) {
+      return res.status(400).json({ error: err.errors.map(error => error.message) });
+    } else {
+      return res.status(400).json({ error: err.errors[0].message });
+    }
   }
 
   res.status(500).json({ error: "internal server error" });
@@ -52,7 +45,7 @@ export async function blogFinder(req, res, next) {
 export async function userFinder(req, res, next) {
   req.user = await User.findByPk(req.params.id, {
     attributes: {
-      exclude: ["password"]
+      exclude: ["passwordHash"]
     },
     include: {
       model: Blog,

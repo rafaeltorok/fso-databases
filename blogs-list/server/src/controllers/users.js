@@ -15,7 +15,7 @@ userRouter.get("/", async (req, res, next) => {
   try {
     const data = await User.findAll({
       attributes: {
-        exclude: ["password"]
+        exclude: ["passwordHash"]
       },
       include: {
         model: Blog,
@@ -44,23 +44,18 @@ userRouter.post("/", async (req, res, next) => {
   try {
     const { username, name, password } = req.body;
 
-    if (
-      username === undefined ||
-      name === undefined ||
-      password === undefined
-    ) {
-      return res.status(400).send({ error: "Missing required fields" });
+    // Check if the password is present
+    if (password === undefined) {
+      return res.status(400).json({ error: "Password is required" });
     }
 
-    // Check if the username is already taken
-    const existingUser = await User.findOne({
-      where: {
-        username: username
-      }
-    });
-
-    if (existingUser) {
-      return res.status(400).json({ error: "Username must be unique" });
+    // Assert the length of the password
+    const minLength = 5;
+    const maxLength = 64;
+    if (password.length < minLength || password.length > maxLength) {
+      return res.status(400).json(
+        { error: `Password length must be between ${minLength} and ${maxLength} chars` }
+      );
     }
 
     // Hash the password to be stored
@@ -71,12 +66,12 @@ userRouter.post("/", async (req, res, next) => {
     const newUser = await User.create({
       username,
       name,
-      password: passwordHash
+      passwordHash: passwordHash
     });
 
     // Remove sensitive field from the response
     const nonSensitiveData = newUser.toJSON();
-    delete nonSensitiveData.password;
+    delete nonSensitiveData.passwordHash;
 
     res.status(201).json(nonSensitiveData);
   } catch (err) {
@@ -88,14 +83,6 @@ userRouter.post("/", async (req, res, next) => {
 userRouter.delete("/:id", async (req, res, next) => {
   try {
     const userId = req.params.id;
-
-    // Check if the ID passed has a valid numeric format
-    if (
-      !Number.isFinite(Number(userId)) ||
-      Number(userId) < 0
-    ) {
-      return res.status(400).json({ error: "Invalid ID format" });
-    }
 
     // Remove the user
     const removedUsers = await User.destroy({
@@ -142,7 +129,7 @@ userRouter.put("/:username", async (req, res, next) => {
 
     // Remove sensitive field from the response
     const nonSensitiveData = userToUpdate.toJSON();
-    delete nonSensitiveData.password;
+    delete nonSensitiveData.passwordHash;
 
     return res.status(200).json(nonSensitiveData);
   } catch (err) {
