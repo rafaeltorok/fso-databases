@@ -84,6 +84,14 @@ userRouter.delete("/:id", async (req, res, next) => {
   try {
     const userId = req.params.id;
 
+    // Check if the ID passed has a valid numeric format
+    if (
+      !Number.isFinite(Number(userId)) ||
+      Number(userId) < 0
+    ) {
+      return res.status(400).json({ error: "Invalid ID format" });
+    }
+
     // Remove the user
     const removedUsers = await User.destroy({
       where: {
