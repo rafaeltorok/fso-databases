@@ -114,4 +114,26 @@ userRouter.delete("/:id", async (req, res, next) => {
   }
 });
 
+// PUT (update) a user's name
+userRouter.put("/:id", userFinder, async (req, res, next) => {
+  try {
+    const newName = req.body.name;
+    const userToUpdate = req.user;
+
+    // Check if the new name is invalid
+    if (
+      newName === undefined ||
+      newName.trim() === ""
+    ) {
+      return res.status(400).json({ error: "Invalid user's name" });
+    }
+
+    // Update and return the user's info
+    await userToUpdate.update({ name: newName });
+    return res.status(200).json(userToUpdate.toJSON());
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default userRouter;
