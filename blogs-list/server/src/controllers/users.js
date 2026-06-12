@@ -115,10 +115,19 @@ userRouter.delete("/:id", async (req, res, next) => {
 });
 
 // PUT (update) a user's name
-userRouter.put("/:id", userFinder, async (req, res, next) => {
+userRouter.put("/:username", async (req, res, next) => {
   try {
     const newName = req.body.name;
-    const userToUpdate = req.user;
+    const userToUpdate = await User.findOne({
+      where: {
+        username: req.params.username
+      },
+    });
+
+    // Check if the user exists
+    if (!userToUpdate) {
+      return res.status(404).end();
+    }
 
     // Check if the new name is invalid
     if (
@@ -130,7 +139,12 @@ userRouter.put("/:id", userFinder, async (req, res, next) => {
 
     // Update and return the user's info
     await userToUpdate.update({ name: newName });
-    return res.status(200).json(userToUpdate.toJSON());
+
+    // Remove sensitive field from the response
+    const nonSensitiveData = userToUpdate.toJSON();
+    delete nonSensitiveData.password;
+
+    return res.status(200).json(nonSensitiveData);
   } catch (err) {
     next(err);
   }
