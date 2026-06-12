@@ -240,7 +240,7 @@ describe("the Users PUT route", () => {
 
     // Update an user
     const putResponse = await api
-      .put(`/api/users/${getResponse.body.id}`)
+      .put(`/api/users/${getResponse.body.username}`)
       .send({ name: newName })
       .expect(200)
       .expect("Content-Type", /application\/json/);
@@ -265,15 +265,18 @@ describe("the Users PUT route", () => {
 
     // Update an user
     const putResponse = await api
-      .put(`/api/users/${getResponse.body.id}`)
+      .put(`/api/users/${getResponse.body.username}`)
       .send(updateData)
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
+    // Remove the blogs field, since it is not present on the PUT response
+    const { blogs, ...otherFields } = getResponse.body;
+
     // Confirm only the name has been updated
     assert.deepStrictEqual(
       putResponse.body,
-      { ...getResponse.body, name: updateData.name, updatedAt: putResponse.body.updatedAt }
+      { ...otherFields, name: updateData.name, updatedAt: putResponse.body.updatedAt }
     );
     assert.notStrictEqual(putResponse.body, getResponse.body);
   });
@@ -289,15 +292,18 @@ describe("the Users PUT route", () => {
 
     // Update an user
     const putResponse = await api
-      .put(`/api/users/${getResponse.body.id}`)
+      .put(`/api/users/${getResponse.body.username}`)
       .send({ name: newName })
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
+    // Remove the blogs field, since it is not present on the PUT response
+    const { blogs, ...otherFields } = getResponse.body;
+
     // Confirm the updateAt field has been updated
     assert.deepStrictEqual(
       putResponse.body,
-      { ...getResponse.body, name: newName, updatedAt: putResponse.body.updatedAt }
+      { ...otherFields, name: newName, updatedAt: putResponse.body.updatedAt }
     );
     assert.notStrictEqual(putResponse.body.updatedAt, getResponse.body.updatedAt);
   });
@@ -313,7 +319,7 @@ describe("the Users PUT route", () => {
 
     // Update an user
     const putResponse = await api
-      .put(`/api/users/${getResponse.body.id}`)
+      .put(`/api/users/${getResponse.body.username}`)
       .send({ name: newName })
       .expect(200)
       .expect("Content-Type", /application\/json/);
@@ -333,7 +339,7 @@ describe("the Users PUT route", () => {
 
     // Update an user
     const putResponse = await api
-      .put(`/api/users/${originalUserData.body.id}`)
+      .put(`/api/users/${originalUserData.body.username}`)
       .send({ name: newName })
       .expect(400)
       .expect("Content-Type", /application\/json/);
@@ -362,7 +368,7 @@ describe("the Users PUT route", () => {
 
     // Update an user
     const putResponse = await api
-      .put(`/api/users/${originalUserData.body.id}`)
+      .put(`/api/users/${originalUserData.body.username}`)
       .send({})
       .expect(400)
       .expect("Content-Type", /application\/json/);
