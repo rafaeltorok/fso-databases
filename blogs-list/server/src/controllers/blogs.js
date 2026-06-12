@@ -93,6 +93,18 @@ blogsRouter.delete("/:id", tokenExtractor, async (req, res, next) => {
       return res.status(400).json({ error: "Invalid ID format" });
     }
 
+    // Confirm the blog to be removed exists
+    const blogToBeRemoved = await Blog.findByPk(blogId);
+
+    if (!blogToBeRemoved) {
+      return res.status(404).end();
+    }
+
+    // Confirm the currently logged in user is the one who owns the blog
+    if (blogToBeRemoved.userId !== req.decodedToken.id) {
+      return res.status(401).json({ error: "Only the user who added the blog can remove it" });
+    }
+
     // Remove the blog
     const removedBlogs = await Blog.destroy({
       where: {
