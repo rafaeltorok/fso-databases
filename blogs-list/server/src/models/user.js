@@ -15,12 +15,34 @@ User.init(
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
+      validate: {
+        isEmail: {
+          msg: "Invalid email address"
+        },
+        len: {
+          args: [5, 32],
+          msg: "The username must be at least 5 chars long"
+        },
+        notNull: {
+          msg: "Username is required"
+        }
+      }
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [3, 32],
+          msg: "The user's name must be at least 3 chars long"
+        }
+        ,
+        notNull: {
+          msg: "Name is required"
+        }
+      }
     },
-    password: {
+    passwordHash: {
       type: DataTypes.STRING,
       allowNull: false,
     }
