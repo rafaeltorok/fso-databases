@@ -14,6 +14,9 @@ import Blog from "../../../src/models/blog.js";
 import initialBlogs from "../../data/initialBlogs.js";
 import initialUsers from "../../data/initialUsers.js";
 
+// Constants
+import { minTitleLength, maxTitleLength, minAuthorLength, maxAuthorLength } from "../../data/minMaxLengths.js";
+
 const api = supertest(app);
 
 // Global variables
@@ -171,6 +174,37 @@ describe("the Blogs POST route", () => {
     assert.strictEqual(postResponse.body.likes, 0);
   });
 
+  test("the HTTP protocol is not required on the URL field", async () => {
+    // Get a blog from the initial list
+    const blog = {
+      ...initialBlogs[0],
+      url: "my-blog.com"
+    };
+
+    // Get the initial amount of objects
+    const initialAmount = await getAmount("blogs");
+
+    // POST a new blog
+    const response = await api
+      .post("/api/blogs")
+      .send(blog)
+      .set("Authorization", `Bearer ${loggedUser.token}`)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    // Get the current amount of objects
+    const currentAmount = await getAmount("blogs");
+
+    // Assert the number of objects has increased
+    assert.strictEqual((initialAmount + 1), currentAmount);
+
+    // Remove the id, user and userId fields from the response
+    const { id, user, userId, ...responseFields } = response.body;
+
+    // Assert all fields are correct
+    assert.deepStrictEqual(blog, responseFields);
+  });
+
   test("missing the title field should return a proper error message", async () => {
     // Get a blog from the initial list
     const blog = initialBlogs[0];
@@ -190,7 +224,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "Missing required fields");
+    assert.strictEqual(postResponse.body.error, "Title is required");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -216,7 +250,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "Missing required fields");
+    assert.strictEqual(postResponse.body.error, "Author is required");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -242,7 +276,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "Missing required fields");
+    assert.strictEqual(postResponse.body.error, "URL is required");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -268,7 +302,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "Invalid number of likes");
+    assert.strictEqual(postResponse.body.error, "The likes counter must be a valid number");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -294,7 +328,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "Invalid number of likes");
+    assert.strictEqual(postResponse.body.error, "The likes counter must be a positive number");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -317,6 +351,156 @@ describe("the Blogs POST route", () => {
 
     // Assert the error response message
     assert.strictEqual(postResponse.body.error, "token missing");
+
+    // Assert the total number of objects has not changed
+    const currentAmount = await getAmount("blogs");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the title cannot be below the min length value", async () => {
+    const blog = {
+      ...initialBlogs[0],
+      title: "T"
+    };
+
+    // Get the initial number of blogs
+    const initialAmount = await getAmount("blogs");
+
+    // POST a new blog
+    const postResponse = await api
+      .post("/api/blogs")
+      .send(blog)
+      .set("Authorization", `Bearer ${loggedUser.token}`)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert the error response message
+    assert.strictEqual(postResponse.body.error, "The title must be between 3 and 32 chars long");
+
+    // Assert the total number of objects has not changed
+    const currentAmount = await getAmount("blogs");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the title cannot exceed the max length value", async () => {
+    const blog = {
+      ...initialBlogs[0],
+      title: "A very long title that exceeds the max length value"
+    };
+
+    // Get the initial number of blogs
+    const initialAmount = await getAmount("blogs");
+
+    // POST a new blog
+    const postResponse = await api
+      .post("/api/blogs")
+      .send(blog)
+      .set("Authorization", `Bearer ${loggedUser.token}`)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert the error response message
+    assert.strictEqual(postResponse.body.error, "The title must be between 3 and 32 chars long");
+
+    // Assert the total number of objects has not changed
+    const currentAmount = await getAmount("blogs");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the author's name cannot be below the min length value", async () => {
+    const blog = {
+      ...initialBlogs[0],
+      author: "A"
+    };
+
+    // Get the initial number of blogs
+    const initialAmount = await getAmount("blogs");
+
+    // POST a new blog
+    const postResponse = await api
+      .post("/api/blogs")
+      .send(blog)
+      .set("Authorization", `Bearer ${loggedUser.token}`)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert the error response message
+    assert.strictEqual(postResponse.body.error, "The author name must be between 3 and 32 chars long");
+
+    // Assert the total number of objects has not changed
+    const currentAmount = await getAmount("blogs");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the author's name cannot exceed the max length value", async () => {
+    const blog = {
+      ...initialBlogs[0],
+      author: "An author with a really long name"
+    };
+
+    // Get the initial number of blogs
+    const initialAmount = await getAmount("blogs");
+
+    // POST a new blog
+    const postResponse = await api
+      .post("/api/blogs")
+      .send(blog)
+      .set("Authorization", `Bearer ${loggedUser.token}`)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert the error response message
+    assert.strictEqual(postResponse.body.error, "The author name must be between 3 and 32 chars long");
+
+    // Assert the total number of objects has not changed
+    const currentAmount = await getAmount("blogs");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("missing the Top-Level Domain on the URL", async () => {
+    const blog = {
+      ...initialBlogs[0],
+      url: "http://my-blog"
+    };
+
+    // Get the initial number of blogs
+    const initialAmount = await getAmount("blogs");
+
+    // POST a new blog
+    const postResponse = await api
+      .post("/api/blogs")
+      .send(blog)
+      .set("Authorization", `Bearer ${loggedUser.token}`)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert the error response message
+    assert.strictEqual(postResponse.body.error, "Invalid URL format");
+
+    // Assert the total number of objects has not changed
+    const currentAmount = await getAmount("blogs");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("invalid dot syntax on the URL", async () => {
+    const blog = {
+      ...initialBlogs[0],
+      url: "http://my-blogdotcom"
+    };
+
+    // Get the initial number of blogs
+    const initialAmount = await getAmount("blogs");
+
+    // POST a new blog
+    const postResponse = await api
+      .post("/api/blogs")
+      .send(blog)
+      .set("Authorization", `Bearer ${loggedUser.token}`)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert the error response message
+    assert.strictEqual(postResponse.body.error, "Invalid URL format");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
