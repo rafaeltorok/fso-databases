@@ -9,7 +9,7 @@ import healthRouter from "./controllers/health.js";
 import testsRouter from "./controllers/tests.js";
 
 // Middleware
-import { errorHandler } from "./utils/middleware.js";
+import errorHandler from "./middleware/errorHandler.js";
 
 // Express server setup
 const app = express();

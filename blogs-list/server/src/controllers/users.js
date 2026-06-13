@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import { Blog, User } from "../models/index.js";
 
 // Middleware
-import { userFinder } from "../utils/middleware.js";
+import { userFinder } from "../middleware/finders.js";
 
 const userRouter = express.Router();
 

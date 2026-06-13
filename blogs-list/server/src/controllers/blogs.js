@@ -5,7 +5,8 @@ import express from "express";
 import { Blog, User } from "../models/index.js";
 
 // Middleware
-import { blogFinder, tokenExtractor } from "../utils/middleware.js";
+import { blogFinder } from "../middleware/finders.js";
+import tokenExtractor from "../middleware/tokenExtractor.js";
 
 const blogsRouter = express.Router();
 
@@ -114,10 +115,13 @@ blogsRouter.put("/:id", blogFinder, tokenExtractor, async (req, res, next) => {
     if (
       likes === undefined ||
       typeof likes !== "number" ||
-      !Number.isFinite(likes) ||
-      likes < 0
+      !Number.isFinite(likes)
     ) {
-      return res.status(400).json({ error: "Invalid number of likes" });
+      return res.status(400).json({ error: "The likes counter must be a valid number" });
+    }
+
+    if (likes < 0) {
+      return res.status(400).json({ error: "The likes counter must be a positive number" });
     }
 
     // Find the blog to be updated
