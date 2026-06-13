@@ -7,6 +7,9 @@ import { Blog, User } from "../models/index.js";
 // Middleware
 import { blogFinder } from "../middleware/finders.js";
 import tokenExtractor from "../middleware/tokenExtractor.js";
+import validateBlog from "../middleware/validators/blogsValidator.js";
+import validateId from "../middleware/validators/validateId.js";
+import validateLikes from "../middleware/validators/validateLikes.js";
 
 const blogsRouter = express.Router();
 
@@ -29,7 +32,7 @@ blogsRouter.get("/", async (req, res, next) => {
 });
 
 // GET a blog by its id
-blogsRouter.get("/:id", blogFinder, async (req, res, next) => {
+blogsRouter.get("/:id", validateId, blogFinder, async (req, res, next) => {
   try {
     return res.status(200).json(req.blog);
   } catch (err) {
@@ -38,7 +41,7 @@ blogsRouter.get("/:id", blogFinder, async (req, res, next) => {
 });
 
 // POST a new blog
-blogsRouter.post("/", tokenExtractor, async (req, res, next) => {
+blogsRouter.post("/", tokenExtractor, validateBlog, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.decodedToken.id);
     const { title, author, url, likes } = req.body;
@@ -59,20 +62,12 @@ blogsRouter.post("/", tokenExtractor, async (req, res, next) => {
 });
 
 // DELETE a blog
-blogsRouter.delete("/:id", tokenExtractor, async (req, res, next) => {
+blogsRouter.delete("/:id", validateId, tokenExtractor, async (req, res, next) => {
   try {
     const blogId = req.params.id;
 
     // Check if the user is authorized
     await User.findByPk(req.decodedToken.id);
-
-    // Check if the ID passed has a valid numeric format
-    if (
-      !Number.isFinite(Number(blogId)) ||
-      Number(blogId) < 0
-    ) {
-      return res.status(400).json({ error: "Invalid ID format" });
-    }
 
     // Confirm the blog to be removed exists
     const blogToBeRemoved = await Blog.findByPk(blogId);
@@ -104,25 +99,12 @@ blogsRouter.delete("/:id", tokenExtractor, async (req, res, next) => {
 });
 
 // PUT (update) a blog's number of likes
-blogsRouter.put("/:id", blogFinder, tokenExtractor, async (req, res, next) => {
+blogsRouter.put("/:id", validateId, validateLikes, blogFinder, tokenExtractor, async (req, res, next) => {
   try {
     const likes = req.body.likes;
 
     // Check if the user is authorized
     await User.findByPk(req.decodedToken.id);
-
-    // Assert the number of likes is valid
-    if (
-      likes === undefined ||
-      typeof likes !== "number" ||
-      !Number.isFinite(likes)
-    ) {
-      return res.status(400).json({ error: "The likes counter must be a valid number" });
-    }
-
-    if (likes < 0) {
-      return res.status(400).json({ error: "The likes counter must be a positive number" });
-    }
 
     // Find the blog to be updated
     const blogToUpdate = req.blog;
