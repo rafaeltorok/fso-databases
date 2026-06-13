@@ -17,7 +17,7 @@ Blog.init(
       validate: {
         len: {
           args: [3, 32],
-          msg: "The title must be at least 5 chars long"
+          msg: "The title must be between 3 and 32 chars long"
         },
         notNull: {
           msg: "Title is required"
@@ -30,7 +30,7 @@ Blog.init(
       validate: {
         len: {
           args: [3, 32],
-          msg: "The author name must be at least 3 chars long"
+          msg: "The author name must be between 3 and 32 chars long"
         },
         notNull: {
           msg: "Author is required"
