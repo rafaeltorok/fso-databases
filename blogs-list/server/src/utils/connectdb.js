@@ -15,6 +15,7 @@ if (process.env.DATABASE_SSL === "true") {
         rejectUnauthorized: false,
       },
     },
+    logging: process.env.NODE_ENV === "test" ? false : true,
   });
 } else if (process.env.DATABASE_SSL === "false") {
   // Disable SSL connections for the Docker orchestrations
@@ -23,6 +24,7 @@ if (process.env.DATABASE_SSL === "true") {
     dialectOptions: {
       ssl: false
     },
+    logging: process.env.NODE_ENV === "test" ? false : true,
   });
 } else {
   throw new Error("The env variable 'DATABASE_SSL' must be set to either true or false");

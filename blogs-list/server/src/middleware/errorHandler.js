@@ -1,6 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 // eslint-disable-next-line no-unused-vars
 export default function errorHandler(err, req, res, next) {
-  console.error(err); // Log on the server for debugging
+  if (process.env.NODE_ENV !== "test") {
+    console.error(err); // Log on the server for debugging
+  }
 
   if (err.name === "SequelizeUniqueConstraintError") {
     return res.status(400).json({ error: "Username must be unique" });
