@@ -98,7 +98,7 @@ psql -U admin -W -d blogslist
 
 **Note**: the test data is stored temporarily inside a PostgreSQL container.
 
-Start the orchestration
+Run all tests
 ```bash
 docker compose -f ./docker-compose.test.yml up --build --abort-on-container-exit
 ```
@@ -111,7 +111,7 @@ docker compose -f ./docker-compose.test.yml down -v
 
 ## CRUD operations
 
-**Note**: when running the Docker orchestration, use port `8000` for all HTTP requests.
+**Note**: when running the Docker orchestration, use proxied Nginx port `8000` for all HTTP requests.
 
 ### GET
 
@@ -166,14 +166,35 @@ curl -X PUT http://localhost:3001/api/blogs/<id> -H "Content-Type: application/j
 
 ### Integration tests
 
+Features:
+
+- Implemented using the standard Node.js testing library with Supertest.
+
+- Covers all major valid, invalid and edge-case inputs relevant to the course's exercise requirements.
+
 Enter the server folder
 ```bash
 cd ./server
 ```
 
-Run tests
+Run all tests
 ```bash
 npm run test
+```
+
+Run only the Blogs routes test suites
+```bash
+npm run test -- ./tests/integration/blogs/*
+```
+
+Run only the Users routes test suites
+```bash
+npm run test -- ./tests/integration/users/*
+```
+
+Run only the Login route test suite
+```bash
+npm run test -- ./tests/integration/login_route.test.js
 ```
 
 
