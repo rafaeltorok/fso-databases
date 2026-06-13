@@ -84,7 +84,7 @@ describe("the Blogs GET route", () => {
     assert.strictEqual(response.body.length, initialBlogs.length);
   });
 
-  test("the blogs contain the name of the user who added it", async () => {
+  test("all blogs should contain the name of the user who added it", async () => {
     // Get all available blogs
     const response = await api
       .get("/api/blogs")
@@ -95,6 +95,22 @@ describe("the Blogs GET route", () => {
     for (const blog of response.body) {
       assert.strictEqual(blog.user.name, loggedUser.name);
     }
+  });
+
+  test("fetching a single blog should also contain the user's name", async () => {
+    // Get the first blog from the initial list
+    const blogToView = initialBlogs[0];
+
+    const response = await api
+      .get("/api/blogs/1")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    // Remove the id field from the blog
+    const { id, ...otherFields } = response.body;
+
+    // Assert the data is correct
+    assert.deepStrictEqual(otherFields, { ...blogToView, user: { name: loggedUser.name } });
   });
 
   test("a blog can be fetch through its id value", async () => {
@@ -111,22 +127,6 @@ describe("the Blogs GET route", () => {
 
     // Assert the data is correct
     assert.deepStrictEqual(otherFields, blogToView);
-  });
-
-  test("a blog should contain the name of the user who added it", async () => {
-    // Get the first blog from the initial list
-    const blogToView = initialBlogs[0];
-
-    const response = await api
-      .get("/api/blogs/1")
-      .expect(200)
-      .expect("Content-Type", /application\/json/);
-
-    // Remove the id field from the blog
-    const { id, ...otherFields } = response.body;
-
-    // Assert the data is correct
-    assert.deepStrictEqual(otherFields, { ...blogToView, user: { name: loggedUser.name } });
   });
 
   test("a non-existing id should return a proper status code", async () => {
