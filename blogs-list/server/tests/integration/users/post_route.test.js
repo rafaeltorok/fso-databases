@@ -180,7 +180,7 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the response error message
-    assert.strictEqual(response.body.error, "Password is required");
+    assert.ok(response.body.error.includes("Password is required"));
 
     // Assert the number of objects has not changed
     const currentAmount = await getAmount("users");
@@ -209,6 +209,181 @@ describe("the Users POST route", () => {
 
     // Assert an error message is within the response
     assert.strictEqual(response.body.error, "Username must be unique");
+
+    // Assert a new user has not been added
+    const currentAmount = await getAmount("users");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the username must be a valid email address", async () => {
+    // Get the initial users length
+    const initialAmount = await getAmount("users");
+
+    // Generate invalid data
+    const newUser = {
+      ...initialUsers[0],
+      username: "admin@admin"
+    };
+
+    // Create a new user
+    const response = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert an error message is within the response
+    assert.ok(response.body.error.includes("Invalid email address"));
+
+    // Assert a new user has not been added
+    const currentAmount = await getAmount("users");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the username cannot be below the min value length", async () => {
+    // Get the initial users length
+    const initialAmount = await getAmount("users");
+
+    // Generate invalid data
+    const newUser = {
+      ...initialUsers[0],
+      username: "a"
+    };
+
+    // Create a new user
+    const response = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert an error message is within the response
+    assert.ok(response.body.error.includes("The username must be between 5 and 32 chars long"));
+
+    // Assert a new user has not been added
+    const currentAmount = await getAmount("users");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the username cannot exceed the max value length", async () => {
+    // Get the initial users length
+    const initialAmount = await getAmount("users");
+
+    // Generate invalid data
+    const newUser = {
+      ...initialUsers[0],
+      username: "a_very_long_email_address@very_long_email_provider_name.com"
+    };
+
+    // Create a new user
+    const response = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert an error message is within the response
+    assert.ok(response.body.error.includes("The username must be between 5 and 32 chars long"));
+
+    // Assert a new user has not been added
+    const currentAmount = await getAmount("users");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the name cannot be below the min value length", async () => {
+    // Get the initial users length
+    const initialAmount = await getAmount("users");
+
+    // Generate invalid data
+    const newUser = {
+      ...initialUsers[0],
+      name: "a"
+    };
+
+    // Create a new user
+    const response = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert an error message is within the response
+    assert.ok(response.body.error.includes("The user's name must be between 3 and 32 chars long"));
+
+    // Assert a new user has not been added
+    const currentAmount = await getAmount("users");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the name cannot exceed the max value length", async () => {
+    // Get the initial users length
+    const initialAmount = await getAmount("users");
+
+    // Generate invalid data
+    const newUser = {
+      ...initialUsers[0],
+      name: "A very long user name to exceed the maximum permitted character length"
+    };
+
+    // Create a new user
+    const response = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert an error message is within the response
+    assert.ok(response.body.error.includes("The user's name must be between 3 and 32 chars long"));
+
+    // Assert a new user has not been added
+    const currentAmount = await getAmount("users");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the password cannot be below the min value length", async () => {
+    // Get the initial users length
+    const initialAmount = await getAmount("users");
+
+    // Generate invalid data
+    const newUser = {
+      ...initialUsers[0],
+      password: "a"
+    };
+
+    // Create a new user
+    const response = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert an error message is within the response
+    assert.ok(response.body.error.includes("Password length must be between 5 and 64 chars long"));
+
+    // Assert a new user has not been added
+    const currentAmount = await getAmount("users");
+    assert.strictEqual(initialAmount, currentAmount);
+  });
+
+  test("the password cannot exceed the max value length", async () => {
+    // Get the initial users length
+    const initialAmount = await getAmount("users");
+
+    // Generate invalid data
+    const newUser = {
+      ...initialUsers[0],
+      password: "abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123"
+    };
+
+    // Create a new user
+    const response = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert an error message is within the response
+    assert.ok(response.body.error.includes("Password length must be between 5 and 64 chars long"));
 
     // Assert a new user has not been added
     const currentAmount = await getAmount("users");
