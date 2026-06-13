@@ -21,7 +21,7 @@ User.init(
         },
         len: {
           args: [5, 32],
-          msg: "The username must be at least 5 chars long"
+          msg: "The username must be between 5 and 32 chars long"
         },
         notNull: {
           msg: "Username is required"
@@ -34,7 +34,7 @@ User.init(
       validate: {
         len: {
           args: [3, 32],
-          msg: "The user's name must be at least 3 chars long"
+          msg: "The user's name must be between 3 and 32 chars long"
         }
         ,
         notNull: {

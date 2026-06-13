@@ -30,7 +30,7 @@ Blog.init(
       validate: {
         len: {
           args: [3, 32],
-          msg: "The author name must be between 3 and 32 chars long"
+          msg: "The author's name must be between 3 and 32 chars long"
         },
         notNull: {
           msg: "Author is required"
