@@ -42,26 +42,6 @@ blogsRouter.post("/", tokenExtractor, async (req, res, next) => {
     const user = await User.findByPk(req.decodedToken.id);
     const { title, author, url, likes } = req.body;
 
-    // Check if any required fields are missing
-    if (
-      title === undefined ||
-      author === undefined ||
-      url === undefined
-    ) {
-      return res.status(400).send({ error: "Missing required fields" });
-    }
-
-    // Assert the number of likes is valid if present
-    if (likes !== undefined) {
-      if (
-        typeof likes !== "number" ||
-        !Number.isFinite(likes) ||
-        likes < 0
-      ) {
-        return res.status(400).json({ error: "Invalid number of likes" });
-      }
-    }
-
     // Create a new blog
     const newBlog = await Blog.create({
       title,
