@@ -18,6 +18,9 @@ Blog.init(
         len: {
           args: [3, 32],
           msg: "The title must be at least 5 chars long"
+        },
+        notNull: {
+          msg: "Title is required"
         }
       }
     },
@@ -28,6 +31,9 @@ Blog.init(
         len: {
           args: [3, 32],
           msg: "The author name must be at least 3 chars long"
+        },
+        notNull: {
+          msg: "Author is required"
         }
       }
     },
@@ -37,6 +43,9 @@ Blog.init(
       validate: {
         isUrl: {
           msg: "Invalid URL format"
+        },
+        notNull: {
+          msg: "URL is required"
         }
       }
     },
@@ -49,7 +58,7 @@ Blog.init(
         },
         min: {
           args: [0],
-          msg: "The likes amount must be a positive number"
+          msg: "The likes counter must be a positive number"
         }
       }
     },
