@@ -7,6 +7,9 @@ import { Blog, User } from "../models/index.js";
 
 // Middleware
 import { userFinder } from "../middleware/finders.js";
+import validateUser from "../middleware/validators/usersValidator.js";
+import validateId from "../middleware/validators/validateId.js";
+import validatePassword from "../middleware/validators/validatePassword.js";
 
 const userRouter = express.Router();
 
@@ -31,7 +34,7 @@ userRouter.get("/", async (req, res, next) => {
 });
 
 // GET by id
-userRouter.get("/:id", userFinder, async (req, res, next) => {
+userRouter.get("/:id", validateId, userFinder, async (req, res, next) => {
   try {
     return res.status(200).json(req.user);
   } catch (err) {
@@ -40,23 +43,9 @@ userRouter.get("/:id", userFinder, async (req, res, next) => {
 });
 
 // POST a new user
-userRouter.post("/", async (req, res, next) => {
+userRouter.post("/", validateUser, validatePassword, async (req, res, next) => {
   try {
     const { username, name, password } = req.body;
-
-    // Check if the password is present
-    if (password === undefined) {
-      return res.status(400).json({ error: "Password is required" });
-    }
-
-    // Assert the length of the password
-    const minLength = 5;
-    const maxLength = 64;
-    if (password.length < minLength || password.length > maxLength) {
-      return res.status(400).json(
-        { error: `Password length must be between ${minLength} and ${maxLength} chars` }
-      );
-    }
 
     // Hash the password to be stored
     const saltRounds = 10;
@@ -80,17 +69,9 @@ userRouter.post("/", async (req, res, next) => {
 });
 
 // DELETE an user
-userRouter.delete("/:id", async (req, res, next) => {
+userRouter.delete("/:id", validateId, async (req, res, next) => {
   try {
     const userId = req.params.id;
-
-    // Check if the ID passed has a valid numeric format
-    if (
-      !Number.isFinite(Number(userId)) ||
-      Number(userId) < 0
-    ) {
-      return res.status(400).json({ error: "Invalid ID format" });
-    }
 
     // Remove the user
     const removedUsers = await User.destroy({
