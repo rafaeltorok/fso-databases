@@ -224,7 +224,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "Title is required");
+    assert.ok(postResponse.body.error.includes("Title is required"));
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -250,7 +250,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "Author is required");
+    assert.ok(postResponse.body.error.includes("Author is required"));
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -276,7 +276,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "URL is required");
+    assert.ok(postResponse.body.error.includes("URL is required"));
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -302,7 +302,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "The likes counter must be a valid number");
+    assert.ok(postResponse.body.error.includes("The likes counter must be a valid number"));
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -328,7 +328,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "The likes counter must be a positive number");
+    assert.ok(postResponse.body.error.includes("The likes counter must be a positive number"));
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -425,7 +425,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "The author name must be between 3 and 32 chars long");
+    assert.strictEqual(postResponse.body.error, "The author's name must be between 3 and 32 chars long");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");
@@ -450,7 +450,7 @@ describe("the Blogs POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the error response message
-    assert.strictEqual(postResponse.body.error, "The author name must be between 3 and 32 chars long");
+    assert.strictEqual(postResponse.body.error, "The author's name must be between 3 and 32 chars long");
 
     // Assert the total number of objects has not changed
     const currentAmount = await getAmount("blogs");

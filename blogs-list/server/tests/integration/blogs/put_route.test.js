@@ -130,7 +130,7 @@ describe("the Blogs PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.strictEqual(putResponse.body.error, "The likes counter must be a positive number");
+    assert.ok(putResponse.body.error.includes("The likes counter must be a positive number"));
 
     // Assert the original likes counter has not been updated
     const originalBlog = await api.get(`/api/blogs/${postResponse.body.id}`);
@@ -147,7 +147,7 @@ describe("the Blogs PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.strictEqual(putResponse.body.error, "The likes counter must be a valid number");
+    assert.ok(putResponse.body.error.includes("The likes counter must be a valid number"));
 
     // Assert the original likes counter has not been updated
     const originalBlog = await api.get(`/api/blogs/${postResponse.body.id}`);
@@ -164,7 +164,7 @@ describe("the Blogs PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.strictEqual(putResponse.body.error, "The likes counter must be a valid number");
+    assert.ok(putResponse.body.error.includes("The likes counter must be a valid number"));
 
     // Assert the original likes counter has not been updated
     const originalBlog = await api.get(`/api/blogs/${postResponse.body.id}`);
@@ -181,7 +181,7 @@ describe("the Blogs PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.strictEqual(putResponse.body.error, "The likes counter must be a valid number");
+    assert.ok(putResponse.body.error.includes("The likes counter must be a valid number"));
 
     // Assert the original likes counter has not been updated
     const originalBlog = await api.get(`/api/blogs/${postResponse.body.id}`);

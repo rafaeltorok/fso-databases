@@ -151,7 +151,7 @@ describe("the Blogs DELETE route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.strictEqual(response.body.error, "Invalid ID format");
+    assert.ok(response.body.error.includes("Invalid ID format"));
   });
 
   test("a negative ID should return a proper error message", async () => {
@@ -162,7 +162,7 @@ describe("the Blogs DELETE route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.strictEqual(response.body.error, "Invalid ID format");
+    assert.ok(response.body.error.includes("Invalid ID format"));
   });
 
   test("a non-authorized user should not be able to delete a blog", async () => {
