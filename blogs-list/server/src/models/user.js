@@ -3,7 +3,7 @@ import { Model, DataTypes } from "sequelize";
 import sequelize from "../utils/connectdb.js";
 
 // User model
-export default class User extends Model {};
+export default class User extends Model {}
 User.init(
   {
     id: {
@@ -17,16 +17,16 @@ User.init(
       allowNull: false,
       validate: {
         isEmail: {
-          msg: "Invalid email address"
+          msg: "Invalid email address",
         },
         len: {
           args: [5, 32],
-          msg: "The username must be between 5 and 32 chars long"
+          msg: "The username must be between 5 and 32 chars long",
         },
         notNull: {
-          msg: "Username is required"
-        }
-      }
+          msg: "Username is required",
+        },
+      },
     },
     name: {
       type: DataTypes.STRING,
@@ -34,18 +34,17 @@ User.init(
       validate: {
         len: {
           args: [3, 32],
-          msg: "The user's name must be between 3 and 32 chars long"
-        }
-        ,
+          msg: "The user's name must be between 3 and 32 chars long",
+        },
         notNull: {
-          msg: "Name is required"
-        }
-      }
+          msg: "Name is required",
+        },
+      },
     },
     passwordHash: {
       type: DataTypes.STRING,
       allowNull: false,
-    }
+    },
   },
   {
     sequelize,

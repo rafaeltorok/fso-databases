@@ -22,7 +22,7 @@ export async function blogFinder(req, res, next) {
 export async function userFinder(req, res, next) {
   req.user = await User.findByPk(req.params.id, {
     attributes: {
-      exclude: ["passwordHash"]
+      exclude: ["passwordHash"],
     },
     include: {
       model: Blog,

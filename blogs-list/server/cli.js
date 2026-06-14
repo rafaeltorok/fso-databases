@@ -10,10 +10,12 @@ function printInfo(blogs) {
 async function main() {
   try {
     await sequelize.authenticate();
-    const blogs = await sequelize.query("SELECT * FROM blogs", { type: QueryTypes.SELECT });
+    const blogs = await sequelize.query("SELECT * FROM blogs", {
+      type: QueryTypes.SELECT,
+    });
     printInfo(blogs);
     sequelize.close();
-  } catch(err) {
+  } catch (err) {
     console.error(err);
   }
 }

@@ -17,12 +17,12 @@ Blog.init(
       validate: {
         len: {
           args: [3, 32],
-          msg: "The title must be between 3 and 32 chars long"
+          msg: "The title must be between 3 and 32 chars long",
         },
         notNull: {
-          msg: "Title is required"
-        }
-      }
+          msg: "Title is required",
+        },
+      },
     },
     author: {
       type: DataTypes.TEXT,
@@ -30,37 +30,37 @@ Blog.init(
       validate: {
         len: {
           args: [3, 32],
-          msg: "The author's name must be between 3 and 32 chars long"
+          msg: "The author's name must be between 3 and 32 chars long",
         },
         notNull: {
-          msg: "Author is required"
-        }
-      }
+          msg: "Author is required",
+        },
+      },
     },
     url: {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
         isUrl: {
-          msg: "Invalid URL format"
+          msg: "Invalid URL format",
         },
         notNull: {
-          msg: "URL is required"
-        }
-      }
+          msg: "URL is required",
+        },
+      },
     },
     likes: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       validate: {
         isInt: {
-          msg: "The likes counter must be a valid number"
+          msg: "The likes counter must be a valid number",
         },
         min: {
           args: [0],
-          msg: "The likes counter must be a positive number"
-        }
-      }
+          msg: "The likes counter must be a positive number",
+        },
+      },
     },
   },
   {

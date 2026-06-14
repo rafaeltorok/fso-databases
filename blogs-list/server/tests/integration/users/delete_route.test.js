@@ -52,12 +52,10 @@ describe("the Users DELETE route", () => {
 
     // Confirm the users length has increased
     let currentAmount = await getAmount("users");
-    assert.strictEqual((initialAmount + 1), currentAmount);
+    assert.strictEqual(initialAmount + 1, currentAmount);
 
     // Remove the user
-    await api
-      .delete(`/api/users/${Number(postResponse.body.id)}`)
-      .expect(204);
+    await api.delete(`/api/users/${Number(postResponse.body.id)}`).expect(204);
 
     // Assert the users length has decreased
     currentAmount = await getAmount("users");
@@ -65,9 +63,7 @@ describe("the Users DELETE route", () => {
   });
 
   test("a non-existing id should return a proper status code", async () => {
-    await api
-      .delete("/api/users/0")
-      .expect(404);
+    await api.delete("/api/users/0").expect(404);
   });
 
   test("an invalid ID format should return a proper error message", async () => {

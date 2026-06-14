@@ -113,13 +113,16 @@ describe("the Login route", () => {
   test("an invalid password should return a proper error message", async () => {
     const invalidCredentials = {
       ...initialUsers[0],
-      password: "wrong_password"
+      password: "wrong_password",
     };
 
     // Login
     const response = await api
       .post("/api/login")
-      .send({ username: invalidCredentials.username, password: invalidCredentials.password })
+      .send({
+        username: invalidCredentials.username,
+        password: invalidCredentials.password,
+      })
       .expect(401)
       .expect("Content-Type", /application\/json/);
 

@@ -67,7 +67,7 @@ describe("the Users PUT route", () => {
     const updateData = {
       username: "newusername@example.com",
       name: "New name",
-      password: "newpassword"
+      password: "newpassword",
     };
 
     // Get an user to be updated
@@ -87,10 +87,11 @@ describe("the Users PUT route", () => {
     const { blogs, ...otherFields } = getResponse.body;
 
     // Confirm only the name has been updated
-    assert.deepStrictEqual(
-      putResponse.body,
-      { ...otherFields, name: updateData.name, updatedAt: putResponse.body.updatedAt }
-    );
+    assert.deepStrictEqual(putResponse.body, {
+      ...otherFields,
+      name: updateData.name,
+      updatedAt: putResponse.body.updatedAt,
+    });
     assert.notStrictEqual(putResponse.body, getResponse.body);
   });
 
@@ -114,11 +115,15 @@ describe("the Users PUT route", () => {
     const { blogs, ...otherFields } = getResponse.body;
 
     // Confirm the updateAt field has been updated
-    assert.deepStrictEqual(
-      putResponse.body,
-      { ...otherFields, name: newName, updatedAt: putResponse.body.updatedAt }
+    assert.deepStrictEqual(putResponse.body, {
+      ...otherFields,
+      name: newName,
+      updatedAt: putResponse.body.updatedAt,
+    });
+    assert.notStrictEqual(
+      putResponse.body.updatedAt,
+      getResponse.body.updatedAt,
     );
-    assert.notStrictEqual(putResponse.body.updatedAt, getResponse.body.updatedAt);
   });
 
   test("the createdAt field should not be updated", async () => {
@@ -169,7 +174,10 @@ describe("the Users PUT route", () => {
     assert.strictEqual(originalUserData.body.name, currentUserData.body.name);
 
     // Assert the updatedAt field has not changed
-    assert.strictEqual(originalUserData.body.updatedAt, currentUserData.body.updatedAt);
+    assert.strictEqual(
+      originalUserData.body.updatedAt,
+      currentUserData.body.updatedAt,
+    );
   });
 
   test("an undefined parameter should return a proper error message", async () => {
@@ -198,6 +206,9 @@ describe("the Users PUT route", () => {
     assert.strictEqual(originalUserData.body.name, currentUserData.body.name);
 
     // Assert the updatedAt field has not changed
-    assert.strictEqual(originalUserData.body.updatedAt, currentUserData.body.updatedAt);
+    assert.strictEqual(
+      originalUserData.body.updatedAt,
+      currentUserData.body.updatedAt,
+    );
   });
 });

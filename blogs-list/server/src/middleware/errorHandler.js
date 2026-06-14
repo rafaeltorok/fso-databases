@@ -13,7 +13,9 @@ export default function errorHandler(err, req, res, next) {
 
   if (err.name === "SequelizeValidationError") {
     if (err.errors.length > 1) {
-      return res.status(400).json({ error: err.errors.map(error => error.message) });
+      return res
+        .status(400)
+        .json({ error: err.errors.map((error) => error.message) });
     } else {
       return res.status(400).json({ error: err.errors[0].message });
     }

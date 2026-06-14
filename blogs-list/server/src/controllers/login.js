@@ -14,28 +14,24 @@ loginRouter.post("/", async (req, res, next) => {
     const { username, password } = req.body;
 
     // Return an error message when missing credentials
-    if (
-      username === undefined ||
-      password === undefined
-    ) {
+    if (username === undefined || password === undefined) {
       return res.status(400).json({ error: "Missing credentials" });
     }
 
     // Confirm the user exists
     const user = await User.findOne({
       where: {
-        username: username
-      }
+        username: username,
+      },
     });
 
-    const passwordCorrect = user === null
-      ? false
-      : await bcrypt.compare(password, user.passwordHash);
+    const passwordCorrect =
+      user === null ? false : await bcrypt.compare(password, user.passwordHash);
 
     // Return an error message if the user does not exist
     if (!(user && passwordCorrect)) {
       return res.status(401).json({
-        error: "Invalid username or password"
+        error: "Invalid username or password",
       });
     }
 

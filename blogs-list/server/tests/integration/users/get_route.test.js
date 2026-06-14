@@ -81,14 +81,11 @@ describe("the Users GET route", () => {
     const { password, ...userFields } = userToView;
 
     // Assert the data is correct
-    assert.deepStrictEqual(
-      otherFields,
-      {
-        ...userFields,
-        createdAt: response.body.createdAt,
-        updatedAt: response.body.updatedAt
-      }
-    );
+    assert.deepStrictEqual(otherFields, {
+      ...userFields,
+      createdAt: response.body.createdAt,
+      updatedAt: response.body.updatedAt,
+    });
   });
 
   test("the list of blogs should be included within the returned user", async () => {
@@ -124,9 +121,7 @@ describe("the Users GET route", () => {
   });
 
   test("a non-existing id should return a proper status code", async () => {
-    await api
-      .get("/api/users/0")
-      .expect(404);
+    await api.get("/api/users/0").expect(404);
   });
 
   test("the password field is not returned when fetching all users", async () => {

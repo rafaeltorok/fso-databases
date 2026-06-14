@@ -22,12 +22,14 @@ if (process.env.DATABASE_SSL === "true") {
   sequelize = new Sequelize(DATABASE_URL, {
     dialect: "postgres",
     dialectOptions: {
-      ssl: false
+      ssl: false,
     },
     logging: process.env.NODE_ENV === "test" ? false : true,
   });
 } else {
-  throw new Error("The env variable 'DATABASE_SSL' must be set to either true or false");
+  throw new Error(
+    "The env variable 'DATABASE_SSL' must be set to either true or false",
+  );
 }
 
 export default sequelize;

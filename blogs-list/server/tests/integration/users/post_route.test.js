@@ -65,7 +65,7 @@ describe("the Users POST route", () => {
     const currentAmount = await getAmount("users");
 
     // Assert the number of objects has increased
-    assert.strictEqual((initialAmount + 1), currentAmount);
+    assert.strictEqual(initialAmount + 1, currentAmount);
   });
 
   test("a newly created user should have no blogs", async () => {
@@ -91,7 +91,7 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the number of objects has increased
-    assert.strictEqual((initialAmount + 1), currentAmount);
+    assert.strictEqual(initialAmount + 1, currentAmount);
 
     // Assert the user has no blogs
     assert(getResponse.body.blogs, []);
@@ -114,7 +114,7 @@ describe("the Users POST route", () => {
     const currentAmount = await getAmount("users");
 
     // Assert the number of objects has increased
-    assert.strictEqual((initialAmount + 1), currentAmount);
+    assert.strictEqual(initialAmount + 1, currentAmount);
 
     // Assert both fields are present inside the returned object
     assert.ok("createdAt" in response.body);
@@ -222,7 +222,7 @@ describe("the Users POST route", () => {
     // Generate invalid data
     const newUser = {
       ...initialUsers[0],
-      username: "admin@admin"
+      username: "admin@admin",
     };
 
     // Create a new user
@@ -247,7 +247,7 @@ describe("the Users POST route", () => {
     // Generate invalid data
     const newUser = {
       ...initialUsers[0],
-      username: "a"
+      username: "a",
     };
 
     // Create a new user
@@ -258,7 +258,11 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.ok(response.body.error.includes("The username must be between 5 and 32 chars long"));
+    assert.ok(
+      response.body.error.includes(
+        "The username must be between 5 and 32 chars long",
+      ),
+    );
 
     // Assert a new user has not been added
     const currentAmount = await getAmount("users");
@@ -272,7 +276,7 @@ describe("the Users POST route", () => {
     // Generate invalid data
     const newUser = {
       ...initialUsers[0],
-      username: "a_very_long_email_address@very_long_email_provider_name.com"
+      username: "a_very_long_email_address@very_long_email_provider_name.com",
     };
 
     // Create a new user
@@ -283,7 +287,11 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.ok(response.body.error.includes("The username must be between 5 and 32 chars long"));
+    assert.ok(
+      response.body.error.includes(
+        "The username must be between 5 and 32 chars long",
+      ),
+    );
 
     // Assert a new user has not been added
     const currentAmount = await getAmount("users");
@@ -297,7 +305,7 @@ describe("the Users POST route", () => {
     // Generate invalid data
     const newUser = {
       ...initialUsers[0],
-      name: "a"
+      name: "a",
     };
 
     // Create a new user
@@ -308,7 +316,11 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.ok(response.body.error.includes("The user's name must be between 3 and 32 chars long"));
+    assert.ok(
+      response.body.error.includes(
+        "The user's name must be between 3 and 32 chars long",
+      ),
+    );
 
     // Assert a new user has not been added
     const currentAmount = await getAmount("users");
@@ -322,7 +334,7 @@ describe("the Users POST route", () => {
     // Generate invalid data
     const newUser = {
       ...initialUsers[0],
-      name: "A very long user name to exceed the maximum permitted character length"
+      name: "A very long user name to exceed the maximum permitted character length",
     };
 
     // Create a new user
@@ -333,7 +345,11 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.ok(response.body.error.includes("The user's name must be between 3 and 32 chars long"));
+    assert.ok(
+      response.body.error.includes(
+        "The user's name must be between 3 and 32 chars long",
+      ),
+    );
 
     // Assert a new user has not been added
     const currentAmount = await getAmount("users");
@@ -347,7 +363,7 @@ describe("the Users POST route", () => {
     // Generate invalid data
     const newUser = {
       ...initialUsers[0],
-      password: "a"
+      password: "a",
     };
 
     // Create a new user
@@ -358,7 +374,11 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.ok(response.body.error.includes("Password length must be between 5 and 64 chars long"));
+    assert.ok(
+      response.body.error.includes(
+        "Password length must be between 5 and 64 chars long",
+      ),
+    );
 
     // Assert a new user has not been added
     const currentAmount = await getAmount("users");
@@ -372,7 +392,8 @@ describe("the Users POST route", () => {
     // Generate invalid data
     const newUser = {
       ...initialUsers[0],
-      password: "abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123"
+      password:
+        "abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123",
     };
 
     // Create a new user
@@ -383,7 +404,11 @@ describe("the Users POST route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert an error message is within the response
-    assert.ok(response.body.error.includes("Password length must be between 5 and 64 chars long"));
+    assert.ok(
+      response.body.error.includes(
+        "Password length must be between 5 and 64 chars long",
+      ),
+    );
 
     // Assert a new user has not been added
     const currentAmount = await getAmount("users");

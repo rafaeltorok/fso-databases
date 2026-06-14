@@ -18,7 +18,7 @@ userRouter.get("/", async (req, res, next) => {
   try {
     const data = await User.findAll({
       attributes: {
-        exclude: ["passwordHash"]
+        exclude: ["passwordHash"],
       },
       include: {
         model: Blog,
@@ -55,7 +55,7 @@ userRouter.post("/", validateUser, validatePassword, async (req, res, next) => {
     const newUser = await User.create({
       username,
       name,
-      passwordHash: passwordHash
+      passwordHash: passwordHash,
     });
 
     // Remove sensitive field from the response
@@ -76,8 +76,8 @@ userRouter.delete("/:id", validateId, async (req, res, next) => {
     // Remove the user
     const removedUsers = await User.destroy({
       where: {
-        id: userId
-      }
+        id: userId,
+      },
     });
 
     if (removedUsers === 1) {
@@ -96,7 +96,7 @@ userRouter.put("/:username", async (req, res, next) => {
     const newName = req.body.name;
     const userToUpdate = await User.findOne({
       where: {
-        username: req.params.username
+        username: req.params.username,
       },
     });
 
@@ -106,10 +106,7 @@ userRouter.put("/:username", async (req, res, next) => {
     }
 
     // Check if the new name is invalid
-    if (
-      newName === undefined ||
-      newName.trim() === ""
-    ) {
+    if (newName === undefined || newName.trim() === "") {
       return res.status(400).json({ error: "Invalid user's name" });
     }
 

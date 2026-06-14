@@ -8,7 +8,7 @@ const initialUsers = [
     username: "newuser@example.com",
     name: "New User",
     password: "newuser",
-  }
+  },
 ];
 
 export default initialUsers;

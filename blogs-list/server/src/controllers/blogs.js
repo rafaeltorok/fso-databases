@@ -62,60 +62,74 @@ blogsRouter.post("/", tokenExtractor, validateBlog, async (req, res, next) => {
 });
 
 // DELETE a blog
-blogsRouter.delete("/:id", validateId, tokenExtractor, async (req, res, next) => {
-  try {
-    const blogId = req.params.id;
+blogsRouter.delete(
+  "/:id",
+  validateId,
+  tokenExtractor,
+  async (req, res, next) => {
+    try {
+      const blogId = req.params.id;
 
-    // Check if the user is authorized
-    await User.findByPk(req.decodedToken.id);
+      // Check if the user is authorized
+      await User.findByPk(req.decodedToken.id);
 
-    // Confirm the blog to be removed exists
-    const blogToBeRemoved = await Blog.findByPk(blogId);
+      // Confirm the blog to be removed exists
+      const blogToBeRemoved = await Blog.findByPk(blogId);
 
-    if (!blogToBeRemoved) {
-      return res.status(404).end();
-    }
-
-    // Confirm the currently logged in user is the one who owns the blog
-    if (blogToBeRemoved.userId !== req.decodedToken.id) {
-      return res.status(401).json({ error: "Only the user who added the blog can remove it" });
-    }
-
-    // Remove the blog
-    const removedBlogs = await Blog.destroy({
-      where: {
-        id: blogId
+      if (!blogToBeRemoved) {
+        return res.status(404).end();
       }
-    });
 
-    if (removedBlogs === 1) {
-      res.status(204).end();
-    } else {
-      res.status(404).end();
+      // Confirm the currently logged in user is the one who owns the blog
+      if (blogToBeRemoved.userId !== req.decodedToken.id) {
+        return res
+          .status(401)
+          .json({ error: "Only the user who added the blog can remove it" });
+      }
+
+      // Remove the blog
+      const removedBlogs = await Blog.destroy({
+        where: {
+          id: blogId,
+        },
+      });
+
+      if (removedBlogs === 1) {
+        res.status(204).end();
+      } else {
+        res.status(404).end();
+      }
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    next(err);
-  }
-});
+  },
+);
 
 // PUT (update) a blog's number of likes
-blogsRouter.put("/:id", validateId, validateLikes, blogFinder, tokenExtractor, async (req, res, next) => {
-  try {
-    const likes = req.body.likes;
+blogsRouter.put(
+  "/:id",
+  validateId,
+  validateLikes,
+  blogFinder,
+  tokenExtractor,
+  async (req, res, next) => {
+    try {
+      const likes = req.body.likes;
 
-    // Check if the user is authorized
-    await User.findByPk(req.decodedToken.id);
+      // Check if the user is authorized
+      await User.findByPk(req.decodedToken.id);
 
-    // Find the blog to be updated
-    const blogToUpdate = req.blog;
+      // Find the blog to be updated
+      const blogToUpdate = req.blog;
 
-    // Update the likes counter
-    await blogToUpdate.update({ likes: likes });
+      // Update the likes counter
+      await blogToUpdate.update({ likes: likes });
 
-    res.status(200).json(blogToUpdate.toJSON());
-  } catch (err) {
-    next(err);
-  }
-});
+      res.status(200).json(blogToUpdate.toJSON());
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 export default blogsRouter;

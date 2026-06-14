@@ -75,7 +75,7 @@ describe("the Blogs DELETE route", () => {
 
     // Confirm the blogs length has increased
     let currentAmount = await getAmount("blogs");
-    assert.strictEqual((initialAmount + 1), currentAmount);
+    assert.strictEqual(initialAmount + 1, currentAmount);
 
     // Remove the blog
     await api
@@ -128,7 +128,7 @@ describe("the Blogs DELETE route", () => {
     // Assert an error message is within the response
     assert.strictEqual(
       deleteResponse.body.error,
-      "Only the user who added the blog can remove it"
+      "Only the user who added the blog can remove it",
     );
 
     // Assert no blogs have been removed
@@ -181,7 +181,7 @@ describe("the Blogs DELETE route", () => {
 
     // Confirm the blogs length has increased
     let currentAmount = await getAmount("blogs");
-    assert.strictEqual((initialAmount + 1), currentAmount);
+    assert.strictEqual(initialAmount + 1, currentAmount);
 
     // Try to delete a blog
     const response = await api
@@ -194,6 +194,6 @@ describe("the Blogs DELETE route", () => {
 
     // Confirm the blogs length has not changed
     currentAmount = await getAmount("blogs");
-    assert.strictEqual((initialAmount + 1), currentAmount);
+    assert.strictEqual(initialAmount + 1, currentAmount);
   });
 });

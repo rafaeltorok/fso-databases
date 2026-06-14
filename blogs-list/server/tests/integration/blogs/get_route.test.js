@@ -110,7 +110,10 @@ describe("the Blogs GET route", () => {
     const { id, ...otherFields } = response.body;
 
     // Assert the data is correct
-    assert.deepStrictEqual(otherFields, { ...blogToView, user: { name: loggedUser.name } });
+    assert.deepStrictEqual(otherFields, {
+      ...blogToView,
+      user: { name: loggedUser.name },
+    });
   });
 
   test("a blog can be fetch through its id value", async () => {
@@ -130,9 +133,7 @@ describe("the Blogs GET route", () => {
   });
 
   test("a non-existing id should return a proper status code", async () => {
-    await api
-      .get("/api/blogs/0")
-      .expect(404);
+    await api.get("/api/blogs/0").expect(404);
   });
 
   test("an empty blogs list should be properly returned", async () => {
