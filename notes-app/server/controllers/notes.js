@@ -1,5 +1,6 @@
 // Dependencies
 import express from "express";
+import { Op } from "sequelize";
 
 // Models
 import { Note, User } from "../models/index.js";
@@ -11,12 +12,25 @@ const notesRouter = express.Router();
 
 // Routes
 notesRouter.get("/", async (req, res) => {
+  const where = {};
+
+  if (req.query.important) {
+    where.important = req.query.important === "true";
+  }
+
+  if (req.query.search) {
+    where.content = {
+      [Op.substring]: req.query.search
+    };
+  }
+
   const notes = await Note.findAll({
     attributes: { exclude: ["userId"] },
     include: {
       model: User,
       attributes: ["name"],
     },
+    where,
   });
   res.json(notes);
 });
