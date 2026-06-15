@@ -129,7 +129,7 @@ curl -X GET http://localhost:3001/api/users
 
 Create a new blog (likes field is **optional**)
 ```bash
-curl -X POST http://localhost:3001/api/blogs -H "Content-Type: application/json" -d '{ "title":"My blog", "author":"The blogger", "url":"https://myblog.com", "likes":10 }'
+curl -X POST http://localhost:3001/api/blogs -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "title":"My blog", "author":"The blogger", "url":"https://myblog.com", "likes":10 }'
 ```
 
 Create a new user
@@ -146,7 +146,7 @@ curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json"
 
 Delete a blog
 ```bash
-curl -X DELETE http://localhost:3001/api/blogs/<id>
+curl -X DELETE http://localhost:3001/api/blogs/<id> -H "Authorization: Bearer <token>"
 ```
 
 Delete an user
@@ -158,7 +158,7 @@ curl -X DELETE http://localhost:3001/api/users/<id>
 
 Update the number of likes of a blog
 ```bash
-curl -X PUT http://localhost:3001/api/blogs/<id> -H "Content-Type: application/json" -d '{ "likes":10 }'
+curl -X PUT http://localhost:3001/api/blogs/<id> -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "likes":10 }'
 ```
 
 
