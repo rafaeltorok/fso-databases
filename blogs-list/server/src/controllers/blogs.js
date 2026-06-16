@@ -1,5 +1,6 @@
 // Dependencies
 import express from "express";
+import { Op } from "sequelize";
 
 // Models
 import { Blog, User } from "../models/index.js";
@@ -16,6 +17,30 @@ const blogsRouter = express.Router();
 // GET all
 blogsRouter.get("/", async (req, res, next) => {
   try {
+    const where = {};
+
+    // Search by Title only
+    if (req.query.title) {
+      where.title = {
+        [Op.iLike]: `%${req.query.title}%`,
+      };
+    }
+
+    // Search by Author name only
+    if (req.query.author) {
+      where.author = {
+        [Op.iLike]: `%${req.query.author}%`,
+      };
+    }
+
+    // Search by both Title and Author
+    if (req.query.search) {
+      where[Op.or] = [
+        { title: { [Op.iLike]: `%${req.query.search}%` } },
+        { author: { [Op.iLike]: `%${req.query.search}%` } },
+      ];
+    }
+
     const data = await Blog.findAll({
       attributes: {
         exclude: ["userId"],
@@ -24,7 +49,10 @@ blogsRouter.get("/", async (req, res, next) => {
         model: User,
         attributes: ["name"],
       },
+      order: [ ["likes", "desc"] ],
+      where,
     });
+
     res.status(200).json(data);
   } catch (err) {
     next(err);
