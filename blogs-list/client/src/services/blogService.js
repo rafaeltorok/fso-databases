@@ -40,7 +40,10 @@ async function removeData(id) {
 
 // PUT updates an item
 async function updateData(id, newObject) {
-  const request = await axios.put(`${baseUrl}/${id}`, newObject);
+  const config = {
+    headers: { Authorization: token },
+  };
+  const request = await axios.put(`${baseUrl}/${id}`, newObject, config);
   return request.data;
 }
 
