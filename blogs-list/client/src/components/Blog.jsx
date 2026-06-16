@@ -48,7 +48,7 @@ export default function Blog({ blog, handleLikes, handleDelete, user }) {
                 <th>User:</th>
                 <td>{blog.user?.name}</td>
               </tr>
-              {user?.username === blog.user?.username && (
+              {user?.name === blog.user?.name && (
                 <tr>
                   <th colSpan={2}>
                     <button type="button" onClick={removeBlog}>
