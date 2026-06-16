@@ -1,16 +1,23 @@
+// Dependencies
 import { useState, useEffect, useRef } from "react";
+
+// Services
 import blogService from "./services/blogService";
+
+// Components
 import Login from "./components/Login";
 import AddBlogForm from "./components/AddBlogForm";
 import Notification from "./components/Notification";
 import BlogList from "./components/BlogList";
 import Togglable from "./components/Togglable";
 
+// App component
 function App() {
   const [blogList, setBlogList] = useState([]);
   const [notification, setNotification] = useState("");
   const [notificationType, setNotificationType] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -24,6 +31,7 @@ function App() {
         setBlogList(data);
       } catch (err) {
         console.error(err);
+        setIsError(true);
       } finally {
         setIsLoading(false);
       }
@@ -94,9 +102,24 @@ function App() {
 
   const addBlog = async (blogObject) => {
     try {
+      // Store the new blog via Axios
       const savedBlog = await blogService.storeData(blogObject);
-      setBlogList(blogList.concat(savedBlog));
+
+      // Add the new blog to the list
+      setBlogList(blogList.concat(
+        {
+          ...savedBlog,
+          user: {
+            // concatenates the currently logged in user name to it
+            name: user.name
+          }
+        }
+      ));
+
+      // Hide the blog form
       blogFormRef.current.toggleVisibility();
+
+      // Print a notification on the page
       handleNotification(
         "success-message",
         `The blog "${savedBlog.title}" by ${savedBlog.author} was added to the list!`,
@@ -124,10 +147,13 @@ function App() {
       );
 
       // Update on the remote server
-      await blogService.updateData(blogToUpdate.id, {
-        ...blogToUpdate,
-        likes: blogToUpdate.likes + 1,
-      });
+      await blogService.updateData(
+        blogToUpdate.id,
+        {
+          ...blogToUpdate,
+          likes: blogToUpdate.likes + 1,
+        },
+      );
     } catch (err) {
       console.error(err);
       handleNotification(
@@ -173,7 +199,7 @@ function App() {
     }
   };
 
-  if (!blogList) {
+  if (isError) {
     return <h2>Failed to get data from the server</h2>;
   }
 
@@ -214,7 +240,7 @@ function App() {
         user={user}
       />
       <footer>
-        Blogs List app, from the FullStackOpen course by MOOC Finland 2025.
+        Blogs List app, from the FullStackOpen Databases course by MOOC Finland 2026.
       </footer>
     </>
   );
