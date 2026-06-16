@@ -125,20 +125,30 @@ Fetch all users
 curl -X GET http://localhost:3001/api/users
 ```
 
-Search by the **blog title**
-```bash
-curl -X GET http://localhost:3001/api/blogs?title=<search_term>
-```
+#### Search
 
-Search by the **author's name**
-```bash
-curl -X GET http://localhost:3001/api/blogs?author=<search_term>
-```
+- Search by the **blog title**
+  ```bash
+  curl -X GET http://localhost:3001/api/blogs?title=<search_term>
+  ```
 
-Search by **both** the blog title and author's name
-```bash
-curl -X GET http://localhost:3001/api/blogs?search=<search_term>
-```
+- Search by the **author's name**
+  ```bash
+  curl -X GET http://localhost:3001/api/blogs?author=<search_term>
+  ```
+
+- Search by **both** the blog title and author's name
+  ```bash
+  curl -X GET http://localhost:3001/api/blogs?search=<search_term>
+  ```
+
+#### Authors
+
+- Get the number of blogs and total likes per author
+  ```bash
+  curl -X GET http://localhost:3001/api/authors
+  ```
+
 
 ### POST
 
