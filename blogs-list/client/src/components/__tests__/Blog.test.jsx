@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Blog from "./Blog.jsx";
+import Blog from "../Blog.jsx";
 
 test("renders only the blog title and author by default", () => {
   const blog = {

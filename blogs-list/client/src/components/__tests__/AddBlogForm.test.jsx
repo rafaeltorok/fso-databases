@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import AddBlogForm from "./AddBlogForm";
+import AddBlogForm from "../AddBlogForm";
 import userEvent from "@testing-library/user-event";
 
 test("<AddBlogForm /> updates parent state and calls onSubmit", async () => {
