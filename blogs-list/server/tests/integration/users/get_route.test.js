@@ -24,7 +24,7 @@ let loggedUser;
 // Reset all data on the database tables
 before(async () => {
   await setupDb();
-  await api.post("/api/tests/reset");
+  await api.post("/api/reset");
 });
 
 // Close the database connection after all tests have been finished

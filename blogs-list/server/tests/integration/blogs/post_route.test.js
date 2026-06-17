@@ -36,7 +36,7 @@ async function getAmount(route) {
 // Reset all data on the database tables
 before(async () => {
   await setupDb();
-  await api.post("/api/tests/reset");
+  await api.post("/api/reset");
 
   // Create a new user for the tests
   const user = initialUsers[0];
