@@ -1,16 +1,17 @@
 # BlogList
 
 ## Table of Contents
-- [Running the app](#running-the-app)
+
+- [Setup](#setup)
+- [ENV variables](#env-variables)
+- [Usage](#usage)
 - [Docker](#docker)
 - [CRUD operations](#crud-operations)
 - [Tests](#tests)
 - [ESLint](#eslint)
 
 
-## Running the app
-
-### Setup
+## Setup
 
 Install the server dependencies
 ```bash
@@ -22,7 +23,22 @@ Install the client dependencies
 cd ./blogs-list/client && npm install
 ```
 
-### Usage
+
+## ENV variables
+
+The `.env` file must contain the following variables scheme
+```conf
+POSTGRES_URI=postgres://<username>:<password>@<hostname>:<port>/blogslist
+TEST_POSTGRES_URI=postgres://<username>:<password>@<hostname>:<port>/test_blogslist
+PORT=3001
+SECRET=<insert_your_secret_passphrase_here>
+DATABASE_SSL=true
+```
+
+- `DATABASE_SSL` should only be set to `false` inside of Docker networks.
+
+
+## Usage
 
 Start the Express server
 ```bash
@@ -115,15 +131,25 @@ docker compose -f ./docker-compose.test.yml down -v
 
 ### GET
 
-Fetch all blogs
-```bash
-curl -X GET http://localhost:3001/api/blogs
-```
+- Fetch all blogs
+  ```bash
+  curl -X GET http://localhost:3001/api/blogs
+  ```
 
-Fetch all users
-```bash
-curl -X GET http://localhost:3001/api/users
-```
+- Fetch all users
+  ```bash
+  curl -X GET http://localhost:3001/api/users
+  ```
+
+- Server health check
+  ```bash
+  curl -X GET http://localhost:3001/api/health
+  ```
+
+- Test route to check the server (**Not available** on the Docker orchestration)
+  ```bash
+  curl -X GET http://localhost:3001
+  ```
 
 #### Search
 
@@ -152,39 +178,39 @@ curl -X GET http://localhost:3001/api/users
 
 ### POST
 
-Create a new blog (likes field is **optional**)
-```bash
-curl -X POST http://localhost:3001/api/blogs -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "title":"My blog", "author":"The blogger", "url":"https://myblog.com", "likes":10 }'
-```
+- Create a new blog (likes field is **optional**)
+  ```bash
+  curl -X POST http://localhost:3001/api/blogs -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "title":"My blog", "author":"The blogger", "url":"https://myblog.com", "likes":10 }'
+  ```
 
-Create a new user
-```bash
-curl -X POST http://localhost:3001/api/users -H "Content-Type: application/json" -d '{ "username":"admin", "name":"Administrator", "password":"admin" }'
-```
+- Create a new user
+  ```bash
+  curl -X POST http://localhost:3001/api/users -H "Content-Type: application/json" -d '{ "username":"admin", "name":"Administrator", "password":"admin" }'
+  ```
 
-Logging in
-```bash
-curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json" -d '{ "username":"admin", "password":"admin" }'
-```
+- Logging in
+  ```bash
+  curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json" -d '{ "username":"admin", "password":"admin" }'
+  ```
 
 ### DELETE
 
-Delete a blog
-```bash
-curl -X DELETE http://localhost:3001/api/blogs/<id> -H "Authorization: Bearer <token>"
-```
+- Delete a blog
+  ```bash
+  curl -X DELETE http://localhost:3001/api/blogs/<id> -H "Authorization: Bearer <token>"
+  ```
 
-Delete an user
-```bash
-curl -X DELETE http://localhost:3001/api/users/<id>
-```
+- Delete an user
+  ```bash
+  curl -X DELETE http://localhost:3001/api/users/<id>
+  ```
 
 ### PUT
 
-Update the number of likes of a blog
-```bash
-curl -X PUT http://localhost:3001/api/blogs/<id> -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "likes":10 }'
-```
+- Update the number of likes of a blog
+  ```bash
+  curl -X PUT http://localhost:3001/api/blogs/<id> -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "likes":10 }'
+  ```
 
 
 ## Tests
