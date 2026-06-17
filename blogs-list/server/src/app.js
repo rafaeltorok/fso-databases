@@ -21,13 +21,14 @@ app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/health", healthRouter);
 app.use("/api/authors", authorsRouter);
+
+if (process.env.NODE_ENV === "test") {
+  app.use("/api/reset", testsRouter);
+}
+
 app.use("/", async (req, res) => {
   return res.status(200).end();
 });
-
-if (process.env.NODE_ENV === "test") {
-  app.use("/api", testsRouter);
-}
 
 app.use(errorHandler);
 

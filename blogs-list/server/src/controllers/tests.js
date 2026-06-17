@@ -8,7 +8,7 @@ import User from "../models/user.js";
 const testsRouter = express.Router();
 
 // Routes
-testsRouter.post("/reset", async (req, res, next) => {
+testsRouter.post("/", async (req, res, next) => {
   try {
     await Blog.truncate({ restartIdentity: true, cascade: true });
     await User.truncate({ restartIdentity: true, cascade: true });
