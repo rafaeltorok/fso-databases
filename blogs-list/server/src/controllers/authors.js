@@ -16,8 +16,8 @@ authorsRouter.get("/", async (req, res, next) => {
         [sequelize.fn("COUNT", sequelize.col("author")), "blogs"],
         [sequelize.fn("SUM", sequelize.col("likes")), "likes"],
       ],
-      group: [ "author" ],
-      order: [[ "likes", "DESC" ]],
+      group: ["author"],
+      order: [["likes", "DESC"]],
     });
 
     return res.status(200).json(authors);
