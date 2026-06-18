@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
 export async function up ({ context: queryInterface }) {
-  await queryInterface.createTable('users', {
+  await queryInterface.createTable("users", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -22,7 +22,7 @@ export async function up ({ context: queryInterface }) {
     }
   });
 
-  await queryInterface.createTable('notes', {
+  await queryInterface.createTable("notes", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -42,12 +42,12 @@ export async function up ({ context: queryInterface }) {
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'users', key: 'id' },
+      references: { model: "users", key: "id" },
     }
   });
 }
 
 export async function down ({ context: queryInterface }) {
-  await queryInterface.dropTable('notes');
-  await queryInterface.dropTable('users');
+  await queryInterface.dropTable("notes");
+  await queryInterface.dropTable("users");
 }
