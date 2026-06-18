@@ -16,6 +16,10 @@ export async function up ({ context: queryInterface }) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   });
 
   await queryInterface.createTable('notes', {
