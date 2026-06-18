@@ -32,7 +32,7 @@ services:
       - dev-network
     volumes:
       - ./server:/usr/src/app/server
-      - /usr/src/app/server/node_modules
+      - server_node_modules:/usr/src/app/server/node_modules
     environment:
       DATABASE_URL: postgres://admin:admin@dev-postgres:5432/notesapp
       PORT: 3001
@@ -63,6 +63,9 @@ services:
       timeout: 20s
       retries: 3
       start_period: 30s
+
+volumes:
+  server_node_modules:
 
 networks:
   dev-network:
