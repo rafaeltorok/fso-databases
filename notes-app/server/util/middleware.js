@@ -1,7 +1,14 @@
+// Dependencies
 import jwt from "jsonwebtoken";
-import { SECRET } from "./config.js";
-import Note from "../models/note.js";
 
+// Variables
+import { SECRET } from "./config.js";
+
+// Models
+import Note from "../models/note.js";
+import User from "../models/user.js";
+
+// Verify if a token is valid or not
 export const tokenExtractor = (req, res, next) => {
   const authorization = req.get("authorization");
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
@@ -20,7 +27,19 @@ export const tokenExtractor = (req, res, next) => {
   next();
 };
 
+// Find a note by its id
 export const noteFinder = async (req, res, next) => {
   req.note = await Note.findByPk(req.params.id);
+  next();
+};
+
+// Check if the currently logged user has admin permission
+export const isAdmin = async (req, res, next) => {
+  const user = await User.findByPk(req.decodedToken.id);
+
+  if (!user.admin) {
+    return res.status(401).json({ error: "Operation not allowed" });
+  }
+
   next();
 };
