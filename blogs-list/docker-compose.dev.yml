@@ -11,7 +11,7 @@ services:
     networks:
       - dev-network
     ports:
-      - 5432:5432
+      - 5433:5432
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "admin"]
       interval: 30s
@@ -32,7 +32,7 @@ services:
       - dev-network
     volumes:
       - ./server:/usr/src/app/server
-      - /usr/src/app/server/node_modules
+      - server_node_modules:/usr/src/app/server/node_modules
     environment:
       POSTGRES_URI: postgres://admin:admin@dev-postgres:5432/blogslist
       PORT: 3001
@@ -86,6 +86,9 @@ services:
       timeout: 20s
       retries: 3
       start_period: 30s
+
+volumes:
+  server_node_modules:
 
 networks:
   dev-network:
