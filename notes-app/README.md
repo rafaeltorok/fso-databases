@@ -91,51 +91,67 @@ psql -U admin -W -d notesapp
 
 ### GET
 
-Fetch all notes
-```bash
-curl -X GET http://localhost:3001/api/notes
-```
+- Fetch all notes
+  ```bash
+  curl -X GET http://localhost:3001/api/notes
+  ```
 
-Fetch all users
-```bash
-curl -X GET http://localhost:3001/api/users
-```
+- Fetch all users
+  ```bash
+  curl -X GET http://localhost:3001/api/users
+  ```
+
+- Search for a note
+  ```bash
+  curl -X GET http://localhost:3001/api/notes?search=<search_term>
+  ```
+
+- Filter notes by importance (`true` or `false`)
+  ```bash
+  curl -X GET http://localhost:3001/api/notes?important=true
+  ```
+
 
 ### POST
 
-Create a new note (the important field is **optional**, will be set to `false` by default)
-```bash
-curl -X POST http://localhost:3001/api/notes -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "content":"My first note", "important":true }'
-```
+- Create a new note (the important field is **optional**, will be set to `false` by default)
+  ```bash
+  curl -X POST http://localhost:3001/api/notes -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "content":"My first note", "important":true }'
+  ```
 
-Create a new user
-```bash
-curl -X POST http://localhost:3001/api/users -H "Content-Type: application/json" -d '{ "username":"admin", "name":"Administrator", "password":"admin" }'
-```
+- Create a new user
+  ```bash
+  curl -X POST http://localhost:3001/api/users -H "Content-Type: application/json" -d '{ "username":"admin", "name":"Administrator", "password":"admin" }'
+  ```
 
-Logging in
-```bash
-curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json" -d '{ "username":"admin", "password":"admin" }'
-```
+- Logging in
+  ```bash
+  curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json" -d '{ "username":"admin", "password":"admin" }'
+  ```
 
 ### DELETE
 
-Delete a note
-```bash
-curl -X DELETE http://localhost:3001/api/notes/<id> -H "Authorization: Bearer <token>"
-```
+- Delete a note
+  ```bash
+  curl -X DELETE http://localhost:3001/api/notes/<id> -H "Authorization: Bearer <token>"
+  ```
 
-Delete an user
-```bash
-curl -X DELETE http://localhost:3001/api/users/<id>
-```
+- Delete an user
+  ```bash
+  curl -X DELETE http://localhost:3001/api/users/<id>
+  ```
 
 ### PUT
 
-Update the importance of a note
-```bash
-curl -X PUT http://localhost:3001/api/notes/<id> -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "important":true }'
-```
+- Update the importance of a note
+  ```bash
+  curl -X PUT http://localhost:3001/api/notes/<id> -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "important":true }'
+  ```
+
+- **Admin Only**: Enable or disable an user for logging in (`true` or `false`)
+  ```bash
+  curl -X PUT http://localhost:3001/api/users/<username> -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "disabled":true }'
+  ```
 
 
 ## ESLint
