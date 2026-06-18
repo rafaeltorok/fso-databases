@@ -11,7 +11,7 @@ services:
     networks:
       - dev-network
     ports:
-      - 5433:5432
+      - 5434:5432
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "admin"]
       interval: 30s
