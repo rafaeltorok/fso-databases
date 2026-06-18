@@ -5,6 +5,7 @@ const app = express();
 // Utils
 import { PORT } from "./util/config.js";
 import { sequelize } from "./util/db.js";
+import runMigrations from "./util/migrations.js";
 
 // Controllers
 import notesRouter from "./controllers/notes.js";
@@ -24,7 +25,7 @@ app.use("/api/health", healthRouter);
 const start = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync();
+    await runMigrations();
     console.log("database connected");
   } catch (err) {
     console.log("connecting database failed:", err);
