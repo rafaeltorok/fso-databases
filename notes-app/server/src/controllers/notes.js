@@ -69,11 +69,26 @@ notesRouter.post("/", tokenExtractor, validateNote, async (req, res, next) => {
 });
 
 // DELETE a note
-notesRouter.delete("/:id", noteFinder, tokenExtractor, async (req, res, next) => {
+notesRouter.delete("/:id", validateId, noteFinder, tokenExtractor, async (req, res, next) => {
   try {
     if (req.note) {
       await User.findByPk(req.decodedToken.id);
 
+      // Confirm the note to be removed exists
+      const noteToBeRemoved = await Note.findByPk(req.note.id);
+
+      if (!noteToBeRemoved) {
+        return res.status(404).end();
+      }
+
+      // Confirm the currently logged in user is the owner of the note
+      if (noteToBeRemoved.userId !== req.decodedToken.id) {
+        return res
+          .status(401)
+          .json({ error: "Only the note owner can remove it" });
+      }
+
+      // Remove the note
       await req.note.destroy();
     }
     return res.status(204).end();
