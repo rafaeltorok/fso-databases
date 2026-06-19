@@ -6,71 +6,64 @@ import bcrypt from "bcrypt";
 import { User, Note } from "../models/index.js";
 
 // Middleware
-import { tokenExtractor, isAdmin } from "../util/middleware.js";
+import { tokenExtractor } from "../middleware/tokenExtractor.js";
+import { isAdmin } from "../middleware/isAdmin.js";
+import { userFinder } from "../middleware/userFinder.js";
+import validateUser from "../middleware/validators/usersValidator.js";
+import validateId from "../middleware/validators/validateId.js";
+import validatePassword from "../middleware/validators/validatePassword.js";
 
 const usersRouter = express.Router();
 
-// Routes
 // Get all users
-usersRouter.get("/", async (req, res) => {
-  const users = await User.findAll({
-    attributes: {
-      exclude: ["passwordHash"],
-    },
-    include: {
-      model: Note,
+usersRouter.get("/", async (req, res, next) => {
+  try {
+    const users = await User.findAll({
       attributes: {
-        exclude: ["userId"]
+        exclude: ["passwordHash"],
       },
-    },
-  });
-  res.json(users);
+      include: {
+        model: Note,
+        attributes: {
+          exclude: ["userId"]
+        },
+      },
+    });
+    return res.status(200).json(users);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Get an user based on its id
-usersRouter.get("/:id", async (req, res) => {
-  const user = await User.findByPk(req.params.id, {
-    attributes: {
-      exclude: ["passwordHash"]
-    },
-    include: {
-      model: Note,
+usersRouter.get("/:id", validateId, userFinder, async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id, {
       attributes: {
-        exclude: ["userId"]
+        exclude: ["passwordHash"]
       },
-    },
-  });
+      include: {
+        model: Note,
+        attributes: {
+          exclude: ["userId"]
+        },
+      },
+    });
 
-  if (user) {
-    res.json(user);
-  } else {
-    res.status(404).end();
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).end();
+    }
+  } catch (err) {
+    next(err);
   }
 });
 
 // Create a new user
-usersRouter.post("/", async (req, res) => {
+usersRouter.post("/", validateUser, validatePassword, async (req, res, next) => {
   try {
     const { username, name, password } = req.body;
-
-    if (
-      username === undefined ||
-      name === undefined ||
-      password === undefined
-    ) {
-      return res.status(400).send({ error: "Missing required fields" });
-    }
-
-    // Check if the username is already taken
-    const existingUser = await User.findOne({
-      where: {
-        username: username
-      }
-    });
-
-    if (existingUser) {
-      return res.status(400).json({ error: "Username must be unique" });
-    }
 
     // Hash the password to be stored
     const saltRounds = 10;
@@ -87,25 +80,51 @@ usersRouter.post("/", async (req, res) => {
     delete nonSensitiveData.passwordHash;
 
     return res.status(201).json(nonSensitiveData);
-  } catch (error) {
-    return res.status(400).json({ error });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE an user
+usersRouter.delete("/:id", validateId, async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+
+    // Remove the user
+    const removedUsers = await User.destroy({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (removedUsers === 1) {
+      return res.status(204).end();
+    } else {
+      return res.status(404).end();
+    }
+  } catch (err) {
+    next(err);
   }
 });
 
 // Admin-only route to enable or disable an user
-usersRouter.put("/:username", tokenExtractor, isAdmin, async (req, res) => {
-  const user = await User.findOne({
-    where: {
-      username: req.params.username
-    }
-  });
+usersRouter.put("/:username", tokenExtractor, isAdmin, async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        username: req.params.username
+      }
+    });
 
-  if (user) {
-    user.disabled = req.body.disabled;
-    await user.save();
-    return res.status(200).json(user);
-  } else {
-    return res.status(404).end();
+    if (user) {
+      user.disabled = req.body.disabled;
+      await user.save();
+      return res.status(200).json(user);
+    } else {
+      return res.status(404).end();
+    }
+  } catch (err) {
+    next(err);
   }
 });
 
