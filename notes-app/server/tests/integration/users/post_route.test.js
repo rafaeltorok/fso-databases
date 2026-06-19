@@ -10,7 +10,7 @@ import { setupDb, dbCleanup } from "../setup.js";
 import app from "../../../src/app.js";
 
 // Models
-import User from "../../../src/models/user.js";
+import { User } from "../../../src/models/index.js";
 import initialUsers from "../../data/initialUsers.js";
 
 // Constants
