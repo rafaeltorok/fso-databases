@@ -10,16 +10,37 @@ export async function up ({ context: queryInterface }) {
     username: {
       type: DataTypes.STRING,
       unique: true,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isEmail: {
+          msg: "Invalid email address",
+        },
+        len: {
+          args: [5, 32],
+          msg: "The username must be between 5 and 32 chars long",
+        },
+        notNull: {
+          msg: "Username is required",
+        },
+      },
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: {
+          args: [3, 32],
+          msg: "The user's name must be between 3 and 32 chars long",
+        },
+        notNull: {
+          msg: "Name is required",
+        },
+      },
     },
-    password: {
+    passwordHash: {
       type: DataTypes.STRING,
       allowNull: false
-    }
+    },
   });
 
   await queryInterface.createTable("notes", {
@@ -30,7 +51,16 @@ export async function up ({ context: queryInterface }) {
     },
     content: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: {
+          args: [3, 32],
+          msg: "The note's content must be between 3 and 32 chars long",
+        },
+        notNull: {
+          msg: "Note's content is required",
+        }
+      }
     },
     important: {
       type: DataTypes.BOOLEAN,
