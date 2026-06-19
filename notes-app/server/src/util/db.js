@@ -1,5 +1,7 @@
 import Sequelize from "sequelize";
 import { DATABASE_URL } from "./config.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 let sequelize;
 
@@ -13,6 +15,7 @@ if (process.env.DATABASE_SSL === "true") {
         rejectUnauthorized: false,
       },
     },
+    logging: process.env.NODE_ENV === "test" ? false : true,
   });
 } else if (process.env.DATABASE_SSL === "false") {
   // Disable SSL connections for the Docker orchestrations
@@ -21,6 +24,7 @@ if (process.env.DATABASE_SSL === "true") {
     dialectOptions: {
       ssl: false,
     },
+    logging: process.env.NODE_ENV === "test" ? false : true,
   });
 } else {
   throw new Error("The DATABASE_SSL env variable must be set to either true or false");
