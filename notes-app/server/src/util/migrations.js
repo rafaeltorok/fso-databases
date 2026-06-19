@@ -1,4 +1,4 @@
-import { sequelize } from "./db.js";
+import sequelize from "./db.js";
 import { Umzug, SequelizeStorage } from "umzug";
 
 export default async function runMigrations() {

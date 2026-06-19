@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../util/db.js";
+import sequelize from "../util/db.js";
 
 export default class Note extends Model {}
 
