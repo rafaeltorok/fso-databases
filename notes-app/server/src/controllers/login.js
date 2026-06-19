@@ -32,13 +32,6 @@ loginRouter.post("/", async (req, res) => {
     },
   });
 
-  // Check if the account has been disabled
-  if (user.disabled) {
-    return res.status(401).json({
-      error: "Account has been disabled, please contact an admin"
-    });
-  }
-
   // If the user exists, check the hashed password
   const passwordCorrect = user === null
     ? false
@@ -48,7 +41,14 @@ loginRouter.post("/", async (req, res) => {
   // or the password is incorrect
   if (!(user && passwordCorrect)) {
     return res.status(401).json({
-      error: "invalid username or password",
+      error: "Invalid username or password",
+    });
+  }
+
+  // Check if the account has been disabled
+  if (user.disabled) {
+    return res.status(401).json({
+      error: "Account has been disabled, please contact an admin"
     });
   }
 
