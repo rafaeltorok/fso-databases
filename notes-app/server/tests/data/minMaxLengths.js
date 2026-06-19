@@ -3,8 +3,8 @@
 // Notes
 
 // Content
-export const minTitleLength = 3;
-export const maxTitleLength = 32;
+export const minContentLength = 3;
+export const maxContentLength = 32;
 
 
 // Users
@@ -16,3 +16,7 @@ export const maxUsernameLength = 32;
 // Name
 export const minNameLength = 3;
 export const maxNameLength = 32;
+
+// Password
+export const minPasswordLength = 5;
+export const maxPasswordLength = 64;
