@@ -56,7 +56,17 @@ notesRouter.get("/:id", validateId, noteFinder, async (req, res, next) => {
 // POST a new note
 notesRouter.post("/", tokenExtractor, validateNote, async (req, res, next) => {
   try {
+    // Check if the user is authorized
     const user = await User.findByPk(req.decodedToken.id);
+
+    // Check if the important value is a valid boolean when present
+    if (req.body.important !== undefined) {
+      if (typeof req.body.important !== "boolean") {
+        return res.status(400).json({ error: "The important field must be either true or false" });
+      }
+    }
+
+    // Create a new note
     const note = await Note.create({
       ...req.body,
       userId: user.id,
