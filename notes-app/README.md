@@ -5,6 +5,7 @@
 - [Usage](#usage)
 - [Docker](#docker)
 - [CRUD Operations](#crud-operations)
+- [Tests](#tests)
 - [ESLint](#eslint)
 
 
@@ -85,6 +86,22 @@ psql -U admin -W -d notesapp
 - Password: `admin`
 
 
+### Integration tests
+
+**Note**: the test data is stored temporarily inside a PostgreSQL container.
+
+Run all tests
+```bash
+docker compose -f ./docker-compose.test.yml up --build --abort-on-container-exit
+```
+
+Cleanup
+```bash
+docker compose -f ./docker-compose.test.yml down -v
+```
+
+
+
 ## CRUD operations
 
 **Note**: when running the Docker orchestration, use the proxied Nginx port `8001` for all HTTP requests.
@@ -131,7 +148,7 @@ psql -U admin -W -d notesapp
 
 ### DELETE
 
-- Delete a note
+- Delete a note (only the **note owner** can remove it)
   ```bash
   curl -X DELETE http://localhost:3001/api/notes/<id> -H "Authorization: Bearer <token>"
   ```
@@ -152,6 +169,42 @@ psql -U admin -W -d notesapp
   ```bash
   curl -X PUT http://localhost:3001/api/users/<username> -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "disabled":true }'
   ```
+
+
+## Tests
+
+### Integration tests
+
+Features:
+
+- Implemented using the standard Node.js testing library with Supertest.
+
+- Covers all major valid, invalid and edge-case inputs relevant to the course's exercise requirements.
+
+Enter the server folder
+```bash
+cd ./server
+```
+
+Run all tests
+```bash
+npm run test
+```
+
+Run only the Notes routes test suites
+```bash
+npm run test -- ./tests/integration/notes/*
+```
+
+Run only the Users routes test suites
+```bash
+npm run test -- ./tests/integration/users/*
+```
+
+Run only the Login route test suite
+```bash
+npm run test -- ./tests/integration/login_route.test.js
+```
 
 
 ## ESLint
