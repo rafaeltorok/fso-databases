@@ -116,10 +116,21 @@ usersRouter.put("/:username", tokenExtractor, isAdmin, async (req, res, next) =>
       }
     });
 
+    // Check if the disabled value is a valid boolean
+    if (typeof req.body.disabled !== "boolean") {
+      return res.status(400).json({ error: "The disabled field must be either true or false" });
+    }
+
+    // Check if the user exists
     if (user) {
       user.disabled = req.body.disabled;
       await user.save();
-      return res.status(200).json(user);
+
+      // Remove sensitive field from the response
+      const nonSensitiveData = user.toJSON();
+      delete nonSensitiveData.passwordHash;
+
+      return res.status(200).send(nonSensitiveData);
     } else {
       return res.status(404).end();
     }
