@@ -1,7 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../util/db.js";
 
-class User extends Model {}
+export default class User extends Model {}
 
 User.init(
   {
@@ -14,12 +14,33 @@ User.init(
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
+      validate: {
+        isEmail: {
+          msg: "Invalid email address",
+        },
+        len: {
+          args: [5, 32],
+          msg: "The username must be between 5 and 32 chars long",
+        },
+        notNull: {
+          msg: "Username is required",
+        },
+      },
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [3, 32],
+          msg: "The user's name must be between 3 and 32 chars long",
+        },
+        notNull: {
+          msg: "Name is required",
+        },
+      },
     },
-    password: {
+    passwordHash: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -35,9 +56,7 @@ User.init(
   {
     sequelize,
     underscored: true,
-    timestamps: false,
+    timestamps: true,
     modelName: "user",
   },
 );
-
-export default User;

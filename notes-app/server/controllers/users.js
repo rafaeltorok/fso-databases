@@ -15,7 +15,7 @@ const usersRouter = express.Router();
 usersRouter.get("/", async (req, res) => {
   const users = await User.findAll({
     attributes: {
-      exclude: ["password"],
+      exclude: ["passwordHash"],
     },
     include: {
       model: Note,
@@ -58,12 +58,12 @@ usersRouter.post("/", async (req, res) => {
     const newUser = await User.create({
       username,
       name,
-      password: passwordHash
+      passwordHash
     });
 
     // Remove sensitive field from the response
     const nonSensitiveData = newUser.toJSON();
-    delete nonSensitiveData.password;
+    delete nonSensitiveData.passwordHash;
 
     return res.status(201).json(nonSensitiveData);
   } catch (error) {
@@ -75,7 +75,7 @@ usersRouter.post("/", async (req, res) => {
 usersRouter.get("/:id", async (req, res) => {
   const user = await User.findByPk(req.params.id, {
     attributes: {
-      exclude: ["password"]
+      exclude: ["passwordHash"]
     }
   });
 
