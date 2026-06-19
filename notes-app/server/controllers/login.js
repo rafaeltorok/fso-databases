@@ -42,7 +42,7 @@ loginRouter.post("/", async (req, res) => {
   // If the user exists, check the hashed password
   const passwordCorrect = user === null
     ? false
-    : await bcrypt.compare(password, user.password);
+    : await bcrypt.compare(password, user.passwordHash);
 
   // Return an error status if the user is not found
   // or the password is incorrect
