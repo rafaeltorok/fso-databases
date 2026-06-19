@@ -37,10 +37,18 @@ export async function up ({ context: queryInterface }) {
         },
       },
     },
-    passwordHash: {
+    password_hash: {
       type: DataTypes.STRING,
       allowNull: false
     },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false
+    }
   });
 
   await queryInterface.createTable("notes", {
