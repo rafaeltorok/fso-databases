@@ -74,8 +74,8 @@ describe("the Users GET route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Remove the id and notes fields from the returned user
-    const { id, notes, ...otherFields } = response.body;
+    // Remove the id, notes and teams fields from the returned user
+    const { id, notes, teams, ...otherFields } = response.body;
 
     // Remove the password field from the original user
     const { password, ...userFields } = userToView;
