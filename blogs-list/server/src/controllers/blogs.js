@@ -11,6 +11,7 @@ import tokenExtractor from "../middleware/tokenExtractor.js";
 import validateBlog from "../middleware/validators/blogsValidator.js";
 import validateId from "../middleware/validators/validateId.js";
 import validateLikes from "../middleware/validators/validateLikes.js";
+import validateYear from "../middleware/validators/validateYear.js";
 
 const blogsRouter = express.Router();
 
@@ -69,24 +70,30 @@ blogsRouter.get("/:id", validateId, blogFinder, async (req, res, next) => {
 });
 
 // POST a new blog
-blogsRouter.post("/", tokenExtractor, validateBlog, async (req, res, next) => {
-  try {
-    const user = await User.findByPk(req.decodedToken.id);
-    const { title, author, url, likes } = req.body;
+blogsRouter.post(
+  "/",
+  tokenExtractor,
+  validateBlog,
+  validateYear,
+  async (req, res, next) => {
+    try {
+      const user = await User.findByPk(req.decodedToken.id);
+      const { title, author, url, likes, year } = req.body;
 
-    // Create a new blog
-    const newBlog = await Blog.create({
-      title,
-      author,
-      url,
-      likes,
-      userId: user.id,
-    });
+      // Create a new blog
+      const newBlog = await Blog.create({
+        title,
+        author,
+        url,
+        likes,
+        year,
+        userId: user.id,
+      });
 
-    res.status(201).json(newBlog);
-  } catch (err) {
-    next(err);
-  }
+      res.status(201).json(newBlog);
+    } catch (err) {
+      next(err);
+    }
 });
 
 // DELETE a blog

@@ -62,11 +62,31 @@ Blog.init(
         },
       },
     },
+    year: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Year is required",
+        },
+        isInt: {
+          msg: "Invalid year format"
+        },
+        min: {
+          args: [1991],
+          msg: "A blog cannot be older than 1991"
+        },
+        max: {
+          args: [new Date().getFullYear()],
+          msg: "The year cannot exceed the current year"
+        },
+      },
+    },
   },
   {
     sequelize,
     underscored: true,
-    timestamps: false,
+    timestamps: true,
     modelName: "blog",
   },
 );
