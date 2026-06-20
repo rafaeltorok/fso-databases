@@ -6,6 +6,7 @@
 - [Docker](#docker)
 - [CRUD Operations](#crud-operations)
 - [Tests](#tests)
+- [Migrations](#migrations)
 - [ESLint](#eslint)
 
 
@@ -204,6 +205,14 @@ npm run test -- ./tests/integration/users/*
 Run only the Login route test suite
 ```bash
 npm run test -- ./tests/integration/login_route.test.js
+```
+
+
+## Migrations
+
+Undo the last migration
+```bash
+npm run migration:down
 ```
 
 

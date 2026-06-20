@@ -27,7 +27,8 @@
     "start": "node ./index.js",
     "start:test": "cross-env NODE_ENV=test node ./index.js",
     "lint": "eslint .",
-    "test": "cross-env NODE_ENV=test node --test --test-concurrency=1"
+    "test": "cross-env NODE_ENV=test node --test --test-concurrency=1",
+    "migration:down": "node ./scripts/rollback.js"
   },
   "author": "",
   "license": "ISC",
