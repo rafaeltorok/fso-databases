@@ -34,6 +34,10 @@ export default function Blog({ blog, handleLikes, handleDelete, user }) {
                 <td>{blog.url}</td>
               </tr>
               <tr>
+                <th>Year:</th>
+                <td>{blog.year}</td>
+              </tr>
+              <tr>
                 <th>Likes:</th>
                 <td>
                   <span className="like-count">{blog.likes}</span>
