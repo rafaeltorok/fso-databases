@@ -106,8 +106,8 @@ describe("the Blogs GET route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Remove the id field from the blog
-    const { id, ...otherFields } = response.body;
+    // Remove the id, createdAt and updatedAt fields from the blog
+    const { id, createdAt, updatedAt, ...otherFields } = response.body;
 
     // Assert the data is correct
     assert.deepStrictEqual(otherFields, {
@@ -129,7 +129,14 @@ describe("the Blogs GET route", () => {
     const { id, user, ...otherFields } = response.body;
 
     // Assert the data is correct
-    assert.deepStrictEqual(otherFields, blogToView);
+    assert.deepStrictEqual(
+      otherFields,
+      {
+        ...blogToView,
+        createdAt: otherFields.createdAt,
+        updatedAt: otherFields.updatedAt,
+      }
+    );
   });
 
   test("a non-existing id should return a proper status code", async () => {

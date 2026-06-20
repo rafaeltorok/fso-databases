@@ -94,7 +94,11 @@ describe("the Blogs POST route", () => {
     const { id, user, userId, ...responseFields } = response.body;
 
     // Assert all fields are correct
-    assert.deepStrictEqual(blog, responseFields);
+    assert.deepStrictEqual(responseFields, {
+      ...blog,
+      createdAt: responseFields.createdAt,
+      updatedAt: responseFields.updatedAt,
+    });
   });
 
   test("the user id who created the blog should be within the response", async () => {
@@ -207,7 +211,11 @@ describe("the Blogs POST route", () => {
     const { id, user, userId, ...responseFields } = response.body;
 
     // Assert all fields are correct
-    assert.deepStrictEqual(blog, responseFields);
+    assert.deepStrictEqual(responseFields, {
+      ...blog,
+      createdAt: responseFields.createdAt,
+      updatedAt: responseFields.updatedAt,
+    });
   });
 
   test("missing the title field should return a proper error message", async () => {
