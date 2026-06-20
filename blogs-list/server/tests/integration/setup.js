@@ -18,7 +18,7 @@ export async function setupDb() {
 
 // Close the connection and clears all data
 export async function dbCleanup() {
-  await Blog.truncate({ restartIdentity: true, cascade: true });
-  await User.truncate({ restartIdentity: true, cascade: true });
+  await Blog.drop();
+  await User.drop();
   await sequelize.close();
 }
