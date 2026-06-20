@@ -124,9 +124,11 @@ function App() {
         "success-message",
         `The blog "${savedBlog.title}" by ${savedBlog.author} was added to the list!`,
       );
+      return true;
     } catch (err) {
       console.error(err);
-      handleNotification("error-message", "Failed to add a new blog");
+      handleNotification("error-message", `${err.response.data.error}`);
+      return false;
     }
   };
 
