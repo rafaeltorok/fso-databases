@@ -5,15 +5,18 @@ export default function AddBlogForm({ addBlog }) {
     title: "",
     author: "",
     url: "",
-    likes: 0,
+    year: 1991,
   });
 
-  const createBlog = (event) => {
+  const createBlog = async (event) => {
     event.preventDefault();
-    addBlog({
+    const result = await addBlog({
       ...newBlog,
     });
-    setNewBlog({ title: "", author: "", url: "", likes: 0 });
+
+    if (result) {
+      setNewBlog({ title: "", author: "", url: "", year: 1991 });
+    }
   };
 
   return (
@@ -44,6 +47,15 @@ export default function AddBlogForm({ addBlog }) {
             type="text"
             value={newBlog.url}
             onChange={(e) => setNewBlog({ ...newBlog, url: e.target.value })}
+          ></input>
+        </div>
+        <div>
+          <label htmlFor="year">Year</label>
+          <input
+            id="year"
+            type="number"
+            value={newBlog.year}
+            onChange={(e) => setNewBlog({ ...newBlog, year: Number(e.target.value) })}
           ></input>
         </div>
         <button type="submit" className="submit-button">
