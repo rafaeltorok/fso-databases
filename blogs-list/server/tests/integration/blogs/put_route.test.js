@@ -100,6 +100,7 @@ describe("the Blogs PUT route", () => {
       author: "New author",
       url: "http://newurl.com",
       likes: 1,
+      year: 1991,
     };
 
     // Update the amount of likes
@@ -110,17 +111,46 @@ describe("the Blogs PUT route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Assert only the likes counter has been updated
+    // Get the updated info from the database
     const updatedBlog = await api.get(`/api/blogs/${postResponse.body.id}`);
 
     // Remove the userId and user fields
     const { userId, ...postResponseFields } = postResponse.body;
     const { user, ...updatedBlogFields } = updatedBlog.body;
 
+    // Assert the only the likes field has been updated
     assert.deepStrictEqual(updatedBlogFields, {
       ...postResponseFields,
       likes: 1,
+      createdAt: updatedBlogFields.createdAt,
+      updatedAt: updatedBlogFields.updatedAt,
     });
+  });
+
+  test("only the updatedAt field should be updated", async () => {
+    // Get the original data
+    const originalBlog = await api.get(`/api/blogs/${postResponse.body.id}`);
+
+    // Update the amount of likes
+    await api
+      .put(`/api/blogs/${postResponse.body.id}`)
+      .send({ likes: 1 })
+      .set("Authorization", `Bearer ${loggedUser.token}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    // Get the updated info from the database
+    const updatedBlog = await api.get(`/api/blogs/${postResponse.body.id}`);
+
+    // Remove the userId and user fields
+    const { userId, ...postResponseFields } = postResponse.body;
+    const { user, ...updatedBlogFields } = updatedBlog.body;
+
+    // Assert the createdAt field remains the same
+    assert.deepStrictEqual(originalBlog.body.createdAt, updatedBlogFields.createdAt);
+
+    // Assert the updatedAt field has changed
+    assert.notStrictEqual(originalBlog.body.updatedAt, updatedBlogFields.updatedAt);
   });
 
   test("a negative amount should return a proper error message", async () => {
