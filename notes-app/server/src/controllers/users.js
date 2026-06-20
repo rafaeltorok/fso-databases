@@ -3,7 +3,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 
 // Models
-import { User, Note } from "../models/index.js";
+import { User, Note, Team } from "../models/index.js";
 
 // Middleware
 import { tokenExtractor } from "../middleware/tokenExtractor.js";
@@ -22,12 +22,21 @@ usersRouter.get("/", async (req, res, next) => {
       attributes: {
         exclude: ["passwordHash"],
       },
-      include: {
-        model: Note,
-        attributes: {
-          exclude: ["userId"]
+      include: [
+        {
+          model: Note,
+          attributes: {
+            exclude: ["userId"]
+          },
         },
-      },
+        {
+          model: Team,
+          attributes: ["name"],
+          through: {
+            attributes: [],
+          }
+        },
+      ],
     });
     return res.status(200).json(users);
   } catch (err) {
@@ -42,12 +51,21 @@ usersRouter.get("/:id", validateId, userFinder, async (req, res, next) => {
       attributes: {
         exclude: ["passwordHash"]
       },
-      include: {
-        model: Note,
-        attributes: {
-          exclude: ["userId"]
+      include: [
+        {
+          model: Note,
+          attributes: {
+            exclude: ["userId"]
+          },
         },
-      },
+        {
+          model: Team,
+          attributes: ["name"],
+          through: {
+            attributes: [],
+          }
+        },
+      ],
     });
 
     if (user) {
