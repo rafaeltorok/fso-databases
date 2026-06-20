@@ -180,8 +180,10 @@ docker compose -f ./docker-compose.test.yml down -v
 
 - Create a new blog (likes field is **optional**)
   ```bash
-  curl -X POST http://localhost:3001/api/blogs -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "title":"My blog", "author":"The blogger", "url":"https://myblog.com", "likes":10 }'
+  curl -X POST http://localhost:3001/api/blogs -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "title":"My blog", "author":"The blogger", "url":"https://myblog.com", "year": 2000, "likes":10 }'
   ```
+
+  - The year must be between **1991** and the **current** year.
 
 - Create a new user
   ```bash
