@@ -2,6 +2,8 @@
 
 ## Table of Contents
 - [About](#about)
+- [Setup](#setup)
+- [ENV variables](#env-variables)
 - [Usage](#usage)
 - [Docker](#docker)
 - [CRUD Operations](#crud-operations)
@@ -15,29 +17,47 @@
 The example Notes App from the FullStackOpen Part 13, section about Relational Databases.
 
 
+## Setup
+
+Install the server dependencies
+```bash
+cd ./notes-app/server && npm install
+```
+
+Install the client dependencies
+```bash
+cd ./notes-app/client && npm install
+```
+
+
+## ENV variables
+
+The `.env` file must contain the following variables scheme
+```conf
+DATABASE_URL=postgres://<username>:<password>@<hostname>:<port>/notesapp
+TEST_DATABASE_URL=postgres://<username>:<password>@<hostname>:<port>/test_notesapp
+PORT=3001
+SECRET=<insert_your_secret_passphrase_here>
+DATABASE_SSL=true
+```
+
+- `DATABASE_SSL` should only be set to `false` inside of Docker networks.
+
+
 ## Usage
 
-Enter the Server folder
+Start the Express server
 ```bash
-cd ./server
+cd ./server && npm run start
 ```
 
-Install dependencies
+Start the Vite server
 ```bash
-npm install
+cd ./client && npm run dev
 ```
 
-Production mode
-```bash
-npm run start
-```
-
-Development mode (with hot reloading of files)
-```bash
-npm run dev
-```
-
-API requests on http://localhost:3001/api
+- API requests on http://localhost:3001/api
+- Web UI access on http://localhost:5173
 
 
 ## Docker
@@ -46,9 +66,9 @@ API requests on http://localhost:3001/api
 
 Features:
 
-- Nginx as a reverse proxy for the server.
-- Supports hot reloading of files for the backend.
-- Containerized PostgreSQL database with persistent data storage inside `/psql-data`.
+- Hot reloading of files for both frontend and backend.
+
+- Containerized PostgreSQL database with persistent data storage inside `/notes-app/psql-data`.
 
 Start the orchestration
 ```bash
@@ -56,6 +76,7 @@ docker compose -f ./docker-compose.dev.yml up --build
 ```
 
 - API requests on http://localhost:8001/api
+- Web UI access on http://localhost:8000
 
 Cleanup
 ```bash
