@@ -196,7 +196,12 @@ docker compose -f ./docker-compose.test.yml down -v
 
 - Add a new team (**admins only**)
   ```bash
-  curl -X POST http://localhost:3001/api/teams -H "Content-Type: application/json" -d '{ "name":"Team name" }'
+  curl -X POST http://localhost:3001/api/teams -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "name":"Team name" }'
+  ```
+
+- Add an user to a team (**admins only**)
+  ```bash
+  curl -X POST http://localhost:3001/api/teams/<id>/users -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "username":"user@email.com" }'
   ```
 
 
@@ -215,6 +220,11 @@ docker compose -f ./docker-compose.test.yml down -v
 - Remove a team (**admins only**)
   ```bash
   curl -X DELETE http://localhost:3001/api/teams/<id> -H "Authorization: Bearer <token>"
+  ```
+
+- Remove an user from a team (**admins only**)
+  ```bash
+  curl -X DELETE http://localhost:3001/api/teams/<id>/users/<user_id> -H "Authorization: Bearer <token>"
   ```
 
 
