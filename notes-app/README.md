@@ -130,14 +130,16 @@ docker compose -f ./docker-compose.test.yml down -v
 
 ### GET
 
+#### Notes
+
 - Fetch all notes
   ```bash
   curl -X GET http://localhost:3001/api/notes
   ```
 
-- Fetch all users
+- Fetch note by its id
   ```bash
-  curl -X GET http://localhost:3001/api/users
+  curl -X GET http://localhost:3001/api/notes/<id>
   ```
 
 - Search for a note
@@ -150,15 +152,39 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X GET http://localhost:3001/api/notes?important=true
   ```
 
+#### Users
+
+- Fetch all users
+  ```bash
+  curl -X GET http://localhost:3001/api/users
+  ```
+
+- Fetch use by its id
+  ```bash
+  curl -X GET http://localhost:3001/api/users/<id>
+  ```
+
+#### Teams
+
+- Fetch all teams
+  ```bash
+  curl -X GET http://localhost:3001/api/teams
+  ```
+
+- Fetch team by its id
+  ```bash
+  curl -X GET http://localhost:3001/api/teams/<id>
+  ```
+
 
 ### POST
 
-- Create a new note (the important field is **optional**, will be set to `false` by default)
+- Add a new note (the important field is **optional**, will be set to `false` by default)
   ```bash
   curl -X POST http://localhost:3001/api/notes -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "content":"My first note", "important":true }'
   ```
 
-- Create a new user
+- Add a new user
   ```bash
   curl -X POST http://localhost:3001/api/users -H "Content-Type: application/json" -d '{ "username":"admin", "name":"Administrator", "password":"admin" }'
   ```
@@ -168,17 +194,29 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json" -d '{ "username":"admin", "password":"admin" }'
   ```
 
+- Add a new team (**admins only**)
+  ```bash
+  curl -X POST http://localhost:3001/api/teams -H "Content-Type: application/json" -d '{ "name":"Team name" }'
+  ```
+
+
 ### DELETE
 
-- Delete a note (only the **note owner** can remove it)
+- Remove a note (only the **note owner** can remove it)
   ```bash
   curl -X DELETE http://localhost:3001/api/notes/<id> -H "Authorization: Bearer <token>"
   ```
 
-- Delete an user
+- Remove an user
   ```bash
   curl -X DELETE http://localhost:3001/api/users/<id>
   ```
+
+- Remove a team (**admins only**)
+  ```bash
+  curl -X DELETE http://localhost:3001/api/teams/<id> -H "Authorization: Bearer <token>"
+  ```
+
 
 ### PUT
 
@@ -187,7 +225,7 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X PUT http://localhost:3001/api/notes/<id> -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "important":true }'
   ```
 
-- **Admin Only**: Enable or disable an user for logging in (`true` or `false`)
+- Enable or disable an user for logging in (**admins only**)
   ```bash
   curl -X PUT http://localhost:3001/api/users/<username> -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "disabled":true }'
   ```
