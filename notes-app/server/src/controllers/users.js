@@ -49,27 +49,41 @@ usersRouter.get("/:id", validateId, userFinder, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id, {
       attributes: {
-        exclude: ["passwordHash"]
+        exclude: ["passwordHash"],
       },
       include: [
         {
           model: Note,
           attributes: {
-            exclude: ["userId"]
+            exclude: ["userId"],
           },
+        },
+        {
+          model: Note,
+          as: "marked_notes",
+          attributes: {
+            exclude: ["userId"],
+          },
+          through: {
+            attributes: [],
+          },
+          include: {
+            model: User,
+            attributes: ["name"],
+          }
         },
         {
           model: Team,
           attributes: ["name"],
           through: {
             attributes: [],
-          }
+          },
         },
       ],
     });
 
     if (user) {
-      res.json(user);
+      return res.status(200).json(user);
     } else {
       res.status(404).end();
     }
