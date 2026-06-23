@@ -3,6 +3,7 @@ import express from "express";
 
 // Models
 import { Team } from "../models/index.js";
+import { User } from "../models/index.js";
 
 // Middleware
 import validateId from "../middleware/validators/validateId.js";
@@ -15,7 +16,19 @@ const teamsRouter = express.Router();
 // Get all teams
 teamsRouter.get("/", async (req, res, next) => {
   try {
-    const teams = await Team.findAll();
+    const teams = await Team.findAll({
+      include: [
+        {
+          model: User,
+          attributes: {
+            exclude: ["passwordHash", "createdAt", "updatedAt"],
+          },
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    });
 
     return res.status(200).json(teams);
   } catch (err) {
@@ -26,7 +39,19 @@ teamsRouter.get("/", async (req, res, next) => {
 // Get team by id
 teamsRouter.get("/:id", validateId, async (req, res, next) => {
   try {
-    const team = await Team.findByPk(req.params.id);
+    const team = await Team.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: {
+            exclude: ["passwordHash", "createdAt", "updatedAt"],
+          },
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    });
 
     if (!team) {
       return res.status(404).end();
