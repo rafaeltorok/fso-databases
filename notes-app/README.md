@@ -225,7 +225,7 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X PUT http://localhost:3001/api/notes/<id> -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "important":true }'
   ```
 
-- Enable or disable an user for logging in (**admins only**)
+- Enable or disable an user from logging in (**admins only**)
   ```bash
   curl -X PUT http://localhost:3001/api/users/<username> -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "disabled":true }'
   ```
