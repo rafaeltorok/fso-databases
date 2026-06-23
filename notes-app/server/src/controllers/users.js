@@ -31,7 +31,6 @@ usersRouter.get("/", async (req, res, next) => {
         },
         {
           model: Team,
-          attributes: ["name"],
           through: {
             attributes: [],
           }
@@ -74,7 +73,6 @@ usersRouter.get("/:id", validateId, userFinder, async (req, res, next) => {
         },
         {
           model: Team,
-          attributes: ["name"],
           through: {
             attributes: [],
           },
