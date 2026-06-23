@@ -108,7 +108,7 @@ teamsRouter.post("/:id/users", tokenExtractor, isAdmin, validateId, async (req, 
     // Add the user to the team
     await team.addUser(user);
 
-    return res.status(200).send(`${user.name} was added to "${team.name}"`);
+    return res.status(201).json({ message: `${user.name} was added to "${team.name}"` });
   } catch (err) {
     next(err);
   }
