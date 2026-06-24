@@ -2,8 +2,7 @@
 import sequelize from "../../src/util/db.js";
 
 // Models
-import Note from "../../src/models/note.js";
-import User from "../../src/models/user.js";
+import { Note, User, Team, Membership, UserNotes } from "../../src/models/index.js";
 
 // Generates all tables inside the database
 export async function setupDb() {
@@ -18,7 +17,10 @@ export async function setupDb() {
 
 // Close the connection and clears all data
 export async function dbCleanup() {
-  await Note.truncate({ restartIdentity: true, cascade: true });
-  await User.truncate({ restartIdentity: true, cascade: true });
+  await UserNotes.drop();
+  await Membership.drop();
+  await Team.drop();
+  await Note.drop();
+  await User.drop();
   await sequelize.close();
 }
