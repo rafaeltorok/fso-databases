@@ -148,12 +148,16 @@ describe("the Users PUT route", () => {
     // Confirm the user has been disabled
     assert.strictEqual(putResponse.body.disabled, true);
 
-    // Remove the notes and teams fields, since they are not present within the response
-    const { notes, teams, ...otherFields } = getResponse.body;
+    // Remove all unnecessary field from the original object
+    const { id, username, name, createdAt, admin, ...otherFields } = getResponse.body;
 
     // Confirm only the disabled field has changed
     assert.deepStrictEqual(putResponse.body, {
-      ...otherFields,
+      id,
+      username,
+      name,
+      createdAt,
+      admin,
       disabled: putResponse.body.disabled,
       updatedAt: putResponse.body.updatedAt,
     });
@@ -178,12 +182,16 @@ describe("the Users PUT route", () => {
     // Confirm the user has been disabled
     assert.strictEqual(putResponse.body.disabled, true);
 
-    // Remove the notes and teams fields, since they are not present within the response
-    const { notes, teams, ...otherFields } = getResponse.body;
+    // Remove all unnecessary fields from the response
+    const { id, username, name, createdAt, admin, ...otherFields } = getResponse.body;
 
     // Confirm the updateAt field has been updated
     assert.deepStrictEqual(putResponse.body, {
-      ...otherFields,
+      id,
+      username,
+      name,
+      createdAt,
+      admin,
       disabled: putResponse.body.disabled,
       updatedAt: putResponse.body.updatedAt,
     });

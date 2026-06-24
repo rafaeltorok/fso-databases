@@ -74,14 +74,21 @@ describe("the Users GET route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Remove the id, notes and teams fields from the returned user
-    const { id, notes, teams, ...otherFields } = response.body;
+    // Remove all unnecessary fields from the returned user
+    const { name, username, createdAt, updatedAt, admin, disabled, ...otherFields } = response.body;
 
     // Remove the password field from the original user
     const { password, ...userFields } = userToView;
 
     // Assert the data is correct
-    assert.deepStrictEqual(otherFields, {
+    assert.deepStrictEqual({
+      name,
+      username,
+      createdAt,
+      updatedAt,
+      admin,
+      disabled
+    }, {
       ...userFields,
       createdAt: response.body.createdAt,
       updatedAt: response.body.updatedAt,
