@@ -20,3 +20,10 @@ export const maxNameLength = 32;
 // Password
 export const minPasswordLength = 5;
 export const maxPasswordLength = 64;
+
+
+// Teams
+
+// Name
+export const minTeamNameLength = 3;
+export const maxTeamNameLength = 32;
