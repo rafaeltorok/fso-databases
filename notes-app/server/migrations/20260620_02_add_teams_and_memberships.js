@@ -33,11 +33,13 @@ export async function up({ context: queryInterface }) {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: "users", key: "id" },
+      onDelete: "CASCADE",
     },
     team_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: "teams", key: "id" },
+      onDelete: "CASCADE",
     },
   });
 }
