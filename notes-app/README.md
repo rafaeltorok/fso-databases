@@ -271,6 +271,11 @@ Run only the Users routes test suites
 npm run test -- ./tests/integration/users/*
 ```
 
+Run only the Teams routes test suites
+```bash
+npm run test -- ./tests/integration/teams/*
+```
+
 Run only the Login route test suite
 ```bash
 npm run test -- ./tests/integration/login_route.test.js
