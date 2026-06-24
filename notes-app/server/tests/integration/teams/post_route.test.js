@@ -1,5 +1,3 @@
-
-
 // Test dependencies
 import { test, beforeEach, describe, before, after } from "node:test";
 import assert from "node:assert";
