@@ -4,15 +4,16 @@ import userEvent from "@testing-library/user-event";
 import Note from "../components/Note";
 
 test("renders content", () => {
+  // Mock a note
   const note = {
     content: "Component testing is done with react-testing-library",
     important: true,
   };
 
+  // Render the component
   render(<Note note={note} />);
 
-  screen.debug();
-
+  // Confirm the note's content is being correctly displayed
   const element = screen.getByText(
     "Component testing is done with react-testing-library",
   );
@@ -20,20 +21,30 @@ test("renders content", () => {
 });
 
 test("clicking the button calls event handler once", async () => {
+  // Mock a note
   const note = {
     content: "Component testing is done with react-testing-library",
     important: true,
   };
 
+  // Mock an user
+  const mockUser = {
+    username: "user@email.com",
+    name: "User"
+  }
+
   const mockHandler = vi.fn();
 
-  render(<Note note={note} toggleImportance={mockHandler} />);
+  // Render the component
+  render(<Note note={note} toggleImportance={mockHandler} user={mockUser} />);
 
-  screen.debug();
-
+  // Setup the user event
   const user = userEvent.setup();
+
+  // Click on the important button
   const button = screen.getByText("✗");
   await user.click(button);
 
+  // Confirm the handler has been called only once
   expect(mockHandler.mock.calls).toHaveLength(1);
 });
