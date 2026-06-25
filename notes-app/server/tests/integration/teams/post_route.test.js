@@ -15,7 +15,10 @@ import initialTeams from "../../data/initialTeams.js";
 import initialUsers from "../../data/initialUsers.js";
 
 // Constants
-import { minTeamNameLength, maxTeamNameLength } from "../../data/minMaxLengths.js";
+import {
+  minTeamNameLength,
+  maxTeamNameLength,
+} from "../../data/minMaxLengths.js";
 
 const api = supertest(app);
 
@@ -51,7 +54,10 @@ before(async () => {
   // Login as the admin
   const loginResponse = await api
     .post("/api/login")
-    .send({ username: initialUsers[0].username, password: initialUsers[0].password })
+    .send({
+      username: initialUsers[0].username,
+      password: initialUsers[0].password,
+    })
     .expect(200)
     .expect("Content-Type", /application\/json/);
 
@@ -76,7 +82,8 @@ describe("the Teams POST route", () => {
       const team = initialTeams[0];
 
       // Store the initial amount of teams
-      const initialAmount = await api.get("/api/teams")
+      const initialAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -88,12 +95,16 @@ describe("the Teams POST route", () => {
         .expect(201)
         .expect("Content-Type", /application\/json/);
 
-      const currentAmount = await api.get("/api/teams")
+      const currentAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
       // Confirm the total amount has increased
-      assert.strictEqual(currentAmount.body.length, initialAmount.body.length + 1);
+      assert.strictEqual(
+        currentAmount.body.length,
+        initialAmount.body.length + 1,
+      );
 
       // Assert the name has been properly added
       assert.strictEqual(team.name, response.body.name);
@@ -113,7 +124,8 @@ describe("the Teams POST route", () => {
         .expect("Content-Type", /application\/json/);
 
       // Store the initial amount of teams
-      const initialAmount = await api.get("/api/teams")
+      const initialAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -125,7 +137,8 @@ describe("the Teams POST route", () => {
         .expect(401)
         .expect("Content-Type", /application\/json/);
 
-      const currentAmount = await api.get("/api/teams")
+      const currentAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -139,11 +152,12 @@ describe("the Teams POST route", () => {
     test("the name field is required", async () => {
       const team = {
         ...initialTeams[0],
-        name: undefined
+        name: undefined,
       };
 
       // Store the initial amount of teams
-      const initialAmount = await api.get("/api/teams")
+      const initialAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -155,7 +169,8 @@ describe("the Teams POST route", () => {
         .expect(400)
         .expect("Content-Type", /application\/json/);
 
-      const currentAmount = await api.get("/api/teams")
+      const currentAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -169,11 +184,12 @@ describe("the Teams POST route", () => {
     test("an empty string should return a proper error message", async () => {
       const team = {
         ...initialTeams[0],
-        name: ""
+        name: "",
       };
 
       // Store the initial amount of teams
-      const initialAmount = await api.get("/api/teams")
+      const initialAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -185,7 +201,8 @@ describe("the Teams POST route", () => {
         .expect(400)
         .expect("Content-Type", /application\/json/);
 
-      const currentAmount = await api.get("/api/teams")
+      const currentAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -194,17 +211,22 @@ describe("the Teams POST route", () => {
 
       // Assert an error message is present within the response
       assert.ok(response.body.error.includes("Name is required"));
-      assert.ok(response.body.error.includes(`Name must be between ${minTeamNameLength} and ${maxTeamNameLength} chars long`));
+      assert.ok(
+        response.body.error.includes(
+          `Name must be between ${minTeamNameLength} and ${maxTeamNameLength} chars long`,
+        ),
+      );
     });
 
     test("a name shorter than the min length should return a proper error message", async () => {
       const team = {
         ...initialTeams[0],
-        name: "T"
+        name: "T",
       };
 
       // Store the initial amount of teams
-      const initialAmount = await api.get("/api/teams")
+      const initialAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -216,7 +238,8 @@ describe("the Teams POST route", () => {
         .expect(400)
         .expect("Content-Type", /application\/json/);
 
-      const currentAmount = await api.get("/api/teams")
+      const currentAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -224,17 +247,22 @@ describe("the Teams POST route", () => {
       assert.strictEqual(currentAmount.body.length, initialAmount.body.length);
 
       // Assert an error message is present within the response
-      assert.ok(response.body.error.includes(`Name must be between ${minTeamNameLength} and ${maxTeamNameLength} chars long`));
+      assert.ok(
+        response.body.error.includes(
+          `Name must be between ${minTeamNameLength} and ${maxTeamNameLength} chars long`,
+        ),
+      );
     });
 
     test("a name longer than the max length should return a proper error message", async () => {
       const team = {
         ...initialTeams[0],
-        name: "A very long team name designed to surpass the maximum allowed length value for the team post route"
+        name: "A very long team name designed to surpass the maximum allowed length value for the team post route",
       };
 
       // Store the initial amount of teams
-      const initialAmount = await api.get("/api/teams")
+      const initialAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -246,7 +274,8 @@ describe("the Teams POST route", () => {
         .expect(400)
         .expect("Content-Type", /application\/json/);
 
-      const currentAmount = await api.get("/api/teams")
+      const currentAmount = await api
+        .get("/api/teams")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -254,7 +283,11 @@ describe("the Teams POST route", () => {
       assert.strictEqual(currentAmount.body.length, initialAmount.body.length);
 
       // Assert an error message is present within the response
-      assert.ok(response.body.error.includes(`Name must be between ${minTeamNameLength} and ${maxTeamNameLength} chars long`));
+      assert.ok(
+        response.body.error.includes(
+          `Name must be between ${minTeamNameLength} and ${maxTeamNameLength} chars long`,
+        ),
+      );
     });
   });
 
@@ -276,7 +309,8 @@ describe("the Teams POST route", () => {
       const user = initialUsers[0];
 
       // Store the original team data
-      const originalTeam = await api.get("/api/teams/1")
+      const originalTeam = await api
+        .get("/api/teams/1")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -289,15 +323,22 @@ describe("the Teams POST route", () => {
         .expect("Content-Type", /application\/json/);
 
       // Store the current team data
-      const currentTeam = await api.get("/api/teams/1")
+      const currentTeam = await api
+        .get("/api/teams/1")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
       // Confirm the number of users on the team has increased
-      assert.strictEqual(currentTeam.body.users.length, originalTeam.body.users.length + 1);
+      assert.strictEqual(
+        currentTeam.body.users.length,
+        originalTeam.body.users.length + 1,
+      );
 
       // Assert the response message has the correct data on it
-      assert.strictEqual(response.body.message, `${user.name} was added to "${originalTeam.body.name}"`);
+      assert.strictEqual(
+        response.body.message,
+        `${user.name} was added to "${originalTeam.body.name}"`,
+      );
 
       // Assert the user is present on the team's user list
       assert.strictEqual(currentTeam.body.users[0].name, user.name);
@@ -305,7 +346,8 @@ describe("the Teams POST route", () => {
 
     test("multiple users can be added into a team", async () => {
       // Store the original team data
-      const originalTeam = await api.get("/api/teams/1")
+      const originalTeam = await api
+        .get("/api/teams/1")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -319,22 +361,31 @@ describe("the Teams POST route", () => {
           .expect("Content-Type", /application\/json/);
 
         // Assert the response message has the correct data on it
-        assert.strictEqual(response.body.message, `${user.name} was added to "${originalTeam.body.name}"`);
+        assert.strictEqual(
+          response.body.message,
+          `${user.name} was added to "${originalTeam.body.name}"`,
+        );
       }
 
       // Store the current team data
-      const currentTeam = await api.get("/api/teams/1")
+      const currentTeam = await api
+        .get("/api/teams/1")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
       // Confirm the number of users on the team matches the same amount of initial users
-      assert.strictEqual(currentTeam.body.users.length, originalTeam.body.users.length + initialUsers.length);
+      assert.strictEqual(
+        currentTeam.body.users.length,
+        originalTeam.body.users.length + initialUsers.length,
+      );
 
       // Assert each user is present on the team's user list
       for (const user of initialUsers) {
-        assert.ok(currentTeam.body.users.some((listItem) => {
-          return listItem.name === user.name;
-        }));
+        assert.ok(
+          currentTeam.body.users.some((listItem) => {
+            return listItem.name === user.name;
+          }),
+        );
       }
     });
 
@@ -357,7 +408,10 @@ describe("the Teams POST route", () => {
           .expect("Content-Type", /application\/json/);
 
         // Assert the response message has the correct data on it
-        assert.strictEqual(response.body.message, `${user.name} was added to "${team.name}"`);
+        assert.strictEqual(
+          response.body.message,
+          `${user.name} was added to "${team.name}"`,
+        );
       }
 
       // Stores the current teams data
@@ -368,15 +422,18 @@ describe("the Teams POST route", () => {
 
       // Assert the user is present on each team
       for (const team of currentTeams.body) {
-        assert.ok(team.users.some((listItem) => {
-          return listItem.name === user.name;
-        }));
+        assert.ok(
+          team.users.some((listItem) => {
+            return listItem.name === user.name;
+          }),
+        );
       }
     });
 
     test("adding a non-existing user to a team should return a proper status code", async () => {
       // Store the original team data
-      const originalTeam = await api.get("/api/teams/1")
+      const originalTeam = await api
+        .get("/api/teams/1")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
@@ -388,12 +445,16 @@ describe("the Teams POST route", () => {
         .expect(404);
 
       // Store the current team data
-      const currentTeam = await api.get("/api/teams/1")
+      const currentTeam = await api
+        .get("/api/teams/1")
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
       // Confirm the number of users on the team has not changed
-      assert.strictEqual(currentTeam.body.users.length, originalTeam.body.users.length);
+      assert.strictEqual(
+        currentTeam.body.users.length,
+        originalTeam.body.users.length,
+      );
     });
 
     test("adding a valid user to a non-existing team should return a proper status code", async () => {
@@ -455,7 +516,10 @@ describe("the Teams POST route", () => {
         .expect("Content-Type", /application\/json/);
 
       // Confirm the total amount of users inside the team has not changed
-      assert.strictEqual(currentTeam.body.users.length, originalTeam.body.users.length);
+      assert.strictEqual(
+        currentTeam.body.users.length,
+        originalTeam.body.users.length,
+      );
 
       // Assert an error message is present within the response
       assert.strictEqual(response.body.error, "Operation not allowed");

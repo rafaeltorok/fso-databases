@@ -17,7 +17,7 @@ import initialUsers from "../../data/initialUsers.js";
 // Constants
 import {
   minContentLength,
-  maxContentLength
+  maxContentLength,
 } from "../../data/minMaxLengths.js";
 
 const api = supertest(app);

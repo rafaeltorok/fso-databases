@@ -20,7 +20,7 @@ import {
   minNameLength,
   maxNameLength,
   minPasswordLength,
-  maxPasswordLength
+  maxPasswordLength,
 } from "../../data/minMaxLengths.js";
 
 const api = supertest(app);
@@ -69,11 +69,14 @@ describe("the Users POST route", () => {
     const { id, notes, createdAt, updatedAt, ...postFields } = response.body;
 
     // Assert the object data is correct
-    assert.deepStrictEqual({
-      ...otherFields,
-      admin: false,
-      disabled: false,
-    }, postFields);
+    assert.deepStrictEqual(
+      {
+        ...otherFields,
+        admin: false,
+        disabled: false,
+      },
+      postFields,
+    );
 
     // Get the current amount of objects
     const currentAmount = await getAmount("users");

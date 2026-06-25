@@ -1,10 +1,10 @@
 const initialTeams = [
   {
-    name: "admins"
+    name: "admins",
   },
   {
-    name: "users"
-  }
+    name: "users",
+  },
 ];
 
 export default initialTeams;

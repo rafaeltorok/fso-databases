@@ -27,7 +27,9 @@ if (process.env.DATABASE_SSL === "true") {
     logging: process.env.NODE_ENV === "test" ? false : true,
   });
 } else {
-  throw new Error("The DATABASE_SSL env variable must be set to either true or false");
+  throw new Error(
+    "The DATABASE_SSL env variable must be set to either true or false",
+  );
 }
 
 export default sequelize;

@@ -57,7 +57,10 @@ describe("the Users PUT route", () => {
     // Login as the admin
     const loginResponse = await api
       .post("/api/login")
-      .send({ username: initialUsers[0].username, password: initialUsers[0].password })
+      .send({
+        username: initialUsers[0].username,
+        password: initialUsers[0].password,
+      })
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
@@ -149,7 +152,8 @@ describe("the Users PUT route", () => {
     assert.strictEqual(putResponse.body.disabled, true);
 
     // Remove all unnecessary field from the original object
-    const { id, username, name, createdAt, admin, ...otherFields } = getResponse.body;
+    const { id, username, name, createdAt, admin, ...otherFields } =
+      getResponse.body;
 
     // Confirm only the disabled field has changed
     assert.deepStrictEqual(putResponse.body, {
@@ -183,7 +187,8 @@ describe("the Users PUT route", () => {
     assert.strictEqual(putResponse.body.disabled, true);
 
     // Remove all unnecessary fields from the response
-    const { id, username, name, createdAt, admin, ...otherFields } = getResponse.body;
+    const { id, username, name, createdAt, admin, ...otherFields } =
+      getResponse.body;
 
     // Confirm the updateAt field has been updated
     assert.deepStrictEqual(putResponse.body, {
@@ -239,7 +244,10 @@ describe("the Users PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Confirm the error message is within the response
-    assert.strictEqual(putResponse.body.error, "The disabled field must be either true or false");
+    assert.strictEqual(
+      putResponse.body.error,
+      "The disabled field must be either true or false",
+    );
 
     const currentUserData = await api
       .get("/api/users/1")
@@ -247,7 +255,10 @@ describe("the Users PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the disabled field has not changed
-    assert.strictEqual(originalUserData.body.disabled, currentUserData.body.disabled);
+    assert.strictEqual(
+      originalUserData.body.disabled,
+      currentUserData.body.disabled,
+    );
 
     // Assert the updatedAt field has not changed
     assert.strictEqual(
@@ -272,7 +283,10 @@ describe("the Users PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Confirm the error message is within the response
-    assert.strictEqual(putResponse.body.error, "The disabled field must be either true or false");
+    assert.strictEqual(
+      putResponse.body.error,
+      "The disabled field must be either true or false",
+    );
 
     const currentUserData = await api
       .get("/api/users/1")
@@ -280,7 +294,10 @@ describe("the Users PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the disabled field has not changed
-    assert.strictEqual(originalUserData.body.disabled, currentUserData.body.disabled);
+    assert.strictEqual(
+      originalUserData.body.disabled,
+      currentUserData.body.disabled,
+    );
 
     // Assert the updatedAt field has not changed
     assert.strictEqual(
@@ -303,7 +320,10 @@ describe("the Users PUT route", () => {
     // Login as the non-admin user
     const loginResponse = await api
       .post("/api/login")
-      .send({ username: initialUsers[0].username, password: initialUsers[0].password })
+      .send({
+        username: initialUsers[0].username,
+        password: initialUsers[0].password,
+      })
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
@@ -330,6 +350,9 @@ describe("the Users PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the disabled field has not changed
-    assert.strictEqual(originalUserData.body.disabled, currentUserData.body.disabled);
+    assert.strictEqual(
+      originalUserData.body.disabled,
+      currentUserData.body.disabled,
+    );
   });
 });

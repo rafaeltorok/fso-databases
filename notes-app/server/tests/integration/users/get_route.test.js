@@ -75,26 +75,37 @@ describe("the Users GET route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Remove all unnecessary fields from the returned user
-    const { name, username, createdAt, updatedAt, admin, disabled, ...otherFields } = response.body;
-
-    // Remove the password field from the original user
-    const { password, ...userFields } = userToView;
-
-    // Assert the data is correct
-    assert.deepStrictEqual({
+    const {
       name,
       username,
       createdAt,
       updatedAt,
       admin,
-      disabled
-    }, {
-      ...userFields,
-      createdAt: response.body.createdAt,
-      updatedAt: response.body.updatedAt,
-      admin: response.body.admin,
-      disabled: response.body.disabled,
-    });
+      disabled,
+      ...otherFields
+    } = response.body;
+
+    // Remove the password field from the original user
+    const { password, ...userFields } = userToView;
+
+    // Assert the data is correct
+    assert.deepStrictEqual(
+      {
+        name,
+        username,
+        createdAt,
+        updatedAt,
+        admin,
+        disabled,
+      },
+      {
+        ...userFields,
+        createdAt: response.body.createdAt,
+        updatedAt: response.body.updatedAt,
+        admin: response.body.admin,
+        disabled: response.body.disabled,
+      },
+    );
   });
 
   test("the list of notes should be included within the returned user", async () => {

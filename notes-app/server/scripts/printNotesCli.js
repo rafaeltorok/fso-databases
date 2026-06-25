@@ -30,12 +30,12 @@ async function main() {
       "SELECT users.id AS userId, users.name, notes.id AS noteId, notes.content FROM users LEFT JOIN notes ON users.id = notes.user_id;",
       {
         type: QueryTypes.SELECT,
-      }
+      },
     );
 
     // Generate an array of objects containing each user with their respective notes
     for (const row of rows) {
-      const user = users.find(u => u.name === row.name);
+      const user = users.find((u) => u.name === row.name);
 
       // If the user is not present yet, add it to the array
       if (!user) {
@@ -44,7 +44,7 @@ async function main() {
 
       // If there are any notes, append them to the user's notes array
       if (row.content) {
-        users.find(u => u.name === row.name).notes.push(row.content);
+        users.find((u) => u.name === row.name).notes.push(row.content);
       }
     }
 

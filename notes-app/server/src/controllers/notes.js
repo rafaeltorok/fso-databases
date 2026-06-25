@@ -26,7 +26,7 @@ notesRouter.get("/", async (req, res, next) => {
 
     if (req.query.search) {
       where.content = {
-        [Op.substring]: req.query.search
+        [Op.substring]: req.query.search,
       };
     }
 
@@ -62,7 +62,9 @@ notesRouter.post("/", tokenExtractor, validateNote, async (req, res, next) => {
     // Check if the important value is a valid boolean when present
     if (req.body.important !== undefined) {
       if (typeof req.body.important !== "boolean") {
-        return res.status(400).json({ error: "The important field must be either true or false" });
+        return res
+          .status(400)
+          .json({ error: "The important field must be either true or false" });
       }
     }
 
@@ -79,49 +81,61 @@ notesRouter.post("/", tokenExtractor, validateNote, async (req, res, next) => {
 });
 
 // DELETE a note
-notesRouter.delete("/:id", validateId, noteFinder, tokenExtractor, async (req, res, next) => {
-  try {
-    if (req.note) {
-      await User.findByPk(req.decodedToken.id);
+notesRouter.delete(
+  "/:id",
+  validateId,
+  noteFinder,
+  tokenExtractor,
+  async (req, res, next) => {
+    try {
+      if (req.note) {
+        await User.findByPk(req.decodedToken.id);
 
-      // Confirm the note to be removed exists
-      const noteToBeRemoved = await Note.findByPk(req.note.id);
+        // Confirm the note to be removed exists
+        const noteToBeRemoved = await Note.findByPk(req.note.id);
 
-      if (!noteToBeRemoved) {
-        return res.status(404).end();
+        if (!noteToBeRemoved) {
+          return res.status(404).end();
+        }
+
+        // Confirm the currently logged in user is the owner of the note
+        if (noteToBeRemoved.userId !== req.decodedToken.id) {
+          return res
+            .status(401)
+            .json({ error: "Only the note owner can remove it" });
+        }
+
+        // Remove the note
+        await req.note.destroy();
       }
-
-      // Confirm the currently logged in user is the owner of the note
-      if (noteToBeRemoved.userId !== req.decodedToken.id) {
-        return res
-          .status(401)
-          .json({ error: "Only the note owner can remove it" });
-      }
-
-      // Remove the note
-      await req.note.destroy();
+      return res.status(204).end();
+    } catch (err) {
+      next(err);
     }
-    return res.status(204).end();
-  } catch (err) {
-    next(err);
-  }
-});
+  },
+);
 
 // PUt (update) the importance of a note
-notesRouter.put("/:id", validateId, noteFinder, tokenExtractor, async (req, res, next) => {
-  try {
-    if (req.note) {
-      await User.findByPk(req.decodedToken.id);
+notesRouter.put(
+  "/:id",
+  validateId,
+  noteFinder,
+  tokenExtractor,
+  async (req, res, next) => {
+    try {
+      if (req.note) {
+        await User.findByPk(req.decodedToken.id);
 
-      req.note.important = req.body.important;
-      await req.note.save();
-      return res.status(200).json(req.note);
-    } else {
-      return res.status(404).end();
+        req.note.important = req.body.important;
+        await req.note.save();
+        return res.status(200).json(req.note);
+      } else {
+        return res.status(404).end();
+      }
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    next(err);
-  }
-});
+  },
+);
 
 export default notesRouter;

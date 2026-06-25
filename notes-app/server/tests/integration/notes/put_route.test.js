@@ -89,7 +89,7 @@ describe("the Notes PUT route", () => {
   test("other fields should be ignored when updating", async () => {
     const updatedData = {
       content: "The note has been changed",
-      important: !postResponse.body.important
+      important: !postResponse.body.important,
     };
 
     // Update the importance
@@ -109,7 +109,7 @@ describe("the Notes PUT route", () => {
 
     assert.deepStrictEqual(updatedNoteFields, {
       ...postResponseFields,
-      important: !postResponse.body.important
+      important: !postResponse.body.important,
     });
   });
 

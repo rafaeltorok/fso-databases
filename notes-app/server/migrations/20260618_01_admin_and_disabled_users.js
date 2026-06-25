@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 
-export async function up ({ context: queryInterface }) {
+export async function up({ context: queryInterface }) {
   await queryInterface.addColumn("users", "admin", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
@@ -12,7 +12,7 @@ export async function up ({ context: queryInterface }) {
   });
 }
 
-export async function down ({ context: queryInterface }) {
+export async function down({ context: queryInterface }) {
   await queryInterface.removeColumn("users", "admin");
   await queryInterface.removeColumn("users", "disabled");
 }

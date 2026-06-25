@@ -1,29 +1,32 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../util/db.js";
 
-export default class Membership extends Model {};
+export default class Membership extends Model {}
 
-Membership.init({
-  id: {
-    type:  DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+Membership.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: "users", key: "id" },
+      onDelete: "CASCADE",
+    },
+    teamId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: "teams", key: "id" },
+      onDelete: "CASCADE",
+    },
   },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: "users", key: "id" },
-    onDelete: "CASCADE",
+  {
+    sequelize,
+    underscored: true,
+    timestamps: false,
+    modelName: "membership",
   },
-  teamId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: "teams", key: "id" },
-    onDelete: "CASCADE",
-  },
-}, {
-  sequelize,
-  underscored: true,
-  timestamps: false,
-  modelName: "membership",
-});
+);

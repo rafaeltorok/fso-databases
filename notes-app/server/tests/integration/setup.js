@@ -2,7 +2,13 @@
 import sequelize from "../../src/util/db.js";
 
 // Models
-import { Note, User, Team, Membership, UserNotes } from "../../src/models/index.js";
+import {
+  Note,
+  User,
+  Team,
+  Membership,
+  UserNotes,
+} from "../../src/models/index.js";
 
 // Generates all tables inside the database
 export async function setupDb() {

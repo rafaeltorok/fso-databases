@@ -42,7 +42,7 @@ User.init(
     },
     passwordHash: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     admin: {
       type: DataTypes.BOOLEAN,
@@ -51,7 +51,7 @@ User.init(
     disabled: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-    }
+    },
   },
   {
     sequelize,

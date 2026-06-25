@@ -48,7 +48,10 @@ before(async () => {
   // Login as the admin
   const loginResponse = await api
     .post("/api/login")
-    .send({ username: initialUsers[0].username, password: initialUsers[0].password })
+    .send({
+      username: initialUsers[0].username,
+      password: initialUsers[0].password,
+    })
     .expect(200)
     .expect("Content-Type", /application\/json/);
 
@@ -98,9 +101,7 @@ describe("the Teams DELETE route", () => {
       .expect(204);
 
     // Confirm the team has been removed
-    await api
-      .get(`/api/teams/${teamToRemove.body.id}`)
-      .expect(404);
+    await api.get(`/api/teams/${teamToRemove.body.id}`).expect(404);
 
     // Store the current amount of teams
     const currentAmount = await api
@@ -109,7 +110,10 @@ describe("the Teams DELETE route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the numbers of teams has decreased
-    assert.strictEqual(currentAmount.body.length, initialAmount.body.length - 1);
+    assert.strictEqual(
+      currentAmount.body.length,
+      initialAmount.body.length - 1,
+    );
   });
 
   test("only an admin can remove a team", async () => {
@@ -235,7 +239,10 @@ describe("the Teams DELETE route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    assert.strictEqual(currentUserData.body.teams[0].name, teamToRemove.body.name);
+    assert.strictEqual(
+      currentUserData.body.teams[0].name,
+      teamToRemove.body.name,
+    );
 
     // Remove the team
     await api
@@ -244,9 +251,7 @@ describe("the Teams DELETE route", () => {
       .expect(204);
 
     // Confirm the team has been removed
-    await api
-      .get(`/api/teams/${teamToRemove.body.id}`)
-      .expect(404);
+    await api.get(`/api/teams/${teamToRemove.body.id}`).expect(404);
 
     // Get the user current amount of teams
     currentUserData = await api
@@ -255,9 +260,11 @@ describe("the Teams DELETE route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the team is not present on the user's team list
-    assert.ok(!(currentUserData.body.teams.some((listItem) => {
-      return listItem.name === teamToRemove.body.name;
-    })));
+    assert.ok(
+      !currentUserData.body.teams.some((listItem) => {
+        return listItem.name === teamToRemove.body.name;
+      }),
+    );
   });
 
   test("removing an user should also remove it from the team's list of users", async () => {
@@ -288,7 +295,10 @@ describe("the Teams DELETE route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    assert.strictEqual(currentTeamData.body.users[0].name, userToRemove.body.name);
+    assert.strictEqual(
+      currentTeamData.body.users[0].name,
+      userToRemove.body.name,
+    );
 
     // Remove the user
     await api
@@ -297,9 +307,7 @@ describe("the Teams DELETE route", () => {
       .expect(204);
 
     // Confirm the user has been removed
-    await api
-      .get(`/api/users/${userToRemove.body.id}`)
-      .expect(404);
+    await api.get(`/api/users/${userToRemove.body.id}`).expect(404);
 
     // Get the team current list of users
     currentTeamData = await api
@@ -308,8 +316,10 @@ describe("the Teams DELETE route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Assert the user is not present on the team's user list
-    assert.ok(!(currentTeamData.body.users.some((listItem) => {
-      return listItem.name === userToRemove.body.name;
-    })));
+    assert.ok(
+      !currentTeamData.body.users.some((listItem) => {
+        return listItem.name === userToRemove.body.name;
+      }),
+    );
   });
 });

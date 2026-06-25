@@ -26,14 +26,14 @@ usersRouter.get("/", async (req, res, next) => {
         {
           model: Note,
           attributes: {
-            exclude: ["userId"]
+            exclude: ["userId"],
           },
         },
         {
           model: Team,
           through: {
             attributes: [],
-          }
+          },
         },
       ],
     });
@@ -69,7 +69,7 @@ usersRouter.get("/:id", validateId, userFinder, async (req, res, next) => {
           include: {
             model: User,
             attributes: ["name"],
-          }
+          },
         },
         {
           model: Team,
@@ -91,29 +91,34 @@ usersRouter.get("/:id", validateId, userFinder, async (req, res, next) => {
 });
 
 // Create a new user
-usersRouter.post("/", validateUser, validatePassword, async (req, res, next) => {
-  try {
-    const { username, name, password } = req.body;
+usersRouter.post(
+  "/",
+  validateUser,
+  validatePassword,
+  async (req, res, next) => {
+    try {
+      const { username, name, password } = req.body;
 
-    // Hash the password to be stored
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(password, saltRounds);
+      // Hash the password to be stored
+      const saltRounds = 10;
+      const passwordHash = await bcrypt.hash(password, saltRounds);
 
-    const newUser = await User.create({
-      username,
-      name,
-      passwordHash
-    });
+      const newUser = await User.create({
+        username,
+        name,
+        passwordHash,
+      });
 
-    // Remove sensitive field from the response
-    const nonSensitiveData = newUser.toJSON();
-    delete nonSensitiveData.passwordHash;
+      // Remove sensitive field from the response
+      const nonSensitiveData = newUser.toJSON();
+      delete nonSensitiveData.passwordHash;
 
-    return res.status(201).json(nonSensitiveData);
-  } catch (err) {
-    next(err);
-  }
-});
+      return res.status(201).json(nonSensitiveData);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 // DELETE an user
 usersRouter.delete("/:id", validateId, async (req, res, next) => {
@@ -138,35 +143,42 @@ usersRouter.delete("/:id", validateId, async (req, res, next) => {
 });
 
 // Admin-only route to enable or disable an user
-usersRouter.put("/:username", tokenExtractor, isAdmin, async (req, res, next) => {
-  try {
-    const user = await User.findOne({
-      where: {
-        username: req.params.username
+usersRouter.put(
+  "/:username",
+  tokenExtractor,
+  isAdmin,
+  async (req, res, next) => {
+    try {
+      const user = await User.findOne({
+        where: {
+          username: req.params.username,
+        },
+      });
+
+      // Check if the disabled value is a valid boolean
+      if (typeof req.body.disabled !== "boolean") {
+        return res
+          .status(400)
+          .json({ error: "The disabled field must be either true or false" });
       }
-    });
 
-    // Check if the disabled value is a valid boolean
-    if (typeof req.body.disabled !== "boolean") {
-      return res.status(400).json({ error: "The disabled field must be either true or false" });
+      // Check if the user exists
+      if (user) {
+        user.disabled = req.body.disabled;
+        await user.save();
+
+        // Remove sensitive field from the response
+        const nonSensitiveData = user.toJSON();
+        delete nonSensitiveData.passwordHash;
+
+        return res.status(200).send(nonSensitiveData);
+      } else {
+        return res.status(404).end();
+      }
+    } catch (err) {
+      next(err);
     }
-
-    // Check if the user exists
-    if (user) {
-      user.disabled = req.body.disabled;
-      await user.save();
-
-      // Remove sensitive field from the response
-      const nonSensitiveData = user.toJSON();
-      delete nonSensitiveData.passwordHash;
-
-      return res.status(200).send(nonSensitiveData);
-    } else {
-      return res.status(404).end();
-    }
-  } catch (err) {
-    next(err);
-  }
-});
+  },
+);
 
 export default usersRouter;

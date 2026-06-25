@@ -20,8 +20,8 @@ Note.init(
         },
         notNull: {
           msg: "Note's content is required",
-        }
-      }
+        },
+      },
     },
     important: {
       type: DataTypes.BOOLEAN,

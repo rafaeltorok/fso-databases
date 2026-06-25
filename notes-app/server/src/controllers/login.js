@@ -18,10 +18,7 @@ loginRouter.post("/", async (req, res) => {
   const { username, password } = req.body;
 
   // Return an error message when missing credentials
-  if (
-    username === undefined ||
-    password === undefined
-  ) {
+  if (username === undefined || password === undefined) {
     return res.status(400).json({ error: "Missing credentials" });
   }
 
@@ -33,9 +30,8 @@ loginRouter.post("/", async (req, res) => {
   });
 
   // If the user exists, check the hashed password
-  const passwordCorrect = user === null
-    ? false
-    : await bcrypt.compare(password, user.passwordHash);
+  const passwordCorrect =
+    user === null ? false : await bcrypt.compare(password, user.passwordHash);
 
   // Return an error status if the user is not found
   // or the password is incorrect
@@ -48,7 +44,7 @@ loginRouter.post("/", async (req, res) => {
   // Check if the account has been disabled
   if (user.disabled) {
     return res.status(401).json({
-      error: "Account has been disabled, please contact an admin"
+      error: "Account has been disabled, please contact an admin",
     });
   }
 

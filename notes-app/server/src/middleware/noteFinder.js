@@ -6,12 +6,12 @@ import User from "../models/user.js";
 export const noteFinder = async (req, res, next) => {
   req.note = await Note.findByPk(req.params.id, {
     attributes: {
-        exclude: ["userId"],
-      },
-      include: {
-        model: User,
-        attributes: ["name"],
-      },
+      exclude: ["userId"],
+    },
+    include: {
+      model: User,
+      attributes: ["name"],
+    },
   });
   if (!req.note) {
     return res.status(404).end();

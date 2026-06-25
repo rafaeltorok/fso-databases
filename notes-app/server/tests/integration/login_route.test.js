@@ -165,7 +165,7 @@ describe("the Login route", () => {
     // Assert the error message is within the response
     assert.strictEqual(
       response.body.error,
-      "Account has been disabled, please contact an admin"
+      "Account has been disabled, please contact an admin",
     );
   });
 });

@@ -19,7 +19,7 @@ const validateTeam = [
       return res.status(400).json({ error: errorMessages });
     }
     next();
-  }
+  },
 ];
 
 export default validateTeam;

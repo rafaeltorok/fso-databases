@@ -50,7 +50,10 @@ before(async () => {
   // Login as the admin
   const loginResponse = await api
     .post("/api/login")
-    .send({ username: initialUsers[0].username, password: initialUsers[0].password })
+    .send({
+      username: initialUsers[0].username,
+      password: initialUsers[0].password,
+    })
     .expect(200)
     .expect("Content-Type", /application\/json/);
 
@@ -113,7 +116,7 @@ describe("the Teams GET route", () => {
     assert.deepStrictEqual(otherFields, teamToView);
   });
 
-test("the list of users should be included within the returned team", async () => {
+  test("the list of users should be included within the returned team", async () => {
     const team = initialTeams[0];
 
     // Stores all initial users into a team

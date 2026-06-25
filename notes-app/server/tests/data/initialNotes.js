@@ -11,8 +11,8 @@ const initialNotes = [
   },
   {
     content: "One more",
-    important: true
-  }
+    important: true,
+  },
 ];
 
 export default initialNotes;

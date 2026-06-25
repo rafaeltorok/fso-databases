@@ -6,7 +6,6 @@
 export const minContentLength = 3;
 export const maxContentLength = 32;
 
-
 // Users
 
 // Username
@@ -20,7 +19,6 @@ export const maxNameLength = 32;
 // Password
 export const minPasswordLength = 5;
 export const maxPasswordLength = 64;
-
 
 // Teams
 
