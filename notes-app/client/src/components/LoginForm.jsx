@@ -1,8 +1,14 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-function LoginForm({ username, password, handleUsernameChange, handlePasswordChange, handleLogin }) {
+function LoginForm({
+  username,
+  password,
+  handleUsernameChange,
+  handlePasswordChange,
+  handleLogin,
+}) {
   return (
-    <div className='login-table'>
+    <div className="login-table">
       <form onSubmit={handleLogin}>
         <table>
           <tbody>
@@ -10,8 +16,8 @@ function LoginForm({ username, password, handleUsernameChange, handlePasswordCha
               <th>username</th>
               <td>
                 <input
-                  id='username'
-                  data-testid='username'
+                  id="username"
+                  data-testid="username"
                   type="text"
                   value={username}
                   name="Username"
@@ -23,8 +29,8 @@ function LoginForm({ username, password, handleUsernameChange, handlePasswordCha
               <th>password</th>
               <td>
                 <input
-                  id='password'
-                  data-testid='password'
+                  id="password"
+                  data-testid="password"
                   type="password"
                   value={password}
                   name="Password"
@@ -33,13 +39,17 @@ function LoginForm({ username, password, handleUsernameChange, handlePasswordCha
               </td>
             </tr>
             <tr>
-              <th colSpan={2}><button className="login-button" type="submit">login</button></th>
+              <th colSpan={2}>
+                <button className="login-button" type="submit">
+                  login
+                </button>
+              </th>
             </tr>
           </tbody>
         </table>
       </form>
     </div>
-  )
+  );
 }
 
 LoginForm.propTypes = {
@@ -47,7 +57,7 @@ LoginForm.propTypes = {
   handleUsernameChange: PropTypes.func.isRequired,
   handlePasswordChange: PropTypes.func.isRequired,
   password: PropTypes.string.isRequired,
-  handleLogin: PropTypes.func.isRequired
-}
+  handleLogin: PropTypes.func.isRequired,
+};
 
-export default LoginForm
+export default LoginForm;

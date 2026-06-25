@@ -1,40 +1,39 @@
-import { test, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event'
-import Note from '../components/Note';
+import { test, expect, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Note from "../components/Note";
 
-
-test('renders content', () => {
+test("renders content", () => {
   const note = {
-    content: 'Component testing is done with react-testing-library',
-    important: true
-  }
+    content: "Component testing is done with react-testing-library",
+    important: true,
+  };
 
-  render(<Note note={note} />)
+  render(<Note note={note} />);
 
-  screen.debug()
+  screen.debug();
 
-  const element = screen.getByText('Component testing is done with react-testing-library')
-  expect(element).toBeDefined()
-})
+  const element = screen.getByText(
+    "Component testing is done with react-testing-library",
+  );
+  expect(element).toBeDefined();
+});
 
-test('clicking the button calls event handler once', async () => {
+test("clicking the button calls event handler once", async () => {
   const note = {
-    content: 'Component testing is done with react-testing-library',
-    important: true
-  }
-  
-  const mockHandler = vi.fn()
+    content: "Component testing is done with react-testing-library",
+    important: true,
+  };
 
-  render(
-    <Note note={note} toggleImportance={mockHandler} />
-  )
+  const mockHandler = vi.fn();
 
-  screen.debug()
+  render(<Note note={note} toggleImportance={mockHandler} />);
 
-  const user = userEvent.setup()
-  const button = screen.getByText('✗')
-  await user.click(button)
+  screen.debug();
 
-  expect(mockHandler.mock.calls).toHaveLength(1)
-})
+  const user = userEvent.setup();
+  const button = screen.getByText("✗");
+  await user.click(button);
+
+  expect(mockHandler.mock.calls).toHaveLength(1);
+});
