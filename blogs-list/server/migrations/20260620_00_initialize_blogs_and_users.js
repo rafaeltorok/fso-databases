@@ -5,7 +5,7 @@ export async function up({ context: queryInterface }) {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     username: {
       type: DataTypes.STRING,
@@ -48,7 +48,7 @@ export async function up({ context: queryInterface }) {
     updated_at: {
       type: DataTypes.DATE,
       allowNull: false,
-    }
+    },
   });
 
   await queryInterface.createTable("blogs", {

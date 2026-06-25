@@ -94,7 +94,8 @@ blogsRouter.post(
     } catch (err) {
       next(err);
     }
-});
+  },
+);
 
 // DELETE a blog
 blogsRouter.delete(

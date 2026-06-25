@@ -147,10 +147,16 @@ describe("the Blogs PUT route", () => {
     const { user, ...updatedBlogFields } = updatedBlog.body;
 
     // Assert the createdAt field remains the same
-    assert.deepStrictEqual(originalBlog.body.createdAt, updatedBlogFields.createdAt);
+    assert.deepStrictEqual(
+      originalBlog.body.createdAt,
+      updatedBlogFields.createdAt,
+    );
 
     // Assert the updatedAt field has changed
-    assert.notStrictEqual(originalBlog.body.updatedAt, updatedBlogFields.updatedAt);
+    assert.notStrictEqual(
+      originalBlog.body.updatedAt,
+      updatedBlogFields.updatedAt,
+    );
   });
 
   test("a negative amount should return a proper error message", async () => {

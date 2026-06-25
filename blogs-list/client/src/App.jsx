@@ -106,15 +106,15 @@ function App() {
       const savedBlog = await blogService.storeData(blogObject);
 
       // Add the new blog to the list
-      setBlogList(blogList.concat(
-        {
+      setBlogList(
+        blogList.concat({
           ...savedBlog,
           user: {
             // concatenates the currently logged in user name to it
-            name: user.name
-          }
-        }
-      ));
+            name: user.name,
+          },
+        }),
+      );
 
       // Hide the blog form
       blogFormRef.current.toggleVisibility();
@@ -149,13 +149,10 @@ function App() {
       );
 
       // Update on the remote server
-      await blogService.updateData(
-        blogToUpdate.id,
-        {
-          ...blogToUpdate,
-          likes: blogToUpdate.likes + 1,
-        },
-      );
+      await blogService.updateData(blogToUpdate.id, {
+        ...blogToUpdate,
+        likes: blogToUpdate.likes + 1,
+      });
     } catch (err) {
       console.error(err);
       handleNotification(
@@ -242,7 +239,8 @@ function App() {
         user={user}
       />
       <footer>
-        Blogs List app, from the FullStackOpen Databases course by MOOC Finland 2026.
+        Blogs List app, from the FullStackOpen Databases course by MOOC Finland
+        2026.
       </footer>
     </>
   );

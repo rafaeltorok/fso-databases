@@ -55,7 +55,9 @@ export default function AddBlogForm({ addBlog }) {
             id="year"
             type="number"
             value={newBlog.year}
-            onChange={(e) => setNewBlog({ ...newBlog, year: Number(e.target.value) })}
+            onChange={(e) =>
+              setNewBlog({ ...newBlog, year: Number(e.target.value) })
+            }
           ></input>
         </div>
         <button type="submit" className="submit-button">

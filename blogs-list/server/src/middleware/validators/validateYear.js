@@ -4,9 +4,7 @@ import { body, validationResult } from "express-validator";
 // Validations
 const validateYear = [
   // Check if it is empty
-  body("year")
-    .exists()
-    .withMessage("Year is required"),
+  body("year").exists().withMessage("Year is required"),
 
   // Prevents strings from passing through
   body("year")

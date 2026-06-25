@@ -8,15 +8,15 @@ export async function up({ context: queryInterface }) {
         msg: "Year is required",
       },
       isInt: {
-        msg: "Invalid year format"
+        msg: "Invalid year format",
       },
       min: {
         args: [1991],
-        msg: "A blog cannot be older than 1991"
+        msg: "A blog cannot be older than 1991",
       },
       max: {
         args: [new Date().getFullYear()],
-        msg: "The year cannot exceed the current year"
+        msg: "The year cannot exceed the current year",
       },
     },
   });

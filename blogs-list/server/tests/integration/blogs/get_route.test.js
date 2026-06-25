@@ -129,14 +129,11 @@ describe("the Blogs GET route", () => {
     const { id, user, ...otherFields } = response.body;
 
     // Assert the data is correct
-    assert.deepStrictEqual(
-      otherFields,
-      {
-        ...blogToView,
-        createdAt: otherFields.createdAt,
-        updatedAt: otherFields.updatedAt,
-      }
-    );
+    assert.deepStrictEqual(otherFields, {
+      ...blogToView,
+      createdAt: otherFields.createdAt,
+      updatedAt: otherFields.updatedAt,
+    });
   });
 
   test("a non-existing id should return a proper status code", async () => {
