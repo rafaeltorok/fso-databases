@@ -8,6 +8,7 @@ import loginRouter from "./controllers/login.js";
 import healthRouter from "./controllers/health.js";
 import testsRouter from "./controllers/tests.js";
 import authorsRouter from "./controllers/authors.js";
+import readingListRouter from "./controllers/readingLists.js";
 
 // Middleware
 import errorHandler from "./middleware/errorHandler.js";
@@ -21,6 +22,7 @@ app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/health", healthRouter);
 app.use("/api/authors", authorsRouter);
+app.use("/api/readinglists", readingListRouter);
 
 if (process.env.NODE_ENV === "test") {
   app.use("/api/reset", testsRouter);
