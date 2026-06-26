@@ -1,10 +1,6 @@
 // Dependencies
 import sequelize from "../../src/utils/connectdb.js";
 
-// Models
-import Blog from "../../src/models/blog.js";
-import User from "../../src/models/user.js";
-
 // Generates all tables inside the database
 export async function setupDb() {
   try {
@@ -18,7 +14,7 @@ export async function setupDb() {
 
 // Close the connection and clears all data
 export async function dbCleanup() {
-  await Blog.drop();
-  await User.drop();
+  // Drop all tables
+  await sequelize.drop();
   await sequelize.close();
 }
