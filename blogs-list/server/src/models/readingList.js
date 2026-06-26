@@ -1,34 +1,37 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../utils/connectdb.js";
 
-export default class ReadingList extends Model {};
+export default class ReadingList extends Model {}
 
-ReadingList.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+ReadingList.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    read: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    addedOn: {
+      type: DataTypes.DATE,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: "users", key: "id" },
+    },
+    blogId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: "blogs", key: "id" },
+    },
   },
-  read: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
+  {
+    sequelize,
+    underscored: true,
+    timestamps: true,
+    modelName: "reading_list",
   },
-  addedOn: {
-    type: DataTypes.DATE,
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: "users", key: "id" },
-  },
-  blogId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: "blogs", key: "id" },
-  },
-}, {
-  sequelize,
-  underscored: true,
-  timestamps: true,
-  modelName: "reading_list",
-});
+);

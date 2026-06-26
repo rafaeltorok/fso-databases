@@ -37,7 +37,7 @@ export async function userFinder(req, res, next) {
         attributes: ["id", "title", "author"],
         through: {
           attributes: ["read", "addedOn"],
-        }
+        },
       },
     ],
   });

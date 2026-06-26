@@ -75,19 +75,26 @@ describe("the Users GET route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Remove all unnecessary field from the returned user
-    const { username, name, createdAt, updatedAt, ...otherFields } = response.body;
+    const { username, name, createdAt, updatedAt, ...otherFields } =
+      response.body;
 
     // Remove the password field from the original user
     const { password, ...userFields } = userToView;
 
     // Assert the data is correct
-    assert.deepStrictEqual({
-      username, name, createdAt, updatedAt
-    }, {
-      ...userFields,
-      createdAt: response.body.createdAt,
-      updatedAt: response.body.updatedAt,
-    });
+    assert.deepStrictEqual(
+      {
+        username,
+        name,
+        createdAt,
+        updatedAt,
+      },
+      {
+        ...userFields,
+        createdAt: response.body.createdAt,
+        updatedAt: response.body.updatedAt,
+      },
+    );
   });
 
   test("the list of blogs should be included within the returned user", async () => {
