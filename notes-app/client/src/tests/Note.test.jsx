@@ -30,8 +30,8 @@ test("clicking the button calls event handler once", async () => {
   // Mock an user
   const mockUser = {
     username: "user@email.com",
-    name: "User"
-  }
+    name: "User",
+  };
 
   const mockHandler = vi.fn();
 
