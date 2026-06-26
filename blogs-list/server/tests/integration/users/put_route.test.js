@@ -83,12 +83,14 @@ describe("the Users PUT route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Remove the blogs field, since it is not present on the PUT response
-    const { blogs, ...otherFields } = getResponse.body;
+    // Remove all unnecessary fields from the returned user
+    const { id, username, createdAt, ...otherFields } = getResponse.body;
 
     // Confirm only the name has been updated
     assert.deepStrictEqual(putResponse.body, {
-      ...otherFields,
+      id,
+      username,
+      createdAt,
       name: updateData.name,
       updatedAt: putResponse.body.updatedAt,
     });
@@ -111,12 +113,14 @@ describe("the Users PUT route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Remove the blogs field, since it is not present on the PUT response
-    const { blogs, ...otherFields } = getResponse.body;
+    // Remove all unnecessary fields from the returned user
+    const { id, username, createdAt, ...otherFields } = getResponse.body;
 
     // Confirm the updateAt field has been updated
     assert.deepStrictEqual(putResponse.body, {
-      ...otherFields,
+      id,
+      username,
+      createdAt,
       name: newName,
       updatedAt: putResponse.body.updatedAt,
     });
