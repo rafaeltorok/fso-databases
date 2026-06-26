@@ -24,12 +24,22 @@ export async function userFinder(req, res, next) {
     attributes: {
       exclude: ["passwordHash"],
     },
-    include: {
-      model: Blog,
-      attributes: {
-        exclude: ["userId"],
+    include: [
+      {
+        model: Blog,
+        attributes: {
+          exclude: ["userId"],
+        },
       },
-    },
+      {
+        model: Blog,
+        as: "blogs_to_read",
+        attributes: ["id", "title", "author"],
+        through: {
+          attributes: ["read", "addedOn"],
+        }
+      },
+    ],
   });
   if (!req.user) {
     return res.status(404).end();
