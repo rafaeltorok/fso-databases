@@ -33,8 +33,8 @@ export async function userFinder(req, res, next) {
       },
       {
         model: Blog,
-        as: "blogs_to_read",
-        attributes: ["id", "title", "author"],
+        as: "readings",
+        attributes: ["id", "title", "author", "url", "likes", "year"],
         through: {
           attributes: ["read", "addedOn"],
         },
