@@ -20,6 +20,12 @@ export async function blogFinder(req, res, next) {
 
 // Handles finding an user based on its id
 export async function userFinder(req, res, next) {
+  const where = {};
+
+  if (req.query.read) {
+    where.read = req.query.read === "true";
+  }
+
   req.user = await User.findByPk(req.params.id, {
     attributes: {
       exclude: ["passwordHash"],
@@ -37,6 +43,7 @@ export async function userFinder(req, res, next) {
         attributes: ["id", "title", "author", "url", "likes", "year"],
         through: {
           attributes: ["id", "read", "addedOn"],
+          where,
         },
       },
     ],
