@@ -168,6 +168,11 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X GET http://localhost:3001/api/blogs?search=<search_term>
   ```
 
+- Filter the reading list entries based on the read status (`true` or `false`)
+  ```bash
+  curl -X GET http://localhost:3001/api/users/<id>?read=true
+  ```
+
 #### Authors
 
 - Get the number of blogs and total likes per author
