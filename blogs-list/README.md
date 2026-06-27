@@ -195,6 +195,11 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json" -d '{ "username":"admin", "password":"admin" }'
   ```
 
+- Adding a blog to your reading list (A **user** can only add a blog to its **own reading list**)
+  ```bash
+  curl -X POST http://localhost:3001/api/readinglists -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "userId":1, "blogId":1 }'
+  ```
+
 ### DELETE
 
 - Delete a blog
@@ -202,7 +207,7 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X DELETE http://localhost:3001/api/blogs/<id> -H "Authorization: Bearer <token>"
   ```
 
-- Delete an user
+- Delete a user
   ```bash
   curl -X DELETE http://localhost:3001/api/users/<id>
   ```
