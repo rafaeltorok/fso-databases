@@ -219,6 +219,11 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X PUT http://localhost:3001/api/blogs/<id> -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "likes":10 }'
   ```
 
+- Modify the read status for a reading list entry (A user can only update the status for its **own reading list**)
+  ```bash
+  curl -X PUT http://locahost:3001/api/readinglists/<id> -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "read":true }'
+  ```
+
 
 ## Tests
 
