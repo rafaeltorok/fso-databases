@@ -36,7 +36,7 @@ export async function userFinder(req, res, next) {
         as: "readings",
         attributes: ["id", "title", "author", "url", "likes", "year"],
         through: {
-          attributes: ["read", "addedOn"],
+          attributes: ["id", "read", "addedOn"],
         },
       },
     ],
