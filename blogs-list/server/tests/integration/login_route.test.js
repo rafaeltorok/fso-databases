@@ -141,4 +141,33 @@ describe("the Login route", () => {
     // Assert the error message is within the response
     assert.strictEqual(response.body.error, "Invalid username or password");
   });
+
+  test("a disabled user should not be allowed to login", async () => {
+    // Get a user to be disabled
+    const disabledUser = await User.findOne({
+      where: {
+        username: initialUsers[0].username,
+      },
+    });
+
+    // Store the updated user on the database
+    disabledUser.disabled = true;
+    await disabledUser.save();
+
+    // Login
+    const loginResponse = await api
+      .post("/api/login")
+      .send({
+        username: initialUsers[0].username,
+        password: initialUsers[0].password,
+      })
+      .expect(401)
+      .expect("Content-Type", /application\/json/);
+
+    // Assert the error message is within the response
+    assert.strictEqual(
+      loginResponse.body.error,
+      "Your account has been disabled, please contact an admin",
+    );
+  });
 });
