@@ -29,7 +29,7 @@ const validateReadingList = [
       return res.status(400).json({ error: errorMessages });
     }
     next();
-  }
+  },
 ];
 
 export default validateReadingList;

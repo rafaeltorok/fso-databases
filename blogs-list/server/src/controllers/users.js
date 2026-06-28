@@ -126,37 +126,44 @@ userRouter.put("/:username", async (req, res, next) => {
 });
 
 // Admin-only route to enable or disable a user
-userRouter.put("/:username/disabled", tokenExtractor, isAdmin, async (req, res, next) => {
-  try {
-    const userToDisable = await User.findOne({
-      where: {
-        username: req.params.username,
-      },
-    });
+userRouter.put(
+  "/:username/disabled",
+  tokenExtractor,
+  isAdmin,
+  async (req, res, next) => {
+    try {
+      const userToDisable = await User.findOne({
+        where: {
+          username: req.params.username,
+        },
+      });
 
-    // Check if the disabled value is a valid boolean
-    if (typeof req.body.disabled !== "boolean") {
-      return res
-        .status(400)
-        .json({ error: "The disabled field must be either 'true' or 'false'" });
+      // Check if the disabled value is a valid boolean
+      if (typeof req.body.disabled !== "boolean") {
+        return res
+          .status(400)
+          .json({
+            error: "The disabled field must be either 'true' or 'false'",
+          });
+      }
+
+      // Check if the user exists
+      if (userToDisable) {
+        userToDisable.disabled = req.body.disabled;
+        await userToDisable.save();
+
+        // Remove sensitive fields from the response
+        const nonSensitiveData = userToDisable.toJSON();
+        delete nonSensitiveData.passwordHash;
+
+        return res.status(200).send(nonSensitiveData);
+      } else {
+        return res.status(404).end();
+      }
+    } catch (err) {
+      next(err);
     }
-
-    // Check if the user exists
-    if (userToDisable) {
-      userToDisable.disabled = req.body.disabled;
-      await userToDisable.save();
-
-      // Remove sensitive fields from the response
-      const nonSensitiveData = userToDisable.toJSON();
-      delete nonSensitiveData.passwordHash;
-
-      return res.status(200).send(nonSensitiveData);
-    } else {
-      return res.status(404).end();
-    }
-  } catch (err) {
-    next(err);
-  }
-});
+  },
+);
 
 export default userRouter;

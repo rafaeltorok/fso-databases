@@ -84,26 +84,30 @@ describe("the Users PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Select only the necessary fields from the GET response
-    const { id, username, createdAt, admin, disabled, ...otherFields } = getResponse.body;
+    const { id, username, createdAt, admin, disabled, ...otherFields } =
+      getResponse.body;
 
     // Confirm only the name has been updated
-    assert.deepStrictEqual({
-      id: putResponse.body.id,
-      username: putResponse.body.username,
-      name: putResponse.body.name,
-      createdAt: putResponse.body.createdAt,
-      updatedAt: putResponse.body.updatedAt,
-      admin: putResponse.body.admin,
-      disabled: putResponse.body.disabled,
-    }, {
-      id,
-      username,
-      createdAt,
-      name: updateData.name,
-      updatedAt: putResponse.body.updatedAt,
-      admin,
-      disabled,
-    });
+    assert.deepStrictEqual(
+      {
+        id: putResponse.body.id,
+        username: putResponse.body.username,
+        name: putResponse.body.name,
+        createdAt: putResponse.body.createdAt,
+        updatedAt: putResponse.body.updatedAt,
+        admin: putResponse.body.admin,
+        disabled: putResponse.body.disabled,
+      },
+      {
+        id,
+        username,
+        createdAt,
+        name: updateData.name,
+        updatedAt: putResponse.body.updatedAt,
+        admin,
+        disabled,
+      },
+    );
     assert.notStrictEqual(putResponse.body.name, getResponse.body.name);
   });
 
@@ -124,26 +128,30 @@ describe("the Users PUT route", () => {
       .expect("Content-Type", /application\/json/);
 
     // Select only the necessary fields from the GET response
-    const { id, username, createdAt, admin, disabled, ...otherFields } = getResponse.body;
+    const { id, username, createdAt, admin, disabled, ...otherFields } =
+      getResponse.body;
 
     // Confirm the updateAt field has been updated
-    assert.deepStrictEqual({
-      id: putResponse.body.id,
-      username: putResponse.body.username,
-      name: putResponse.body.name,
-      createdAt: putResponse.body.createdAt,
-      updatedAt: putResponse.body.updatedAt,
-      admin: putResponse.body.admin,
-      disabled: putResponse.body.disabled,
-    }, {
-      id,
-      username,
-      createdAt,
-      name: newName,
-      updatedAt: putResponse.body.updatedAt,
-      admin,
-      disabled
-    });
+    assert.deepStrictEqual(
+      {
+        id: putResponse.body.id,
+        username: putResponse.body.username,
+        name: putResponse.body.name,
+        createdAt: putResponse.body.createdAt,
+        updatedAt: putResponse.body.updatedAt,
+        admin: putResponse.body.admin,
+        disabled: putResponse.body.disabled,
+      },
+      {
+        id,
+        username,
+        createdAt,
+        name: newName,
+        updatedAt: putResponse.body.updatedAt,
+        admin,
+        disabled,
+      },
+    );
     assert.notStrictEqual(
       putResponse.body.updatedAt,
       getResponse.body.updatedAt,

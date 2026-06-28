@@ -37,7 +37,11 @@ loginRouter.post("/", async (req, res, next) => {
 
     // Check if the user is disabled
     if (user.disabled) {
-      return res.status(400).json({ error: "Your account has been disabled, please contact an admin" });
+      return res
+        .status(400)
+        .json({
+          error: "Your account has been disabled, please contact an admin",
+        });
     }
 
     // Generates the token
