@@ -10,6 +10,8 @@ import { userFinder } from "../middleware/finders.js";
 import validateUser from "../middleware/validators/usersValidator.js";
 import validateId from "../middleware/validators/validateId.js";
 import validatePassword from "../middleware/validators/validatePassword.js";
+import isAdmin from "../middleware/isAdmin.js";
+import tokenExtractor from "../middleware/tokenExtractor.js";
 
 const userRouter = express.Router();
 
@@ -118,6 +120,40 @@ userRouter.put("/:username", async (req, res, next) => {
     delete nonSensitiveData.passwordHash;
 
     return res.status(200).json(nonSensitiveData);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Admin-only route to enable or disable an user
+userRouter.put("/:username/disabled", tokenExtractor, isAdmin, async (req, res, next) => {
+  try {
+    const userToDisable = await User.findOne({
+      where: {
+        username: req.params.username,
+      },
+    });
+
+    // Check if the disabled value is a valid boolean
+    if (typeof req.body.disabled !== "boolean") {
+      return res
+        .status(400)
+        .json({ error: "The disabled field must be either 'true' or 'false'" });
+    }
+
+    // Check if the user exists
+    if (userToDisable) {
+      userToDisable.disabled = req.body.disabled;
+      await userToDisable.save();
+
+      // Remove sensitive fields from the response
+      const nonSensitiveData = userToDisable.toJSON();
+      delete nonSensitiveData.passwordHash;
+
+      return res.status(200).send(nonSensitiveData);
+    } else {
+      return res.status(404).end();
+    }
   } catch (err) {
     next(err);
   }
