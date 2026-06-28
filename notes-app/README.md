@@ -199,7 +199,7 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X POST http://localhost:3001/api/teams -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "name":"Team name" }'
   ```
 
-- Add an user to a team (**admins only**)
+- Add a user to a team (**admins only**)
   ```bash
   curl -X POST http://localhost:3001/api/teams/<id>/users -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "username":"user@email.com" }'
   ```
@@ -212,7 +212,7 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X DELETE http://localhost:3001/api/notes/<id> -H "Authorization: Bearer <token>"
   ```
 
-- Remove an user
+- Remove a user
   ```bash
   curl -X DELETE http://localhost:3001/api/users/<id>
   ```
@@ -222,7 +222,7 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X DELETE http://localhost:3001/api/teams/<id> -H "Authorization: Bearer <token>"
   ```
 
-- Remove an user from a team (**admins only**)
+- Remove a user from a team (**admins only**)
   ```bash
   curl -X DELETE http://localhost:3001/api/teams/<id>/users/<user_id> -H "Authorization: Bearer <token>"
   ```
@@ -235,7 +235,7 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X PUT http://localhost:3001/api/notes/<id> -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "important":true }'
   ```
 
-- Enable or disable an user from logging in (**admins only**)
+- Enable or disable a user from logging in (**admins only**)
   ```bash
   curl -X PUT http://localhost:3001/api/users/<username> -H "Content-Type: application/json"  -H "Authorization: Bearer <token>" -d '{ "disabled":true }'
   ```
