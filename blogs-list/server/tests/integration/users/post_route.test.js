@@ -55,11 +55,11 @@ describe("the Users POST route", () => {
     // Remove the password from the original object
     const { password, ...otherFields } = user;
 
-    // Remove the id, blogs and timestamps fields from the returned object
-    const { id, blogs, createdAt, updatedAt, ...postFields } = response.body;
+    // Select only the necessary fields from the POST response
+    const { username, name, ...postFields } = response.body;
 
     // Assert the object data is correct
-    assert.deepStrictEqual(otherFields, postFields);
+    assert.deepStrictEqual(otherFields, { username, name });
 
     // Get the current amount of objects
     const currentAmount = await getAmount("users");

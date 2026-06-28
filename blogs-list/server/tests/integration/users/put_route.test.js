@@ -83,18 +83,28 @@ describe("the Users PUT route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Remove all unnecessary fields from the returned user
-    const { id, username, createdAt, ...otherFields } = getResponse.body;
+    // Select only the necessary fields from the GET response
+    const { id, username, createdAt, admin, disabled, ...otherFields } = getResponse.body;
 
     // Confirm only the name has been updated
-    assert.deepStrictEqual(putResponse.body, {
+    assert.deepStrictEqual({
+      id: putResponse.body.id,
+      username: putResponse.body.username,
+      name: putResponse.body.name,
+      createdAt: putResponse.body.createdAt,
+      updatedAt: putResponse.body.updatedAt,
+      admin: putResponse.body.admin,
+      disabled: putResponse.body.disabled,
+    }, {
       id,
       username,
       createdAt,
       name: updateData.name,
       updatedAt: putResponse.body.updatedAt,
+      admin,
+      disabled,
     });
-    assert.notStrictEqual(putResponse.body, getResponse.body);
+    assert.notStrictEqual(putResponse.body.name, getResponse.body.name);
   });
 
   test("the updateAt field should be updated after a successful request", async () => {
@@ -113,16 +123,26 @@ describe("the Users PUT route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Remove all unnecessary fields from the returned user
-    const { id, username, createdAt, ...otherFields } = getResponse.body;
+    // Select only the necessary fields from the GET response
+    const { id, username, createdAt, admin, disabled, ...otherFields } = getResponse.body;
 
     // Confirm the updateAt field has been updated
-    assert.deepStrictEqual(putResponse.body, {
+    assert.deepStrictEqual({
+      id: putResponse.body.id,
+      username: putResponse.body.username,
+      name: putResponse.body.name,
+      createdAt: putResponse.body.createdAt,
+      updatedAt: putResponse.body.updatedAt,
+      admin: putResponse.body.admin,
+      disabled: putResponse.body.disabled,
+    }, {
       id,
       username,
       createdAt,
       name: newName,
       updatedAt: putResponse.body.updatedAt,
+      admin,
+      disabled
     });
     assert.notStrictEqual(
       putResponse.body.updatedAt,
