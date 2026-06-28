@@ -142,7 +142,7 @@ usersRouter.delete("/:id", validateId, async (req, res, next) => {
   }
 });
 
-// Admin-only route to enable or disable an user
+// Admin-only route to enable or disable a user
 usersRouter.put(
   "/:username",
   tokenExtractor,
@@ -167,7 +167,7 @@ usersRouter.put(
         user.disabled = req.body.disabled;
         await user.save();
 
-        // Remove sensitive field from the response
+        // Remove sensitive fields from the response
         const nonSensitiveData = user.toJSON();
         delete nonSensitiveData.passwordHash;
 
