@@ -43,7 +43,7 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-// Get an user based on its id
+// Get a user based on its id
 usersRouter.get("/:id", validateId, userFinder, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id, {
@@ -120,7 +120,7 @@ usersRouter.post(
   },
 );
 
-// DELETE an user
+// DELETE a user
 usersRouter.delete("/:id", validateId, async (req, res, next) => {
   try {
     const userId = req.params.id;

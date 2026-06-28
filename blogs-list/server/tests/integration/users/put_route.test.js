@@ -42,16 +42,16 @@ describe("the Users PUT route", () => {
       .expect("Content-Type", /application\/json/);
   });
 
-  test("an user's name can be updated", async () => {
+  test("a user's name can be updated", async () => {
     const newName = "New name";
 
-    // Get an user to be updated
+    // Get a user to be updated
     const getResponse = await api
       .get("/api/users/1")
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Update an user
+    // Update a user
     const putResponse = await api
       .put(`/api/users/${getResponse.body.username}`)
       .send({ name: newName })
@@ -70,13 +70,13 @@ describe("the Users PUT route", () => {
       password: "newpassword",
     };
 
-    // Get an user to be updated
+    // Get a user to be updated
     const getResponse = await api
       .get("/api/users/1")
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Update an user
+    // Update a user
     const putResponse = await api
       .put(`/api/users/${getResponse.body.username}`)
       .send(updateData)
@@ -110,13 +110,13 @@ describe("the Users PUT route", () => {
   test("the updateAt field should be updated after a successful request", async () => {
     const newName = "New name";
 
-    // Get an user to be updated
+    // Get a user to be updated
     const getResponse = await api
       .get("/api/users/1")
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Update an user
+    // Update a user
     const putResponse = await api
       .put(`/api/users/${getResponse.body.username}`)
       .send({ name: newName })
@@ -153,13 +153,13 @@ describe("the Users PUT route", () => {
   test("the createdAt field should not be updated", async () => {
     const newName = "New name";
 
-    // Get an user to be updated
+    // Get a user to be updated
     const getResponse = await api
       .get("/api/users/1")
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Update an user
+    // Update a user
     const putResponse = await api
       .put(`/api/users/${getResponse.body.username}`)
       .send({ name: newName })
@@ -173,13 +173,13 @@ describe("the Users PUT route", () => {
   test("an empty name should return a proper error message", async () => {
     const newName = "";
 
-    // Get an user to be updated
+    // Get a user to be updated
     const originalUserData = await api
       .get("/api/users/1")
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Update an user
+    // Update a user
     const putResponse = await api
       .put(`/api/users/${originalUserData.body.username}`)
       .send({ name: newName })
@@ -205,13 +205,13 @@ describe("the Users PUT route", () => {
   });
 
   test("an undefined parameter should return a proper error message", async () => {
-    // Get an user to be updated
+    // Get a user to be updated
     const originalUserData = await api
       .get("/api/users/1")
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Update an user
+    // Update a user
     const putResponse = await api
       .put(`/api/users/${originalUserData.body.username}`)
       .send({})

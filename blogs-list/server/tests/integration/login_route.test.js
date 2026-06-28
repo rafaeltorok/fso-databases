@@ -44,7 +44,7 @@ describe("the Login route", () => {
       .expect("Content-Type", /application\/json/);
   });
 
-  test("an user can successfully login", async () => {
+  test("a user can successfully login", async () => {
     const { username, password } = initialUsers[0];
 
     // Login with the correct credentials

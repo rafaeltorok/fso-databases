@@ -88,7 +88,7 @@ describe("the Blogs DELETE route", () => {
     assert.strictEqual(initialAmount, currentAmount);
   });
 
-  test("an user cannot remove another user's blog", async () => {
+  test("a user cannot remove another user's blog", async () => {
     const blog = initialBlogs[0];
 
     // Add a blog to be removed

@@ -18,7 +18,7 @@ export async function blogFinder(req, res, next) {
   next();
 }
 
-// Handles finding an user based on its id
+// Handles finding a user based on its id
 export async function userFinder(req, res, next) {
   const where = {};
 

@@ -70,7 +70,7 @@ userRouter.post("/", validateUser, validatePassword, async (req, res, next) => {
   }
 });
 
-// DELETE an user
+// DELETE a user
 userRouter.delete("/:id", validateId, async (req, res, next) => {
   try {
     const userId = req.params.id;
@@ -125,7 +125,7 @@ userRouter.put("/:username", async (req, res, next) => {
   }
 });
 
-// Admin-only route to enable or disable an user
+// Admin-only route to enable or disable a user
 userRouter.put("/:username/disabled", tokenExtractor, isAdmin, async (req, res, next) => {
   try {
     const userToDisable = await User.findOne({

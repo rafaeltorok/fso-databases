@@ -11,7 +11,7 @@ import validateReadStatus from "../middleware/validators/validateReadStatus.js";
 
 const readingListRouter = express.Router();
 
-// Add a blog to an user reading list
+// Add a blog to a user reading list
 readingListRouter.post("/", tokenExtractor, validateReadingList, async (req, res, next) => {
   try {
     const userId = req.body.userId;

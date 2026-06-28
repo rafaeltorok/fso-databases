@@ -47,7 +47,7 @@ async function updateData(id, newObject) {
   return request.data;
 }
 
-// Login an user
+// Login a user
 async function userLogin(credentials) {
   const request = await axios.post(loginUrl, credentials);
   return request.data;

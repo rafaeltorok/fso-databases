@@ -37,13 +37,13 @@ describe("the Users DELETE route", () => {
     await User.truncate({ restartIdentity: true, cascade: true });
   });
 
-  test("an user can be removed", async () => {
+  test("a user can be removed", async () => {
     const user = initialUsers[0];
 
     // Store the initial users length
     const initialAmount = await getAmount("users");
 
-    // Add an user to be removed
+    // Add a user to be removed
     const postResponse = await api
       .post("/api/users")
       .send(user)

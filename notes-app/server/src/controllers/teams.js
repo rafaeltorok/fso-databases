@@ -82,7 +82,7 @@ teamsRouter.post(
   },
 );
 
-// Add an user to a team (admins only)
+// Add a user to a team (admins only)
 teamsRouter.post(
   "/:id/users",
   tokenExtractor,
@@ -153,7 +153,7 @@ teamsRouter.delete(
   },
 );
 
-// Remove an user from a team (admins only)
+// Remove a user from a team (admins only)
 teamsRouter.delete(
   "/:id/users/:user_id",
   tokenExtractor,

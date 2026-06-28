@@ -42,7 +42,7 @@ describe("the Login route", () => {
       .expect("Content-Type", /application\/json/);
   });
 
-  test("an user can successfully login", async () => {
+  test("a user can successfully login", async () => {
     const { username, password } = initialUsers[0];
 
     // Login with the correct credentials
@@ -141,7 +141,7 @@ describe("the Login route", () => {
   });
 
   test("a disabled user should not be able to login", async () => {
-    // Get an user to be disable
+    // Get a user to be disable
     const disabledUser = await User.findOne({
       where: {
         username: initialUsers[0].username,

@@ -1,7 +1,7 @@
 // Models
 import { User, Note } from "../models/index.js";
 
-// Handles finding an user based on its id
+// Handles finding a user based on its id
 export async function userFinder(req, res, next) {
   req.user = await User.findByPk(req.params.id, {
     attributes: {

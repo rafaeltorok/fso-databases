@@ -304,7 +304,7 @@ describe("the Teams POST route", () => {
       }
     });
 
-    test("an user can be added to a team", async () => {
+    test("a user can be added to a team", async () => {
       // Fetch the currently logged in admin user
       const user = initialUsers[0];
 
@@ -481,8 +481,8 @@ describe("the Teams POST route", () => {
       assert.strictEqual(currentUser.body.teams.length, user.body.teams.length);
     });
 
-    test("only an admin can add an user to a team", async () => {
-      // Get an user to be added
+    test("only an admin can add a user to a team", async () => {
+      // Get a user to be added
       const user = initialTeams[0];
 
       // Login as a non-admin user

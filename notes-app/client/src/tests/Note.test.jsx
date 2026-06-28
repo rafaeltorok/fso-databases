@@ -27,7 +27,7 @@ test("clicking the button calls event handler once", async () => {
     important: true,
   };
 
-  // Mock an user
+  // Mock a user
   const mockUser = {
     username: "user@email.com",
     name: "User",

@@ -77,8 +77,8 @@ describe("the Users PUT route", () => {
       .expect("Content-Type", /application\/json/);
   });
 
-  test("an user can be disabled", async () => {
-    // Get an user to be disabled
+  test("a user can be disabled", async () => {
+    // Get a user to be disabled
     const getResponse = await api
       .get("/api/users/1")
       .expect(200)
@@ -97,7 +97,7 @@ describe("the Users PUT route", () => {
   });
 
   test("a disabled user can be re-enabled", async () => {
-    // Get an user to be disabled
+    // Get a user to be disabled
     const getResponse = await api
       .get("/api/users/1")
       .expect(200)
@@ -134,7 +134,7 @@ describe("the Users PUT route", () => {
       disabled: true,
     };
 
-    // Get an user to be disabled
+    // Get a user to be disabled
     const getResponse = await api
       .get("/api/users/1")
       .expect(200)
@@ -169,7 +169,7 @@ describe("the Users PUT route", () => {
   });
 
   test("the updateAt field should be updated after a successful request", async () => {
-    // Get an user to be disabled
+    // Get a user to be disabled
     const getResponse = await api
       .get("/api/users/1")
       .expect(200)
@@ -207,7 +207,7 @@ describe("the Users PUT route", () => {
   });
 
   test("the createdAt field should not be updated", async () => {
-    // Get an user to be disabled
+    // Get a user to be disabled
     const getResponse = await api
       .get("/api/users/1")
       .expect(200)
@@ -229,7 +229,7 @@ describe("the Users PUT route", () => {
   });
 
   test("a non-boolean value for the disabled field should return a proper error message", async () => {
-    // Get an user to be disabled
+    // Get a user to be disabled
     const originalUserData = await api
       .get("/api/users/1")
       .expect(200)
@@ -268,7 +268,7 @@ describe("the Users PUT route", () => {
   });
 
   test("an undefined parameter should return a proper error message", async () => {
-    // Get an user to be disabled
+    // Get a user to be disabled
     const originalUserData = await api
       .get("/api/users/1")
       .expect(200)
@@ -327,7 +327,7 @@ describe("the Users PUT route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Get an user to be disabled
+    // Get a user to be disabled
     const originalUserData = await api
       .get("/api/users/1")
       .expect(200)

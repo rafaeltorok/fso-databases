@@ -65,7 +65,7 @@ describe("the Users GET route", () => {
     assert.strictEqual(response.body.length, initialUsers.length);
   });
 
-  test("an user can be fetch through its id value", async () => {
+  test("a user can be fetch through its id value", async () => {
     // Get the first user from the initial list
     const userToView = initialUsers[0];
 

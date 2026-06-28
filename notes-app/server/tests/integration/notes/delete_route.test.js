@@ -88,7 +88,7 @@ describe("the Notes DELETE route", () => {
     assert.strictEqual(initialAmount, currentAmount);
   });
 
-  test("an user cannot remove another user's note", async () => {
+  test("a user cannot remove another user's note", async () => {
     const note = initialNotes[0];
 
     // Add a note to be removed

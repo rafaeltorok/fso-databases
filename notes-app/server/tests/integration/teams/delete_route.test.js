@@ -212,7 +212,7 @@ describe("the Teams DELETE route", () => {
     assert.ok(response.body.error.includes("Invalid ID format"));
   });
 
-  test("removing a team should also remove it from an user's teams list", async () => {
+  test("removing a team should also remove it from a user's teams list", async () => {
     // Get the user initial list of teams
     const originalUserData = await api
       .get("/api/users/1")
@@ -225,7 +225,7 @@ describe("the Teams DELETE route", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Add an user to a team
+    // Add a user to a team
     await api
       .post(`/api/teams/${teamToRemove.body.id}/users`)
       .send({ username: originalUserData.body.username })
@@ -267,14 +267,14 @@ describe("the Teams DELETE route", () => {
     );
   });
 
-  test("removing an user should also remove it from the team's list of users", async () => {
+  test("removing a user should also remove it from the team's list of users", async () => {
     // Get the team initial list of users
     const originalTeamData = await api
       .get("/api/teams/1")
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // Get an user to be removed
+    // Get a user to be removed
     // Select the second user, since the first one is the current logged in admin
     const userToRemove = await api
       .get("/api/users/2")
