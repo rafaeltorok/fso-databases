@@ -161,7 +161,7 @@ describe("the Login route", () => {
         username: initialUsers[0].username,
         password: initialUsers[0].password,
       })
-      .expect(401)
+      .expect(403)
       .expect("Content-Type", /application\/json/);
 
     // Assert the error message is within the response
