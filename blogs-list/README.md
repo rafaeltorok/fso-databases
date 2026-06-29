@@ -217,6 +217,11 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X DELETE http://localhost:3001/api/users/<id>
   ```
 
+- Logout
+  ```bash
+  curl -X DELETE http://localhost:3001/api/logout
+  ```
+
 ### PUT
 
 - Update the number of likes of a blog

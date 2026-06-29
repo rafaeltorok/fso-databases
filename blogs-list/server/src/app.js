@@ -5,6 +5,7 @@ import express from "express";
 import blogsRouter from "./controllers/blogs.js";
 import userRouter from "./controllers/users.js";
 import loginRouter from "./controllers/login.js";
+import logoutRouter from "./controllers/logout.js";
 import healthRouter from "./controllers/health.js";
 import testsRouter from "./controllers/tests.js";
 import authorsRouter from "./controllers/authors.js";
@@ -17,21 +18,30 @@ import errorHandler from "./middleware/errorHandler.js";
 const app = express();
 
 app.use(express.json());
+
 app.use("/api/blogs", blogsRouter);
 app.use("/api/users", userRouter);
-app.use("/api/login", loginRouter);
-app.use("/api/health", healthRouter);
 app.use("/api/authors", authorsRouter);
 app.use("/api/readinglists", readingListRouter);
 
+// Session routes
+app.use("/api/login", loginRouter);
+app.use("/api/logout", logoutRouter);
+
+// Server health check route
+app.use("/api/health", healthRouter);
+
+// Route to reset all data tables for testing
 if (process.env.NODE_ENV === "test") {
   app.use("/api/reset", testsRouter);
 }
 
+// Basic server check
 app.use("/", async (req, res) => {
   return res.status(200).end();
 });
 
+// Error handler middleware
 app.use(errorHandler);
 
 export default app;
