@@ -2,8 +2,7 @@
 import express from "express";
 
 // Models
-import Blog from "../models/blog.js";
-import User from "../models/user.js";
+import { Blog, User, ReadingList, Session } from "../models/index.js";
 
 const testsRouter = express.Router();
 
@@ -12,6 +11,8 @@ testsRouter.post("/", async (req, res, next) => {
   try {
     await Blog.truncate({ restartIdentity: true, cascade: true });
     await User.truncate({ restartIdentity: true, cascade: true });
+    await ReadingList.truncate({ restartIdentity: true, cascade: true });
+    await Session.truncate({ restartIdentity: true, cascade: true });
 
     res.status(204).end();
   } catch (err) {
