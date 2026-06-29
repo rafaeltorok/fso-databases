@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { SECRET } from "../utils/config.js";
 
 // Model
-import User from "../models/user.js";
+import { User, Session } from "../models/index.js";
 
 const loginRouter = express.Router();
 
@@ -38,7 +38,7 @@ loginRouter.post("/", async (req, res, next) => {
     // Check if the user is disabled
     if (user.disabled) {
       return res
-        .status(400)
+        .status(403)
         .json({
           error: "Your account has been disabled, please contact an admin",
         });
@@ -52,8 +52,14 @@ loginRouter.post("/", async (req, res, next) => {
 
     const token = jwt.sign(userForToken, SECRET);
 
+    // Start a new session for the logged user
+    await Session.create({
+      userId: user.id,
+      sessionToken: token,
+    });
+
     // Return the token alongside the non-sensitive user information
-    res.status(200).send({ token, username: user.username, name: user.name });
+    return res.status(200).send({ token, username: user.username, name: user.name });
   } catch (err) {
     next(err);
   }
