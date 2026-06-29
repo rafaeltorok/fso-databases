@@ -3,15 +3,18 @@ import express from "express";
 import bcrypt from "bcrypt";
 
 // Models
-import { Blog, User } from "../models/index.js";
+import { Blog, User, Session } from "../models/index.js";
 
 // Middleware
 import { userFinder } from "../middleware/finders.js";
+import tokenExtractor from "../middleware/tokenExtractor.js";
+import isAdmin from "../middleware/isAdmin.js";
+import activeSession from "../middleware/activeSession.js";
+
+// Validators
 import validateUser from "../middleware/validators/usersValidator.js";
 import validateId from "../middleware/validators/validateId.js";
 import validatePassword from "../middleware/validators/validatePassword.js";
-import isAdmin from "../middleware/isAdmin.js";
-import tokenExtractor from "../middleware/tokenExtractor.js";
 
 const userRouter = express.Router();
 
@@ -129,6 +132,7 @@ userRouter.put("/:username", async (req, res, next) => {
 userRouter.put(
   "/:username/disabled",
   tokenExtractor,
+  activeSession,
   isAdmin,
   async (req, res, next) => {
     try {
@@ -155,6 +159,13 @@ userRouter.put(
         // Remove sensitive fields from the response
         const nonSensitiveData = userToDisable.toJSON();
         delete nonSensitiveData.passwordHash;
+
+        // Remove all active sessions related to the disabled user
+        await Session.destroy({
+          where: {
+            userId: userToDisable.id,
+          },
+        });
 
         return res.status(200).send(nonSensitiveData);
       } else {

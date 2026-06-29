@@ -8,6 +8,9 @@ import { Blog, User } from "../models/index.js";
 // Middleware
 import { blogFinder } from "../middleware/finders.js";
 import tokenExtractor from "../middleware/tokenExtractor.js";
+import activeSession from "../middleware/activeSession.js";
+
+// Validators
 import validateBlog from "../middleware/validators/blogsValidator.js";
 import validateId from "../middleware/validators/validateId.js";
 import validateLikes from "../middleware/validators/validateLikes.js";
@@ -73,6 +76,7 @@ blogsRouter.get("/:id", validateId, blogFinder, async (req, res, next) => {
 blogsRouter.post(
   "/",
   tokenExtractor,
+  activeSession,
   validateBlog,
   validateYear,
   async (req, res, next) => {
@@ -100,8 +104,9 @@ blogsRouter.post(
 // DELETE a blog
 blogsRouter.delete(
   "/:id",
-  validateId,
   tokenExtractor,
+  activeSession,
+  validateId,
   async (req, res, next) => {
     try {
       const blogId = req.params.id;
@@ -144,10 +149,11 @@ blogsRouter.delete(
 // PUT (update) a blog's number of likes
 blogsRouter.put(
   "/:id",
-  validateId,
-  validateLikes,
-  blogFinder,
   tokenExtractor,
+  activeSession,
+  validateId,
+  blogFinder,
+  validateLikes,
   async (req, res, next) => {
     try {
       const likes = req.body.likes;

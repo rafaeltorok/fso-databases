@@ -5,6 +5,9 @@ import { Blog, User, ReadingList } from "../models/index.js";
 
 // Middleware
 import tokenExtractor from "../middleware/tokenExtractor.js";
+import activeSession from "../middleware/activeSession.js";
+
+// Validators
 import validateReadingList from "../middleware/validators/validateReadingList.js";
 import validateId from "../middleware/validators/validateId.js";
 import validateReadStatus from "../middleware/validators/validateReadStatus.js";
@@ -15,6 +18,7 @@ const readingListRouter = express.Router();
 readingListRouter.post(
   "/",
   tokenExtractor,
+  activeSession,
   validateReadingList,
   async (req, res, next) => {
     try {
@@ -53,8 +57,9 @@ readingListRouter.post(
 
 readingListRouter.put(
   "/:id",
-  validateId,
   tokenExtractor,
+  activeSession,
+  validateId,
   validateReadStatus,
   async (req, res, next) => {
     try {
