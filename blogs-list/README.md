@@ -260,12 +260,12 @@ Enter the server folder
 cd ./server
 ```
 
-Run only the FSO test suites
+Run the FSO test suites
 ```bash
 npm run test
 ```
 
-Run all integration tests
+Run my custom integration test suites
 ```bash
 npm run test:integration
 ```
