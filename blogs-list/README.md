@@ -28,8 +28,8 @@ cd ./blogs-list/client && npm install
 
 The `.env` file must contain the following variables scheme
 ```conf
-POSTGRES_URI=postgres://<username>:<password>@<hostname>:<port>/blogslist
-TEST_POSTGRES_URI=postgres://<username>:<password>@<hostname>:<port>/test_blogslist
+DATABASE_URL=postgres://<username>:<password>@<hostname>:<port>/blogslist
+TEST_DATABASE_URL=postgres://<username>:<password>@<hostname>:<port>/test_blogslist
 PORT=3001
 SECRET=<insert_your_secret_passphrase_here>
 DATABASE_SSL=true
@@ -183,13 +183,6 @@ docker compose -f ./docker-compose.test.yml down -v
 
 ### POST
 
-- Create a new blog (likes field is **optional**)
-  ```bash
-  curl -X POST http://localhost:3001/api/blogs -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "title":"My blog", "author":"The blogger", "url":"https://myblog.com", "year": 2000, "likes":10 }'
-  ```
-
-  - The year must be between **1991** and the **current** year.
-
 - Create a new user
   ```bash
   curl -X POST http://localhost:3001/api/users -H "Content-Type: application/json" -d '{ "username":"admin", "name":"Administrator", "password":"admin" }'
@@ -200,9 +193,16 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X POST http://localhost:3001/api/login -H "Content-Type: application/json" -d '{ "username":"admin", "password":"admin" }'
   ```
 
-- Adding a blog to your reading list (A **user** can only add a blog to its **own reading list**)
+- Create a new blog (`likes` and `year` fields are **optional**)
   ```bash
-  curl -X POST http://localhost:3001/api/readinglists -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "userId":1, "blogId":1 }'
+  curl -X POST http://localhost:3001/api/blogs -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "title":"My blog", "author":"The blogger", "url":"https://myblog.com", "year":2000, "likes":10 }'
+  ```
+
+  - The year must be between **1991** and the **current** year.
+
+- Adding a blog to your reading list
+  ```bash
+  curl -X POST http://localhost:3001/api/readinglists -H "Content-Type: application/json" -d '{ "userId":1, "blogId":1 }'
   ```
 
 ### DELETE
@@ -217,6 +217,11 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X DELETE http://localhost:3001/api/users/<id>
   ```
 
+- Remove an entry from the reading list
+  ```bash
+  curl -X DELETE http://localhost:3001/api/readinglists/<id>
+  ```
+
 - Logout
   ```bash
   curl -X DELETE http://localhost:3001/api/logout
@@ -229,9 +234,9 @@ docker compose -f ./docker-compose.test.yml down -v
   curl -X PUT http://localhost:3001/api/blogs/<id> -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "likes":10 }'
   ```
 
-- Modify the read status for a reading list entry (A user can only update the status for its **own reading list**)
+- Modify the read status for a reading list entry
   ```bash
-  curl -X PUT http://locahost:3001/api/readinglists/<id> -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{ "read":true }'
+  curl -X PUT http://locahost:3001/api/readinglists/<id> -H "Content-Type: application/json" -d '{ "read":true }'
   ```
 
 - Enable or disable a user from logging in (**admins only**)
@@ -255,24 +260,14 @@ Enter the server folder
 cd ./server
 ```
 
-Run all tests
+Run only the FSO test suites
 ```bash
 npm run test
 ```
 
-Run only the Blogs routes test suites
+Run all integration tests
 ```bash
-npm run test -- ./tests/integration/blogs/*
-```
-
-Run only the Users routes test suites
-```bash
-npm run test -- ./tests/integration/users/*
-```
-
-Run only the Login route test suite
-```bash
-npm run test -- ./tests/integration/login_route.test.js
+npm run test:integration
 ```
 
 
