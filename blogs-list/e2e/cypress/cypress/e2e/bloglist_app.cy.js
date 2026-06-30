@@ -1,12 +1,12 @@
 describe('Blogs List app', function() {
   beforeEach(function() {
     cy.resetDatabase()
-    cy.createUser({ username: 'admin', name: 'The Administrator', password: 'password' })
+    cy.createUser({ username: 'admin@email.com', name: 'The Administrator', password: 'admin' })
   })
 
   it('Front page can be opened', function() {
     cy.contains('Blogs List')
-    cy.contains('Blogs List app, from the FullStackOpen course by MOOC Finland 2025.')
+    cy.contains('Blogs List app, from the FullStackOpen Databases course by MOOC Finland 2026.')
   })
 
   it('Login form is shown', function() {
@@ -17,25 +17,25 @@ describe('Blogs List app', function() {
 
   describe('Login',function() {
     it('succeeds with correct credentials', function() {
-      cy.login({ username: 'admin', password: 'password' })
+      cy.login({ username: 'admin@email.com', password: 'admin' })
       cy.contains('The Administrator logged in')
     })
 
     it('Login fails with wrong username', function() {
-      cy.loginViaUI({ username: 'wrong', password: 'password' })
+      cy.loginViaUI({ username: 'wrong@email.com', password: 'admin' })
       cy.get('.error-message')
         .should('contain', 'Incorrect credentials')
-        .and('have.css', 'color', 'rgb(255, 0, 0)')
+        .and('have.css', 'color', 'rgb(255, 26, 26)')
         .and('have.css', 'border-style', 'solid')
 
       cy.get('html').should('not.contain', 'The Administrator logged in')
     })
 
     it('Login fails with wrong password', function() {
-      cy.loginViaUI({ username: 'admin', password: 'wrong' })
+      cy.loginViaUI({ username: 'admin@email.com', password: 'wrong' })
       cy.get('.error-message')
         .should('contain', 'Incorrect credentials')
-        .and('have.css', 'color', 'rgb(255, 0, 0)')
+        .and('have.css', 'color', 'rgb(255, 26, 26)')
         .and('have.css', 'border-style', 'solid')
       
       cy.get('html').should('not.contain', 'The Administrator logged in')
@@ -44,7 +44,7 @@ describe('Blogs List app', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      cy.login({ username: 'admin', password: 'password' })
+      cy.login({ username: 'admin@email.com', password: 'admin' })
       cy.createBlog({
         title: 'My test blog',
         author: 'Cypress',
@@ -66,8 +66,8 @@ describe('Blogs List app', function() {
 
       cy.contains('button', 'logout').click()
       
-      cy.createUser({ username: 'test', name: 'Test user', password: 'test' })
-      cy.login({ username: 'test', password: 'test' })
+      cy.createUser({ username: 'tester@test.com', name: 'Tester', password: 'tester' })
+      cy.login({ username: 'tester@test.com', password: 'tester' })
 
       cy.contains('.blog-title', 'My test blog by Cypress')
         .closest('table')
@@ -80,7 +80,7 @@ describe('Blogs List app', function() {
 
   describe('And a blog exists', function () {
     beforeEach(function () {
-      cy.login({ username: 'admin', password: 'password' })
+      cy.login({ username: 'admin@email.com', password: 'admin' })
       cy.createBlog({
         title: 'My test blog',
         author: 'Cypress',
@@ -133,7 +133,7 @@ describe('Blogs List app', function() {
 
   describe('And multiple blogs exists', function() {
     beforeEach(function () {
-      cy.login({ username: 'admin', password: 'password' })
+      cy.login({ username: 'admin@email.com', password: 'admin' })
       cy.createBlog({
         title: 'New blog',
         author: 'Cypress',
