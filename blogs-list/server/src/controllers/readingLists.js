@@ -3,6 +3,10 @@ import express from "express";
 // Models
 import { Blog, User, ReadingList } from "../models/index.js";
 
+// Middleware
+import tokenExtractor from "../middleware/tokenExtractor.js";
+import activeSession from "../middleware/activeSession.js";
+
 // Validators
 import validateReadingList from "../middleware/validators/validateReadingList.js";
 import validateId from "../middleware/validators/validateId.js";
@@ -36,16 +40,25 @@ readingListRouter.post(
       });
 
       if (existingEntry) {
-        throw new Error({ error: "Blog entry has already been added" });
+        return res.status(400).json({ error: "Blog entry has already been added" });
       }
 
       // Add the blog to the reading list
-      const entry = await ReadingList.create({
+      const newEntry = await ReadingList.create({
         userId,
         blogId,
       });
 
-      return res.status(200).json(entry);
+      let returnEntry = newEntry.toJSON();
+
+      delete returnEntry.userId;
+      delete returnEntry.blogId;
+
+      return res.status(200).json({
+        ...returnEntry,
+        user_id: newEntry.toJSON().userId,
+        blog_id: newEntry.toJSON().blogId,
+      });
     } catch (err) {
       next(err);
     }
@@ -55,6 +68,8 @@ readingListRouter.post(
 // Update the read status of an entry
 readingListRouter.put(
   "/:id",
+  tokenExtractor,
+  activeSession,
   validateId,
   validateReadStatus,
   async (req, res, next) => {
@@ -64,6 +79,13 @@ readingListRouter.put(
       // Confirm the list item exists
       if (!readingListEntry) {
         return res.status(404).end();
+      }
+
+      // Confirm the reading list entry belongs to the currently logged in user
+      if (readingListEntry.userId !== req.decodedToken.id) {
+        return res
+          .status(401)
+          .json({ error: "You cannot modify another user's reading list" });
       }
 
       // Update the read status for the entry
