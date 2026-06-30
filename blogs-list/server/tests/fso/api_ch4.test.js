@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import axios from "axios";
