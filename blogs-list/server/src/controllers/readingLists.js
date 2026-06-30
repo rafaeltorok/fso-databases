@@ -3,10 +3,6 @@ import express from "express";
 // Models
 import { Blog, User, ReadingList } from "../models/index.js";
 
-// Middleware
-import tokenExtractor from "../middleware/tokenExtractor.js";
-import activeSession from "../middleware/activeSession.js";
-
 // Validators
 import validateReadingList from "../middleware/validators/validateReadingList.js";
 import validateId from "../middleware/validators/validateId.js";
@@ -17,8 +13,6 @@ const readingListRouter = express.Router();
 // Add a blog to a user reading list
 readingListRouter.post(
   "/",
-  tokenExtractor,
-  activeSession,
   validateReadingList,
   async (req, res, next) => {
     try {
@@ -33,32 +27,34 @@ readingListRouter.post(
         return res.status(404).end();
       }
 
-      // Confirm the logged in user is adding the blog to its own reading list
-      if (userId !== req.decodedToken.id) {
-        return res
-          .status(401)
-          .json({ error: "You cannot modify another user's reading list" });
+      // Check if the blog is already present on the list
+      const existingEntry = await ReadingList.findOne({
+        where: {
+          userId: userId,
+          blogId: blogId,
+        },
+      });
+
+      if (existingEntry) {
+        throw new Error({ error: "Blog entry has already been added" });
       }
 
       // Add the blog to the reading list
-      await ReadingList.create({
+      const entry = await ReadingList.create({
         userId,
         blogId,
       });
 
-      return res.status(200).json({
-        message: `${blog.title} by ${blog.author} was added to the ${user.name}'s reading list`,
-      });
+      return res.status(200).json(entry);
     } catch (err) {
       next(err);
     }
   },
 );
 
+// Update the read status of an entry
 readingListRouter.put(
   "/:id",
-  tokenExtractor,
-  activeSession,
   validateId,
   validateReadStatus,
   async (req, res, next) => {
@@ -70,17 +66,38 @@ readingListRouter.put(
         return res.status(404).end();
       }
 
-      // Confirm the reading list entry belongs to the currently logged in user
-      if (readingListEntry.userId !== req.decodedToken.id) {
-        return res
-          .status(401)
-          .json({ error: "You cannot modify another user's reading list" });
-      }
-
       // Update the read status for the entry
       await readingListEntry.update({ read: req.body.read });
 
       return res.status(200).json(readingListEntry.toJSON());
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+// Remove a reading list entry
+// Add a blog to a user reading list
+readingListRouter.delete(
+  "/:id",
+  validateId,
+  async (req, res, next) => {
+    try {
+      const entry = await ReadingList.findByPk(req.params.id);
+
+      // Check if the entry exists
+      if (!entry) {
+        return res.status(404).end();
+      }
+
+      // Remove the entry from the user's reading list
+      await ReadingList.destroy({
+        where: {
+          id: entry.id,
+        },
+      });
+
+      return res.status(204).end();
     } catch (err) {
       next(err);
     }
