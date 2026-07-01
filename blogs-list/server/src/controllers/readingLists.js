@@ -99,7 +99,6 @@ readingListRouter.put(
 );
 
 // Remove a reading list entry
-// Add a blog to a user reading list
 readingListRouter.delete(
   "/:id",
   validateId,
