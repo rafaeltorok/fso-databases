@@ -15,55 +15,53 @@ import validateReadStatus from "../middleware/validators/validateReadStatus.js";
 const readingListRouter = express.Router();
 
 // Add a blog to a user reading list
-readingListRouter.post(
-  "/",
-  validateReadingList,
-  async (req, res, next) => {
-    try {
-      const userId = req.body.userId;
-      const blogId = req.body.blogId;
+readingListRouter.post("/", validateReadingList, async (req, res, next) => {
+  try {
+    const userId = req.body.userId;
+    const blogId = req.body.blogId;
 
-      const user = await User.findByPk(userId);
-      const blog = await Blog.findByPk(blogId);
+    const user = await User.findByPk(userId);
+    const blog = await Blog.findByPk(blogId);
 
-      // Confirm both the user and the blog exists
-      if (!user || !blog) {
-        return res.status(404).end();
-      }
-
-      // Check if the blog is already present on the list
-      const existingEntry = await ReadingList.findOne({
-        where: {
-          userId: userId,
-          blogId: blogId,
-        },
-      });
-
-      if (existingEntry) {
-        return res.status(400).json({ error: "Blog entry has already been added" });
-      }
-
-      // Add the blog to the reading list
-      const newEntry = await ReadingList.create({
-        userId,
-        blogId,
-      });
-
-      let returnEntry = newEntry.toJSON();
-
-      delete returnEntry.userId;
-      delete returnEntry.blogId;
-
-      return res.status(200).json({
-        ...returnEntry,
-        user_id: newEntry.toJSON().userId,
-        blog_id: newEntry.toJSON().blogId,
-      });
-    } catch (err) {
-      next(err);
+    // Confirm both the user and the blog exists
+    if (!user || !blog) {
+      return res.status(404).end();
     }
-  },
-);
+
+    // Check if the blog is already present on the list
+    const existingEntry = await ReadingList.findOne({
+      where: {
+        userId: userId,
+        blogId: blogId,
+      },
+    });
+
+    if (existingEntry) {
+      return res
+        .status(400)
+        .json({ error: "Blog entry has already been added" });
+    }
+
+    // Add the blog to the reading list
+    const newEntry = await ReadingList.create({
+      userId,
+      blogId,
+    });
+
+    let returnEntry = newEntry.toJSON();
+
+    delete returnEntry.userId;
+    delete returnEntry.blogId;
+
+    return res.status(200).json({
+      ...returnEntry,
+      user_id: newEntry.toJSON().userId,
+      blog_id: newEntry.toJSON().blogId,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Update the read status of an entry
 readingListRouter.put(
@@ -99,30 +97,26 @@ readingListRouter.put(
 );
 
 // Remove a reading list entry
-readingListRouter.delete(
-  "/:id",
-  validateId,
-  async (req, res, next) => {
-    try {
-      const entry = await ReadingList.findByPk(req.params.id);
+readingListRouter.delete("/:id", validateId, async (req, res, next) => {
+  try {
+    const entry = await ReadingList.findByPk(req.params.id);
 
-      // Check if the entry exists
-      if (!entry) {
-        return res.status(404).end();
-      }
-
-      // Remove the entry from the user's reading list
-      await ReadingList.destroy({
-        where: {
-          id: entry.id,
-        },
-      });
-
-      return res.status(204).end();
-    } catch (err) {
-      next(err);
+    // Check if the entry exists
+    if (!entry) {
+      return res.status(404).end();
     }
-  },
-);
+
+    // Remove the entry from the user's reading list
+    await ReadingList.destroy({
+      where: {
+        id: entry.id,
+      },
+    });
+
+    return res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+});
 
 export default readingListRouter;
